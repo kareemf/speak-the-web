@@ -9,9 +9,7 @@ An iOS app that reads web pages aloud using text-to-speech. Share a URL from Saf
 - **Safari Share Extension**: Share directly from Safari's share sheet ("Read Aloud")
 - **Text-to-Speech**: Using iOS's AVSpeechSynthesizer
 - **Playback Controls**:
-  - Play / Pause / Stop
-  - Skip forward (30 seconds)
-  - Skip backward (15 seconds)
+  - Play / Pause / Stop / Skip
   - Seekable progress bar
 - **Speed Controls**: 0.5x, 0.75x, 1x, 1.25x, 1.5x, 1.75x, 2x
 
