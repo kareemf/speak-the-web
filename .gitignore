@@ -1,0 +1,117 @@
+# Xcode
+## Build generated
+build/
+DerivedData/
+
+## Various settings
+*.pbxuser
+!default.pbxuser
+*.mode1v3
+!default.mode1v3
+*.mode2v3
+!default.mode2v3
+*.perspectivev3
+!default.perspectivev3
+xcuserdata/
+
+## Other
+*.moved-aside
+*.xccheckout
+*.xcscmblueprint
+
+## Obj-C/Swift specific
+*.hmap
+*.ipa
+*.dSYM.zip
+*.dSYM
+
+## Playgrounds
+timeline.xctimeline
+playground.xcworkspace
+
+# Swift Package Manager
+.build/
+.swiftpm/
+Packages/
+Package.pins
+Package.resolved
+*.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/
+
+# CocoaPods
+Pods/
+*.xcworkspace
+!*.xcodeproj/project.xcworkspace/
+
+# Carthage
+Carthage/Build/
+Carthage/Checkouts/
+
+# Fastlane
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/screenshots/**/*.png
+fastlane/test_output/
+
+# Code Injection
+iOSInjectionProject/
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Thumbnails
+._*
+
+# Files that might appear in the root of a volume
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+
+# Directories potentially created on remote AFP share
+.AppleDB
+.AppleDesktop
+Network Trash Folder
+Temporary Items
+.apdisk
+
+# Xcode Instruments
+*.trace
+
+# Archives
+*.xcarchive
+
+# Provisioning Profiles
+*.mobileprovision
+*.provisionprofile
+
+# App Store Connect
+*.itmsp
+
+# Test results
+TestResults/
+*.xcresult
+
+# IDE - VSCode
+.vscode/
+
+# IDE - JetBrains (AppCode)
+.idea/
+*.iml
+
+# Environment files (may contain secrets)
+.env
+.env.*
+!.env.example
+
+# Secrets and credentials
+*.p12
+*.cer
+*.pem
+secrets/
+credentials/
