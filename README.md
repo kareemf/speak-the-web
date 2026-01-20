@@ -82,6 +82,44 @@ Before building for a physical device:
 5. Repeat for the **URLReaderShare** extension target
 6. Enable **App Groups** capability with identifier: `group.com.kareemf.URLReader`
 
+### Install Required Tooling
+
+This project relies on a few CLI tools for consistent builds and linting:
+
+```bash
+brew install git-secrets xcodegen swiftformat swiftlint
+```
+
+- **git-secrets** prevents accidental commits of credentials/keys.
+- **xcodegen** regenerates the Xcode project from `project.yml`.
+- **swiftformat** (lint mode) enforces formatting; run `swiftformat .` to auto-fix.
+- **swiftlint** enforces Swift style rules.
+
+After updating `project.yml`, regenerate the project with:
+
+```bash
+xcodegen generate
+```
+
+> **Note**: If you don't use XcodeGen, you can still use the pre-generated `.xcodeproj` file directly, but any project file changes should be made through `project.yml`.
+
+### 3. Configure Git Hooks
+
+This project includes Git hooks that run checks before every commit:
+
+1. `swiftformat` — auto-formats tracked files, re-stages the changes, then verifies formatting via lint mode.
+2. `swiftlint --strict` — enforces Swift style rules.
+3. `git-secrets` — prevents accidental commits of credentials/keys.
+4. `xcodegen` — regenerates the Xcode project to keep it aligned with `project.yml`.
+
+Then point Git at the repo-local hooks directory:
+
+```bash
+git config core.hooksPath .githooks
+```
+
+The pre-commit hook will fail (with actionable messaging) if any tool is missing or surfaces issues. Fix them (e.g., run `swiftformat .`, resolve lint warnings, rerun XcodeGen) and reattempt the commit. Formatting fixes performed by the hook are automatically staged, so you can simply re-run your commit afterward.
+
 ## Testing
 
 ### Running Tests from Command Line

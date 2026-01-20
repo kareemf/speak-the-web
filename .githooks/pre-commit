@@ -1,0 +1,64 @@
+#!/bin/bash
+
+# Pre-commit hook enforcing: swiftformat, swiftlint, git-secrets, xcodegen.
+set -euo pipefail
+
+require_tool() {
+    local tool="$1"
+    local install="$2"
+    if ! command -v "$tool" &> /dev/null; then
+        cat <<EOM
+Error: $tool is not installed.
+Install it with: $install
+EOM
+        exit 1
+    fi
+}
+
+require_tool swiftformat "brew install swiftformat"
+require_tool swiftlint "brew install swiftlint"
+require_tool git-secrets "brew install git-secrets"
+require_tool xcodegen "brew install xcodegen"
+
+echo "Running swiftformat (auto-fix)..."
+swiftformat . >/dev/null
+git add -u
+
+echo "Running swiftformat (lint mode)..."
+if ! swiftformat --lint . >/dev/null; then
+    cat <<'EOM'
+swiftformat detected remaining formatting issues.
+Run `swiftformat .` to apply fixes before committing.
+EOM
+    exit 1
+fi
+echo "✓ swiftformat checks passed"
+
+echo "Running swiftlint..."
+if ! swiftlint --strict >/dev/null; then
+    echo "swiftlint rejected this commit."
+    exit 1
+fi
+echo "✓ swiftlint passed"
+
+echo "Running git-secrets scan..."
+if ! git secrets --pre_commit_hook -- "$@"; then
+    echo "git-secrets rejected this commit."
+    exit 1
+fi
+echo "✓ git-secrets passed"
+
+echo "Running xcodegen..."
+if ! xcodegen >/dev/null; then
+    echo "Error: xcodegen failed"
+    exit 1
+fi
+
+# Check if the project file was modified
+if git diff --name-only | grep -q "CareKeeper.xcodeproj/"; then
+    echo "Xcode project was regenerated. Staging changes..."
+    git add CareKeeper.xcodeproj/
+fi
+
+echo "✓ xcodegen completed successfully"
+exit 0
