@@ -1,13 +1,13 @@
 # URL Reader
 
-An iOS app that reads web articles aloud using text-to-speech. Share any URL from Safari and listen to the content with full playback controls.
+An iOS app that reads web pages aloud using text-to-speech. Share a URL from Safari and listen to the content with playback controls and content navigation.
 
 ## Features
 
 ### Core Features
 - **URL Input**: Paste or type any URL to fetch article content
 - **Safari Share Extension**: Share directly from Safari's share sheet ("Read Aloud")
-- **Text-to-Speech**: High-quality speech using iOS's AVSpeechSynthesizer
+- **Text-to-Speech**: Using iOS's AVSpeechSynthesizer
 - **Playback Controls**:
   - Play / Pause / Stop
   - Skip forward (30 seconds)
@@ -82,7 +82,7 @@ Before building for a physical device:
 3. Go to **Signing & Capabilities**
 4. Select your Development Team
 5. Repeat for the **URLReaderShare** extension target
-6. Enable **App Groups** capability with identifier: `group.com.example.URLReader`
+6. Enable **App Groups** capability with identifier: `group.com.kareemf.URLReader`
 
 ## Testing
 
@@ -189,7 +189,7 @@ The app includes a Share Extension that appears as "Read Aloud" in Safari's shar
 5. Main app reads URL from shared storage and starts loading
 
 ### App Groups Configuration
-Both the main app and extension use the App Group: `group.com.example.URLReader`
+Both the main app and extension use the App Group: `group.com.kareemf.URLReader`
 
 ## Customization
 

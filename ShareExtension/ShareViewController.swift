@@ -216,7 +216,7 @@ class ShareViewController: UIViewController {
         guard let url = sharedURL else { return }
 
         // Save URL to shared UserDefaults (App Group)
-        let sharedDefaults = UserDefaults(suiteName: "group.com.example.URLReader")
+        let sharedDefaults = UserDefaults(suiteName: "group.com.kareemf.URLReader")
         sharedDefaults?.set(url.absoluteString, forKey: "SharedURL")
         sharedDefaults?.set(Date(), forKey: "SharedURLTimestamp")
         sharedDefaults?.synchronize()

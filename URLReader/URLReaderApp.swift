@@ -35,7 +35,7 @@ struct URLReaderApp: App {
 
     /// Checks for URLs shared via App Group from the Share Extension
     private func checkForSharedURL() {
-        guard let sharedDefaults = UserDefaults(suiteName: "group.com.example.URLReader"),
+        guard let sharedDefaults = UserDefaults(suiteName: "group.com.kareemf.URLReader"),
               let sharedURLString = sharedDefaults.string(forKey: "SharedURL"),
               let timestamp = sharedDefaults.object(forKey: "SharedURLTimestamp") as? Date else {
             return
