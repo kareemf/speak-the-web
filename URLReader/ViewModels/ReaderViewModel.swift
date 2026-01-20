@@ -118,6 +118,14 @@ class ReaderViewModel: ObservableObject {
     func loadSampleURL() {
         urlInput = "https://en.wikipedia.org/wiki/Text-to-speech"
     }
+
+    /// Loads a URL directly (used when receiving shared URLs)
+    func loadURL(_ urlString: String) {
+        urlInput = urlString
+        Task {
+            await fetchContent()
+        }
+    }
 }
 
 // MARK: - Array Extension

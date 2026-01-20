@@ -1,90 +1,226 @@
-# URL Reader - iOS Text-to-Speech App
+# URL Reader
 
-An iOS app that reads web articles aloud using text-to-speech. Drop in any URL and listen to the content with full playback controls.
+An iOS app that reads web articles aloud using text-to-speech. Share any URL from Safari and listen to the content with full playback controls.
 
 ## Features
 
-### Must-Haves (Implemented)
+### Core Features
 - **URL Input**: Paste or type any URL to fetch article content
-- **Text-to-Speech**: Uses iOS's built-in AVSpeechSynthesizer for high-quality speech
+- **Safari Share Extension**: Share directly from Safari's share sheet ("Read Aloud")
+- **Text-to-Speech**: High-quality speech using iOS's AVSpeechSynthesizer
 - **Playback Controls**:
-  - Play/Pause
-  - Stop
+  - Play / Pause / Stop
   - Skip forward (30 seconds)
   - Skip backward (15 seconds)
   - Seekable progress bar
-- **Speed Controls**: Adjustable playback speed from 0.5x to 2x
+- **Speed Controls**: 0.5x, 0.75x, 1x, 1.25x, 1.5x, 1.75x, 2x
 
-### Nice-to-Haves (Implemented)
-- **Table of Contents**: Automatically generated from HTML semantic elements (h1-h6 headings)
-- **Section Navigation**: Jump directly to different sections of the article
+### Additional Features
+- **Table of Contents**: Auto-generated from HTML semantic elements (h1-h6)
+- **Section Navigation**: Jump directly to any section
 - **Voice Selection**: Choose from all available iOS voices
 - **Voice Preview**: Test voices before selecting
 - **Background Audio**: Continues playing when app is backgrounded
-
-## Architecture
-
-```
-URLReader/
-├── URLReaderApp.swift          # App entry point
-├── Models/
-│   └── Article.swift           # Article and section data models
-├── Services/
-│   ├── ContentExtractor.swift  # HTML fetching and parsing
-│   └── SpeechService.swift     # Text-to-speech engine
-├── ViewModels/
-│   └── ReaderViewModel.swift   # Main view model
-└── Views/
-    ├── ContentView.swift       # Root view
-    ├── URLInputView.swift      # URL input screen
-    ├── ArticleReaderView.swift # Article display
-    ├── PlaybackControlsView.swift # Playback UI
-    ├── TableOfContentsView.swift  # TOC navigation
-    └── VoiceSettingsView.swift    # Voice/speed settings
-```
 
 ## Requirements
 
 - iOS 17.0+
 - Xcode 15.0+
 - Swift 5.9+
+- macOS Sonoma 14.0+ (for development)
 
-## Setup
+## Build Instructions
+
+### Prerequisites
+
+1. Install Xcode 15+ from the Mac App Store
+2. Install Xcode Command Line Tools:
+   ```bash
+   xcode-select --install
+   ```
+
+### Building from Command Line
+
+```bash
+# Navigate to project directory
+cd URLReader
+
+# Build for iOS Simulator (Debug)
+xcodebuild -project URLReader.xcodeproj \
+  -scheme URLReader \
+  -destination 'platform=iOS Simulator,name=iPhone 15' \
+  -configuration Debug \
+  build
+
+# Build for iOS Simulator (Release)
+xcodebuild -project URLReader.xcodeproj \
+  -scheme URLReader \
+  -destination 'platform=iOS Simulator,name=iPhone 15' \
+  -configuration Release \
+  build
+
+# Build for device (requires signing)
+xcodebuild -project URLReader.xcodeproj \
+  -scheme URLReader \
+  -destination 'generic/platform=iOS' \
+  -configuration Release \
+  build
+```
+
+### Building from Xcode
 
 1. Open `URLReader.xcodeproj` in Xcode
-2. Select your development team in Signing & Capabilities
-3. Build and run on a simulator or device
+2. Select your target device or simulator
+3. Press `Cmd + B` to build, or `Cmd + R` to build and run
 
-## Usage
+### Code Signing Setup
 
-1. Launch the app
-2. Enter a URL in the text field (e.g., `wikipedia.org/wiki/Swift`)
-3. Tap "Fetch Article" to load the content
-4. Use the play button to start listening
-5. Adjust speed using the segmented control
-6. Use the list icon to access the Table of Contents
-7. Use the gear icon to change voices
+Before building for a physical device:
 
-## Technical Notes
+1. Open the project in Xcode
+2. Select the **URLReader** target
+3. Go to **Signing & Capabilities**
+4. Select your Development Team
+5. Repeat for the **URLReaderShare** extension target
+6. Enable **App Groups** capability with identifier: `group.com.example.URLReader`
 
-### Content Extraction
-The app uses a custom HTML parser that:
-- Removes unwanted elements (scripts, styles, nav, etc.)
-- Extracts main content from `<article>`, `<main>`, or content divs
-- Preserves heading structure for TOC generation
-- Decodes HTML entities
-- Handles various character encodings
+## Testing
 
-### Text-to-Speech
-Uses `AVSpeechSynthesizer` with:
-- Real-time progress tracking
-- Word-by-word highlighting
-- Background audio support
-- Voice quality detection (enhanced voices prioritized)
+### Running Tests from Command Line
 
-### Permissions
-- **Network Access**: Required to fetch URLs (configured in Info.plist)
-- **Background Audio**: Enabled for continued playback
+```bash
+# Run unit tests on simulator
+xcodebuild test \
+  -project URLReader.xcodeproj \
+  -scheme URLReader \
+  -destination 'platform=iOS Simulator,name=iPhone 15' \
+  -resultBundlePath TestResults
+
+# Run tests with verbose output
+xcodebuild test \
+  -project URLReader.xcodeproj \
+  -scheme URLReader \
+  -destination 'platform=iOS Simulator,name=iPhone 15' \
+  | xcpretty
+```
+
+### Running Tests from Xcode
+
+1. Open `URLReader.xcodeproj`
+2. Press `Cmd + U` to run all tests
+
+### Manual Testing Checklist
+
+- [ ] Enter a URL and fetch content
+- [ ] Play/pause/stop functionality works
+- [ ] Speed control changes playback rate
+- [ ] Skip forward/backward works
+- [ ] Progress bar is accurate and seekable
+- [ ] Table of contents shows headings
+- [ ] Tapping TOC item navigates correctly
+- [ ] Voice settings allow changing voice
+- [ ] Background audio continues playing
+- [ ] Safari share extension appears in share sheet
+- [ ] Sharing from Safari opens app with URL
+
+## Project Structure
+
+```
+URLReader/
+├── URLReader.xcodeproj/          # Xcode project file
+├── URLReader/                    # Main app target
+│   ├── URLReaderApp.swift        # App entry point & deep link handling
+│   ├── Info.plist                # App configuration
+│   ├── URLReader.entitlements    # App Groups entitlement
+│   ├── Models/
+│   │   └── Article.swift         # Article & section data models
+│   ├── Services/
+│   │   ├── ContentExtractor.swift # HTML fetching & parsing
+│   │   └── SpeechService.swift    # Text-to-speech engine
+│   ├── ViewModels/
+│   │   └── ReaderViewModel.swift  # Main view model
+│   ├── Views/
+│   │   ├── ContentView.swift      # Root view
+│   │   ├── URLInputView.swift     # URL input screen
+│   │   ├── ArticleReaderView.swift # Article display
+│   │   ├── PlaybackControlsView.swift # Playback UI
+│   │   ├── TableOfContentsView.swift  # TOC navigation
+│   │   └── VoiceSettingsView.swift    # Voice/speed settings
+│   └── Assets.xcassets/          # App icons & colors
+├── ShareExtension/               # Safari Share Extension target
+│   ├── ShareViewController.swift  # Share UI controller
+│   ├── Info.plist                # Extension configuration
+│   └── ShareExtension.entitlements # App Groups entitlement
+└── README.md                     # This file
+```
+
+## Architecture
+
+### Design Pattern
+- **MVVM** (Model-View-ViewModel) with SwiftUI
+- `@ObservableObject` for reactive state management
+- `@EnvironmentObject` for dependency injection
+
+### Key Components
+
+| Component | Responsibility |
+|-----------|----------------|
+| `ContentExtractor` | Fetches URLs, parses HTML, extracts text and headings |
+| `SpeechService` | Wraps AVSpeechSynthesizer, manages playback state |
+| `ReaderViewModel` | Coordinates UI state, handles user actions |
+| `ShareViewController` | Receives URLs from Safari, launches main app |
+
+### Data Flow
+```
+Safari → ShareExtension → App Groups → URLReaderApp → ReaderViewModel
+                                              ↓
+URL Input → ContentExtractor → Article → SpeechService → Audio Output
+```
+
+## Safari Share Extension
+
+The app includes a Share Extension that appears as "Read Aloud" in Safari's share sheet.
+
+### How It Works
+1. User taps Share in Safari
+2. Selects "Read Aloud" from the share sheet
+3. Extension saves URL to App Groups shared storage
+4. Extension launches main app via URL scheme (`urlreader://`)
+5. Main app reads URL from shared storage and starts loading
+
+### App Groups Configuration
+Both the main app and extension use the App Group: `group.com.example.URLReader`
+
+## Customization
+
+### Changing Bundle Identifier
+1. Update `PRODUCT_BUNDLE_IDENTIFIER` in project settings
+2. Update App Group identifier in both entitlements files
+3. Update `UserDefaults(suiteName:)` calls in code
+
+### Adding New Voices
+The app automatically discovers all installed iOS voices. Users can download additional voices in:
+**Settings → Accessibility → Spoken Content → Voices**
+
+## Troubleshooting
+
+### Build Errors
+
+**"Signing requires a development team"**
+- Select a development team in Xcode's Signing & Capabilities
+
+**"App Groups capability not enabled"**
+- Add App Groups capability to both targets in Xcode
+
+### Runtime Issues
+
+**Share extension doesn't appear**
+- Ensure the extension is built and installed with the main app
+- Check that the extension's Info.plist activation rules are correct
+
+**Audio doesn't play in background**
+- Verify `UIBackgroundModes` includes `audio` in Info.plist
+- Ensure audio session is configured for `.playback` category
 
 ## License
 

@@ -2,7 +2,7 @@ import SwiftUI
 
 /// Main content view of the app
 struct ContentView: View {
-    @StateObject private var viewModel = ReaderViewModel()
+    @EnvironmentObject var viewModel: ReaderViewModel
 
     var body: some View {
         NavigationView {
@@ -63,4 +63,5 @@ struct ContentView: View {
 
 #Preview {
     ContentView()
+        .environmentObject(ReaderViewModel())
 }

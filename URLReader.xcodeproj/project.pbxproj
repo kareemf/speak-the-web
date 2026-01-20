@@ -19,7 +19,33 @@
 		A1000010000000000000000A /* TableOfContentsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000010000000000000000A /* TableOfContentsView.swift */; };
 		A1000011000000000000000B /* VoiceSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000011000000000000000B /* VoiceSettingsView.swift */; };
 		A1000012000000000000000C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A2000012000000000000000C /* Assets.xcassets */; };
+		C10000010000000000000001 /* ShareViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C20000010000000000000001 /* ShareViewController.swift */; };
+		C10000020000000000000002 /* URLReaderShare.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = C30000000000000000000001 /* URLReaderShare.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		C40000000000000000000001 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A90000000000000000000001 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = C60000000000000000000001;
+			remoteInfo = URLReaderShare;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		C50000000000000000000001 /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				C10000020000000000000002 /* URLReaderShare.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		A20000010000000000000001 /* URLReaderApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLReaderApp.swift; sourceTree = "<group>"; };
@@ -35,11 +61,23 @@
 		A2000011000000000000000B /* VoiceSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceSettingsView.swift; sourceTree = "<group>"; };
 		A2000012000000000000000C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		A2000013000000000000000D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		A2000014000000000000000E /* URLReader.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = URLReader.entitlements; sourceTree = "<group>"; };
 		A30000000000000000000001 /* URLReader.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = URLReader.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		C20000010000000000000001 /* ShareViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareViewController.swift; sourceTree = "<group>"; };
+		C20000020000000000000002 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		C20000030000000000000003 /* ShareExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ShareExtension.entitlements; sourceTree = "<group>"; };
+		C30000000000000000000001 /* URLReaderShare.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = URLReaderShare.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		A40000000000000000000001 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C70000000000000000000001 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -53,6 +91,7 @@
 			isa = PBXGroup;
 			children = (
 				A50000010000000000000002 /* URLReader */,
+				C80000000000000000000001 /* ShareExtension */,
 				A50000020000000000000003 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -67,6 +106,7 @@
 				A50000060000000000000007 /* Views */,
 				A2000012000000000000000C /* Assets.xcassets */,
 				A2000013000000000000000D /* Info.plist */,
+				A2000014000000000000000E /* URLReader.entitlements */,
 			);
 			path = URLReader;
 			sourceTree = "<group>";
@@ -75,6 +115,7 @@
 			isa = PBXGroup;
 			children = (
 				A30000000000000000000001 /* URLReader.app */,
+				C30000000000000000000001 /* URLReaderShare.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -117,6 +158,16 @@
 			path = Views;
 			sourceTree = "<group>";
 		};
+		C80000000000000000000001 /* ShareExtension */ = {
+			isa = PBXGroup;
+			children = (
+				C20000010000000000000001 /* ShareViewController.swift */,
+				C20000020000000000000002 /* Info.plist */,
+				C20000030000000000000003 /* ShareExtension.entitlements */,
+			);
+			path = ShareExtension;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -127,15 +178,34 @@
 				A70000000000000000000001 /* Sources */,
 				A40000000000000000000001 /* Frameworks */,
 				A70000010000000000000002 /* Resources */,
+				C50000000000000000000001 /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				C90000000000000000000001 /* PBXTargetDependency */,
 			);
 			name = URLReader;
 			productName = URLReader;
 			productReference = A30000000000000000000001 /* URLReader.app */;
 			productType = "com.apple.product-type.application";
+		};
+		C60000000000000000000001 /* URLReaderShare */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = CA0000000000000000000001 /* Build configuration list for PBXNativeTarget "URLReaderShare" */;
+			buildPhases = (
+				CB0000000000000000000001 /* Sources */,
+				C70000000000000000000001 /* Frameworks */,
+				CC0000000000000000000001 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = URLReaderShare;
+			productName = URLReaderShare;
+			productReference = C30000000000000000000001 /* URLReaderShare.appex */;
+			productType = "com.apple.product-type.app-extension";
 		};
 /* End PBXNativeTarget section */
 
@@ -148,6 +218,9 @@
 				LastUpgradeCheck = 1500;
 				TargetAttributes = {
 					A60000000000000000000001 = {
+						CreatedOnToolsVersion = 15.0;
+					};
+					C60000000000000000000001 = {
 						CreatedOnToolsVersion = 15.0;
 					};
 				};
@@ -166,6 +239,7 @@
 			projectRoot = "";
 			targets = (
 				A60000000000000000000001 /* URLReader */,
+				C60000000000000000000001 /* URLReaderShare */,
 			);
 		};
 /* End PBXProject section */
@@ -176,6 +250,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				A1000012000000000000000C /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CC0000000000000000000001 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -200,7 +281,23 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		CB0000000000000000000001 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C10000010000000000000001 /* ShareViewController.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		C90000000000000000000001 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = C60000000000000000000001 /* URLReaderShare */;
+			targetProxy = C40000000000000000000001 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		B10000000000000000000001 /* Debug */ = {
@@ -327,6 +424,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = URLReader/URLReader.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = "";
@@ -358,6 +456,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = URLReader/URLReader.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = "";
@@ -384,6 +483,58 @@
 			};
 			name = Release;
 		};
+		D10000000000000000000001 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = ShareExtension/ShareExtension.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = ShareExtension/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Read Aloud";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.example.URLReader.ShareExtension;
+				PRODUCT_NAME = URLReaderShare;
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		D10000010000000000000002 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = ShareExtension/ShareExtension.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = ShareExtension/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Read Aloud";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.example.URLReader.ShareExtension;
+				PRODUCT_NAME = URLReaderShare;
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -401,6 +552,15 @@
 			buildConfigurations = (
 				B10000000000000000000001 /* Debug */,
 				B10000010000000000000002 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		CA0000000000000000000001 /* Build configuration list for PBXNativeTarget "URLReaderShare" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D10000000000000000000001 /* Debug */,
+				D10000010000000000000002 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
