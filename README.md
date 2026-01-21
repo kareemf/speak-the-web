@@ -17,7 +17,6 @@ An iOS app that reads web pages aloud using text-to-speech. Share a URL from Saf
 - **Table of Contents**: Auto-generated from HTML semantic elements (h1-h6)
 - **Section Navigation**: Jump directly to any section
 - **Voice Selection**: Choose from all available iOS voices
-- **Voice Preview**: Test voices before selecting
 - **Background Audio**: Continues playing when app is backgrounded
 
 ## Requirements
@@ -31,7 +30,7 @@ An iOS app that reads web pages aloud using text-to-speech. Share a URL from Saf
 
 ### Prerequisites
 
-1. Install Xcode 15+ from the Mac App Store
+1. Install Xcode 15+
 2. Install Xcode Command Line Tools:
    ```bash
    xcode-select --install
@@ -82,7 +81,7 @@ Before building for a physical device:
 5. Repeat for the **URLReaderShare** extension target
 6. Enable **App Groups** capability with identifier: `group.com.kareemf.URLReader`
 
-### Install Required Tooling
+### Install Dev Tooling
 
 This project relies on a few CLI tools for consistent builds and linting:
 
@@ -103,7 +102,7 @@ xcodegen generate
 
 > **Note**: If you don't use XcodeGen, you can still use the pre-generated `.xcodeproj` file directly, but any project file changes should be made through `project.yml`.
 
-### 3. Configure Git Hooks
+#### Configure Git Hooks
 
 This project includes Git hooks that run checks before every commit:
 
@@ -119,6 +118,30 @@ git config core.hooksPath .githooks
 ```
 
 The pre-commit hook will fail (with actionable messaging) if any tool is missing or surfaces issues. Fix them (e.g., run `swiftformat .`, resolve lint warnings, rerun XcodeGen) and reattempt the commit. Formatting fixes performed by the hook are automatically staged, so you can simply re-run your commit afterward.
+
+
+### Install Sherpa-ONNX (Local SwiftPM Package)
+
+[Sherpa-ONNX](https://github.com/k2-fsa/sherpa-onnx) is wrapped as a local SwiftPM package under `Vendor/SherpaOnnx`. It relies on an upstream build script that produces two xcframeworks (`sherpa-onnx.xcframework` and `onnxruntime.xcframework`) and a thin wrapper script to copy them into `Vendor/SherpaOnnx/Artifacts`.
+
+#### Requirements
+
+```bash
+brew install wget cmake
+```
+
+#### Build Sherpa-onnx xcframeworks
+
+```bash
+./Vendor/SherpaOnnx/Scripts/build-ios.sh
+```
+
+To update the upstream clone, remove it and re-run the wrapper to fetch the original `build-ios.sh`:
+
+```bash
+rm -rf Vendor/SherpaOnnx/build/sherpa-onnx
+./Vendor/SherpaOnnx/Scripts/build-ios.sh
+```
 
 ## Testing
 
@@ -145,19 +168,6 @@ xcodebuild test \
 1. Open `URLReader.xcodeproj`
 2. Press `Cmd + U` to run all tests
 
-### Manual Testing Checklist
-
-- [ ] Enter a URL and fetch content
-- [ ] Play/pause/stop functionality works
-- [ ] Speed control changes playback rate
-- [ ] Skip forward/backward works
-- [ ] Progress bar is accurate and seekable
-- [ ] Table of contents shows headings
-- [ ] Tapping TOC item navigates correctly
-- [ ] Voice settings allow changing voice
-- [ ] Background audio continues playing
-- [ ] Safari share extension appears in share sheet
-- [ ] Sharing from Safari opens app with URL
 
 ## Project Structure
 
@@ -226,13 +236,6 @@ The app includes a Share Extension that appears as "Read Aloud" in Safari's shar
 
 ### App Groups Configuration
 Both the main app and extension use the App Group: `group.com.kareemf.URLReader`
-
-## Customization
-
-### Changing Bundle Identifier
-1. Update `PRODUCT_BUNDLE_IDENTIFIER` in project settings
-2. Update App Group identifier in both entitlements files
-3. Update `UserDefaults(suiteName:)` calls in code
 
 ### Adding New Voices
 The app automatically discovers all installed iOS voices. Users can download additional voices in:

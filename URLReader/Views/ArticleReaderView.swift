@@ -46,13 +46,13 @@ struct ArticleReaderView: View {
                             .cornerRadius(12)
 
                             // Current word highlight
-                            if viewModel.speechService.isPlaying {
+                            if viewModel.shouldShowCurrentWord {
                                 HStack {
                                     Image(systemName: "waveform")
                                         .foregroundColor(.accentColor)
                                     Text("Speaking: ")
                                         .foregroundColor(.secondary)
-                                    Text(viewModel.speechService.currentWord)
+                                    Text(viewModel.playbackCurrentWord)
                                         .fontWeight(.medium)
                                     Spacer()
                                 }
@@ -92,6 +92,14 @@ struct ArticleReaderView: View {
 
             // Playback controls
             PlaybackControlsView(viewModel: viewModel)
+        }
+        .alert("Error", isPresented: Binding(
+            get: { viewModel.showError && viewModel.showArticle },
+            set: { if !$0 { viewModel.showError = false } }
+        )) {
+            Button("OK", role: .cancel) {}
+        } message: {
+            Text(viewModel.errorMessage ?? "An unknown error occurred")
         }
     }
 }

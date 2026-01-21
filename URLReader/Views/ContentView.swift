@@ -37,12 +37,7 @@ struct ContentView: View {
                 TableOfContentsView(viewModel: viewModel)
             }
             .sheet(isPresented: $viewModel.showVoiceSettings) {
-                VoiceSettingsView(viewModel: viewModel)
-            }
-            .alert("Error", isPresented: $viewModel.showError) {
-                Button("OK", role: .cancel) {}
-            } message: {
-                Text(viewModel.errorMessage ?? "An unknown error occurred")
+                SettingsView(viewModel: viewModel, modelStore: viewModel.sherpaModelStore)
             }
             .onChange(of: viewModel.showArticle) { isShowing in
                 if !isShowing {

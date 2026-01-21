@@ -2,77 +2,67 @@ import SwiftUI
 import AVFoundation
 
 /// View for selecting voice and adjusting speech settings
-struct VoiceSettingsView: View {
+struct AVSpeechSettingsView: View {
     @ObservedObject var viewModel: ReaderViewModel
-    @Environment(\.dismiss) private var dismiss
 
     var body: some View {
-        NavigationView {
-            List {
-                // Speed Section
-                Section("Playback Speed") {
-                    Picker("Speed", selection: $viewModel.selectedRateIndex) {
-                        ForEach(0..<SpeechService.ratePresets.count, id: \.self) { index in
-                            Text(SpeechService.ratePresets[index].name)
-                                .tag(index)
+        List {
+            // Speed Section
+            Section("Playback Speed") {
+                Picker("Speed", selection: $viewModel.selectedRateIndex) {
+                    ForEach(0..<SpeechService.ratePresets.count, id: \.self) { index in
+                        Text(SpeechService.ratePresets[index].name)
+                            .tag(index)
+                    }
+                }
+                .pickerStyle(.wheel)
+                .frame(height: 120)
+            }
+
+            // Voice Section
+            Section("Voice") {
+                ForEach(groupedVoices.keys.sorted(), id: \.self) { language in
+                    DisclosureGroup(languageDisplayName(for: language)) {
+                        ForEach(groupedVoices[language] ?? [], id: \.identifier) { voice in
+                            VoiceRow(
+                                voice: voice,
+                                isSelected: viewModel.speechService.selectedVoice?.identifier == voice.identifier,
+                                onSelect: {
+                                    viewModel.speechService.setVoice(voice)
+                                }
+                            )
                         }
-                    }
-                    .pickerStyle(.wheel)
-                    .frame(height: 120)
-                }
-
-                // Voice Section
-                Section("Voice") {
-                    ForEach(groupedVoices.keys.sorted(), id: \.self) { language in
-                        DisclosureGroup(languageDisplayName(for: language)) {
-                            ForEach(groupedVoices[language] ?? [], id: \.identifier) { voice in
-                                VoiceRow(
-                                    voice: voice,
-                                    isSelected: viewModel.speechService.selectedVoice?.identifier == voice.identifier,
-                                    onSelect: {
-                                        viewModel.speechService.setVoice(voice)
-                                    }
-                                )
-                            }
-                        }
-                    }
-                }
-
-                // Preview Section
-                Section("Preview") {
-                    Button(action: previewVoice) {
-                        Label("Preview Current Voice", systemImage: "play.circle")
-                    }
-                }
-
-                // Info Section
-                Section {
-                    HStack {
-                        Text("Current Voice")
-                        Spacer()
-                        Text(viewModel.speechService.selectedVoice?.name ?? "Default")
-                            .foregroundColor(.secondary)
-                    }
-
-                    HStack {
-                        Text("Current Speed")
-                        Spacer()
-                        Text(viewModel.currentRateName)
-                            .foregroundColor(.secondary)
                     }
                 }
             }
-            .listStyle(.insetGrouped)
-            .navigationTitle("Voice Settings")
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("Done") {
-                        dismiss()
-                    }
+
+            // Preview Section
+            Section("Preview") {
+                Button(action: previewVoice) {
+                    Label("Preview Current Voice", systemImage: "play.circle")
+                }
+            }
+
+            // Info Section
+            Section {
+                HStack {
+                    Text("Current Voice")
+                    Spacer()
+                    Text(viewModel.speechService.selectedVoice?.name ?? "Default")
+                        .foregroundColor(.secondary)
+                }
+
+                HStack {
+                    Text("Current Speed")
+                    Spacer()
+                    Text(viewModel.currentRateName)
+                        .foregroundColor(.secondary)
                 }
             }
         }
+        .listStyle(.insetGrouped)
+        .navigationTitle("AVSpeech")
+        .navigationBarTitleDisplayMode(.inline)
     }
 
     private var groupedVoices: [String: [AVSpeechSynthesisVoice]] {
@@ -139,5 +129,5 @@ struct VoiceRow: View {
 }
 
 #Preview {
-    VoiceSettingsView(viewModel: ReaderViewModel())
+    AVSpeechSettingsView(viewModel: ReaderViewModel())
 }

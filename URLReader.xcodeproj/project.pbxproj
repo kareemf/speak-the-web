@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		159DAE5957C13455D1886750 /* SpeechService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50FC8F82C631ABEF4B11E5DE /* SpeechService.swift */; };
 		16B29CACA2456DA2D2C97CFD /* ReaderMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = B297243EF5ABBC553443E7E1 /* ReaderMode.swift */; };
+		369BCB84996C0761D5BC3614 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CA63389F895AB182DAAC91E /* SettingsView.swift */; };
 		3E540ED61B4201D7D9A2CF0D /* ReaderWebViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C96FA06FFF40C100CDE678F /* ReaderWebViews.swift */; };
 		3E673A92CFC2A3F0D03821AB /* PlaybackControlsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CEEEC11DDCB80D6006DF829 /* PlaybackControlsView.swift */; };
 		3F675CAE5D4F32F289CB9EC3 /* RecentArticle.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA5167FDD71D6AA5130C11D0 /* RecentArticle.swift */; };
@@ -16,14 +17,22 @@
 		46B0F985B66CF9029B6B0191 /* VoiceSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D1B5BE16D7D801CA175C010 /* VoiceSettingsView.swift */; };
 		58CBFE5CD8CD806F6C1D819F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5186DC41F065782B3102EC7B /* Assets.xcassets */; };
 		6CBDFF460F01EF17E3426558 /* Article.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D54287956AF94ECD5D699EF /* Article.swift */; };
+		7A01D4539DBB5AC00DF959FA /* SherpaSpeechService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10DBDD1D16ABF83E1CDBE34 /* SherpaSpeechService.swift */; };
 		7BA4F38F2580363F8C4201BE /* URLInputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE3D85301AE537AFFAFE8462 /* URLInputView.swift */; };
 		9B6AA94961884E8F10FBAEEA /* URLReaderApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2432B3BE5277F79CD46DB22E /* URLReaderApp.swift */; };
 		9D0A51B7F445CE77453A29A4 /* TableOfContentsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9565D6B189EAFA8762A49A9 /* TableOfContentsView.swift */; };
+		AA5DC2AAF2312CD69B1E5C84 /* SherpaModelsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABEFF49161B4A0C73B5C131B /* SherpaModelsView.swift */; };
 		C1708AC40A3B767426114486 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F67E8BCCCC1EE6181DBD3E20 /* ContentView.swift */; };
+		C475AED55F3C68ECD11E8E7A /* SherpaModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF66A3444EACB04D82B567D1 /* SherpaModel.swift */; };
 		C625B8A508CAD99A05EECC64 /* ShareViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9E19C8D977CAB04ECC28FBB /* ShareViewController.swift */; };
+		C8CCC1356282B058EB2F4E44 /* SpeechEngineType.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD3BF8A9AF584A00DF28729A /* SpeechEngineType.swift */; };
+		CB8B260CE3322A7C339A321B /* SWCompression in Frameworks */ = {isa = PBXBuildFile; productRef = AF5EDBA8F97DD3A42C02584F /* SWCompression */; };
 		DB58FC9753C33F6AD9ED8770 /* URLReaderShare.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 47266E86AB3F17B599224D74 /* URLReaderShare.appex */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		DDF02680D0045FED88EB78C9 /* ContentExtractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = C55EFAD3E6251CA3C173E771 /* ContentExtractor.swift */; };
 		DF7D9A990AE670F316BFE40B /* ReaderViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D47C7E812E533483E3575157 /* ReaderViewModel.swift */; };
+		E812E10A7DFB94F56B4D3DD0 /* SherpaOnnxRuntime.swift in Sources */ = {isa = PBXBuildFile; fileRef = 411C7D264E56E015DCA95DF6 /* SherpaOnnxRuntime.swift */; };
+		EE2D6746B5D8A6C25FC6F919 /* SherpaOnnxModelStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = D62C2E20837FF349BDF384C6 /* SherpaOnnxModelStore.swift */; };
+		F70FF2609AFB7083731EFAE5 /* SherpaOnnx in Frameworks */ = {isa = PBXBuildFile; productRef = 8BC79544F2C7301DB62305CE /* SherpaOnnx */; };
 		FD45E02576D5011E5A92E0D6 /* ArticleReaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FB56B74B8A60502F7C15D7B /* ArticleReaderView.swift */; };
 /* End PBXBuildFile section */
 
@@ -59,23 +68,43 @@
 		3B9C649F433619C0A3DD1E75 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		3CEEEC11DDCB80D6006DF829 /* PlaybackControlsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaybackControlsView.swift; sourceTree = "<group>"; };
 		3FB56B74B8A60502F7C15D7B /* ArticleReaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleReaderView.swift; sourceTree = "<group>"; };
+		411C7D264E56E015DCA95DF6 /* SherpaOnnxRuntime.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SherpaOnnxRuntime.swift; sourceTree = "<group>"; };
 		47266E86AB3F17B599224D74 /* URLReaderShare.appex */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = "wrapper.app-extension"; path = URLReaderShare.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		4CA63389F895AB182DAAC91E /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		4D54287956AF94ECD5D699EF /* Article.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Article.swift; sourceTree = "<group>"; };
 		50FC8F82C631ABEF4B11E5DE /* SpeechService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeechService.swift; sourceTree = "<group>"; };
 		5186DC41F065782B3102EC7B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		7D1B5BE16D7D801CA175C010 /* VoiceSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceSettingsView.swift; sourceTree = "<group>"; };
 		A6A865223BB056996BF10106 /* SelectableTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectableTextView.swift; sourceTree = "<group>"; };
 		ABC219EE441A6774D031D327 /* URLReader.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = URLReader.entitlements; sourceTree = "<group>"; };
+		ABEFF49161B4A0C73B5C131B /* SherpaModelsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SherpaModelsView.swift; sourceTree = "<group>"; };
 		B297243EF5ABBC553443E7E1 /* ReaderMode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReaderMode.swift; sourceTree = "<group>"; };
 		C55EFAD3E6251CA3C173E771 /* ContentExtractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentExtractor.swift; sourceTree = "<group>"; };
 		C7FB69FBA56BBFE703C27994 /* URLReader.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = URLReader.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C9565D6B189EAFA8762A49A9 /* TableOfContentsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableOfContentsView.swift; sourceTree = "<group>"; };
 		C9E19C8D977CAB04ECC28FBB /* ShareViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareViewController.swift; sourceTree = "<group>"; };
 		CA5167FDD71D6AA5130C11D0 /* RecentArticle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentArticle.swift; sourceTree = "<group>"; };
+		CD3BF8A9AF584A00DF28729A /* SpeechEngineType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeechEngineType.swift; sourceTree = "<group>"; };
 		CE3D85301AE537AFFAFE8462 /* URLInputView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLInputView.swift; sourceTree = "<group>"; };
 		D47C7E812E533483E3575157 /* ReaderViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReaderViewModel.swift; sourceTree = "<group>"; };
+		D62C2E20837FF349BDF384C6 /* SherpaOnnxModelStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SherpaOnnxModelStore.swift; sourceTree = "<group>"; };
+		DF66A3444EACB04D82B567D1 /* SherpaModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SherpaModel.swift; sourceTree = "<group>"; };
+		E4B540C5F2A13DB79A2DA761 /* SherpaOnnx */ = {isa = PBXFileReference; lastKnownFileType = folder; name = SherpaOnnx; path = Vendor/SherpaOnnx; sourceTree = SOURCE_ROOT; };
+		F10DBDD1D16ABF83E1CDBE34 /* SherpaSpeechService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SherpaSpeechService.swift; sourceTree = "<group>"; };
 		F67E8BCCCC1EE6181DBD3E20 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		4D469DD0842962F61DD0F082 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CB8B260CE3322A7C339A321B /* SWCompression in Frameworks */,
+				F70FF2609AFB7083731EFAE5 /* SherpaOnnx in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
 		13CC6B8957130FCBEA84513E /* Views */ = {
@@ -86,6 +115,8 @@
 				3CEEEC11DDCB80D6006DF829 /* PlaybackControlsView.swift */,
 				0C96FA06FFF40C100CDE678F /* ReaderWebViews.swift */,
 				A6A865223BB056996BF10106 /* SelectableTextView.swift */,
+				4CA63389F895AB182DAAC91E /* SettingsView.swift */,
+				ABEFF49161B4A0C73B5C131B /* SherpaModelsView.swift */,
 				C9565D6B189EAFA8762A49A9 /* TableOfContentsView.swift */,
 				CE3D85301AE537AFFAFE8462 /* URLInputView.swift */,
 				7D1B5BE16D7D801CA175C010 /* VoiceSettingsView.swift */,
@@ -93,9 +124,18 @@
 			path = Views;
 			sourceTree = "<group>";
 		};
+		26C65DCC849156F33CA59631 /* Packages */ = {
+			isa = PBXGroup;
+			children = (
+				E4B540C5F2A13DB79A2DA761 /* SherpaOnnx */,
+			);
+			name = Packages;
+			sourceTree = "<group>";
+		};
 		2EDC83145A2490A27CAEFC64 = {
 			isa = PBXGroup;
 			children = (
+				26C65DCC849156F33CA59631 /* Packages */,
 				EEE9708EF516A8DC9C80141B /* ShareExtension */,
 				6485B95DE3FAB8C9147F3CD2 /* URLReader */,
 				DB907875E70226678E207DAE /* Products */,
@@ -129,6 +169,9 @@
 			isa = PBXGroup;
 			children = (
 				C55EFAD3E6251CA3C173E771 /* ContentExtractor.swift */,
+				D62C2E20837FF349BDF384C6 /* SherpaOnnxModelStore.swift */,
+				411C7D264E56E015DCA95DF6 /* SherpaOnnxRuntime.swift */,
+				F10DBDD1D16ABF83E1CDBE34 /* SherpaSpeechService.swift */,
 				50FC8F82C631ABEF4B11E5DE /* SpeechService.swift */,
 			);
 			path = Services;
@@ -140,6 +183,8 @@
 				4D54287956AF94ECD5D699EF /* Article.swift */,
 				B297243EF5ABBC553443E7E1 /* ReaderMode.swift */,
 				CA5167FDD71D6AA5130C11D0 /* RecentArticle.swift */,
+				DF66A3444EACB04D82B567D1 /* SherpaModel.swift */,
+				CD3BF8A9AF584A00DF28729A /* SpeechEngineType.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -172,6 +217,7 @@
 			buildPhases = (
 				57AC08FEA3C81FEB50B3F3DF /* Sources */,
 				B65FE1469EA92AB2EB95A504 /* Resources */,
+				4D469DD0842962F61DD0F082 /* Frameworks */,
 				71CFF547F1B280064FFAB43C /* Embed Foundation Extensions */,
 			);
 			buildRules = (
@@ -181,6 +227,8 @@
 			);
 			name = URLReader;
 			packageProductDependencies = (
+				AF5EDBA8F97DD3A42C02584F /* SWCompression */,
+				8BC79544F2C7301DB62305CE /* SherpaOnnx */,
 			);
 			productName = URLReader;
 			productReference = C7FB69FBA56BBFE703C27994 /* URLReader.app */;
@@ -232,6 +280,10 @@
 			);
 			mainGroup = 2EDC83145A2490A27CAEFC64;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				1887E6FDF11F913EB57CEFC7 /* XCRemoteSwiftPackageReference "SWCompression" */,
+				2428990A0D33A8CB5E6A1FB4 /* XCLocalSwiftPackageReference "Vendor/SherpaOnnx" */,
+			);
 			preferredProjectObjectVersion = 77;
 			projectDirPath = "";
 			projectRoot = "";
@@ -268,6 +320,13 @@
 				3E540ED61B4201D7D9A2CF0D /* ReaderWebViews.swift in Sources */,
 				3F675CAE5D4F32F289CB9EC3 /* RecentArticle.swift in Sources */,
 				42E899370C769AEF73485126 /* SelectableTextView.swift in Sources */,
+				369BCB84996C0761D5BC3614 /* SettingsView.swift in Sources */,
+				C475AED55F3C68ECD11E8E7A /* SherpaModel.swift in Sources */,
+				AA5DC2AAF2312CD69B1E5C84 /* SherpaModelsView.swift in Sources */,
+				EE2D6746B5D8A6C25FC6F919 /* SherpaOnnxModelStore.swift in Sources */,
+				E812E10A7DFB94F56B4D3DD0 /* SherpaOnnxRuntime.swift in Sources */,
+				7A01D4539DBB5AC00DF959FA /* SherpaSpeechService.swift in Sources */,
+				C8CCC1356282B058EB2F4E44 /* SpeechEngineType.swift in Sources */,
 				159DAE5957C13455D1886750 /* SpeechService.swift in Sources */,
 				9D0A51B7F445CE77453A29A4 /* TableOfContentsView.swift in Sources */,
 				7BA4F38F2580363F8C4201BE /* URLInputView.swift in Sources */,
@@ -563,6 +622,36 @@
 			defaultConfigurationName = Debug;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		2428990A0D33A8CB5E6A1FB4 /* XCLocalSwiftPackageReference "Vendor/SherpaOnnx" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = Vendor/SherpaOnnx;
+		};
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		1887E6FDF11F913EB57CEFC7 /* XCRemoteSwiftPackageReference "SWCompression" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/tsolomko/SWCompression.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 4.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		8BC79544F2C7301DB62305CE /* SherpaOnnx */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = SherpaOnnx;
+		};
+		AF5EDBA8F97DD3A42C02584F /* SWCompression */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 1887E6FDF11F913EB57CEFC7 /* XCRemoteSwiftPackageReference "SWCompression" */;
+			productName = SWCompression;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 7C15DF92AC5C315365C97B64 /* Project object */;
 }

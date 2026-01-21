@@ -172,6 +172,14 @@ struct URLInputView: View {
         } message: {
             Text("This also removes all cached article data.")
         }
+        .alert("Error", isPresented: Binding(
+            get: { viewModel.showError && !viewModel.showArticle },
+            set: { if !$0 { viewModel.showError = false } }
+        )) {
+            Button("OK", role: .cancel) {}
+        } message: {
+            Text(viewModel.errorMessage ?? "An unknown error occurred")
+        }
     }
 
     private var recentHeader: some View {

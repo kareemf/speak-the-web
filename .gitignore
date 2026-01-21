@@ -121,6 +121,10 @@ TestResults/
 .env.*
 !.env.example
 
+# Sherpa-onnx local package build outputs
+Vendor/SherpaOnnx/build/
+Vendor/SherpaOnnx/Artifacts/
+
 # Secrets and credentials
 *.p12
 *.cer

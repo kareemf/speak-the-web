@@ -1,0 +1,474 @@
+import Foundation
+import AVFoundation
+import SherpaOnnx
+
+final class SherpaSpeechService: ObservableObject {
+    @Published var isPlaying: Bool = false
+    @Published var isPaused: Bool = false
+    @Published var currentPosition: Int = 0
+    @Published var progress: Double = 0.0
+    @Published var isPreparing: Bool = false
+    @Published var generationPhase: String?
+    @Published var lastErrorMessage: String?
+
+    var isFinished: Bool {
+        progress >= 1.0 && !isPlaying && !isPaused
+    }
+
+    private let engine = AVAudioEngine()
+    private let playerNode = AVAudioPlayerNode()
+    private let timePitch = AVAudioUnitTimePitch()
+    private let instanceID = UUID()
+    private let generationLock = NSLock()
+    private var generationInFlight = false
+    private var audioFile: AVAudioFile?
+    private var audioFileURL: URL?
+    private var totalFrames: AVAudioFramePosition = 0
+    private var startFrame: AVAudioFramePosition = 0
+    private var progressTimer: Timer?
+    private let workQueue = DispatchQueue(label: "SherpaSpeechService")
+    private let fileManager = FileManager.default
+
+    private var text: String = ""
+    private var textLength: Int = 0
+    private var modelRecord: SherpaModelRecord?
+    private var shouldAutoPlayAfterPrepare = false
+    private var speed: Float = 1.0
+    private var currentGenerationID: UUID?
+    private var generationTimeoutWorkItem: DispatchWorkItem?
+
+    init() {
+        print("[Sherpa] Init service \(instanceID.uuidString)")
+        engine.attach(playerNode)
+        engine.attach(timePitch)
+        engine.connect(playerNode, to: timePitch, format: nil)
+        engine.connect(timePitch, to: engine.mainMixerNode, format: nil)
+        timePitch.rate = speed
+        configureAudioSession()
+        try? engine.start()
+    }
+
+    func updateModel(record: SherpaModelRecord?) {
+        if record?.id != modelRecord?.id {
+            stop()
+            clearAudio()
+        }
+        modelRecord = record
+    }
+
+    func loadContent(_ text: String) {
+        stop()
+        self.text = text
+        self.textLength = text.count
+        currentPosition = 0
+        progress = 0.0
+        clearAudio()
+    }
+
+    func togglePlayPause() {
+        print("[Sherpa] togglePlayPause (isPreparing=\(isPreparing), isPlaying=\(isPlaying), isPaused=\(isPaused))")
+        if isPreparing {
+            return
+        }
+        if isPlaying {
+            pause()
+        } else {
+            play()
+        }
+    }
+
+    func play() {
+        print("[Sherpa] play (isPreparing=\(isPreparing), isPlaying=\(isPlaying), isPaused=\(isPaused), hasAudio=\(audioFile != nil))")
+        guard !isPreparing else { return }
+        if isPaused {
+            playerNode.play()
+            isPaused = false
+            isPlaying = true
+            startProgressTimer()
+            return
+        }
+
+        guard !isPlaying else { return }
+
+        if audioFile == nil {
+            shouldAutoPlayAfterPrepare = true
+            prepareAudio()
+            return
+        }
+
+        startPlayback()
+    }
+
+    func pause() {
+        guard isPlaying else { return }
+        startFrame = currentFrame()
+        playerNode.pause()
+        isPlaying = false
+        isPaused = true
+        stopProgressTimer()
+        updateProgress(for: startFrame)
+    }
+
+    func stop() {
+        playerNode.stop()
+        isPlaying = false
+        isPaused = false
+        startFrame = 0
+        currentPosition = 0
+        progress = 0.0
+        resetGenerationState()
+        stopProgressTimer()
+    }
+
+    func skipForward(characters: Int = 500) {
+        seekTo(position: currentPosition + characters)
+    }
+
+    func skipBackward(characters: Int = 500) {
+        seekTo(position: currentPosition - characters)
+    }
+
+    func seekTo(position: Int) {
+        let clampedPosition = max(0, min(position, textLength))
+        currentPosition = clampedPosition
+        progress = textLength > 0 ? Double(clampedPosition) / Double(textLength) : 0
+
+        guard let audioFile, totalFrames > 0 else { return }
+
+        let targetFrame = AVAudioFramePosition(Double(totalFrames) * progress)
+        startFrame = max(0, min(targetFrame, totalFrames))
+
+        let wasPlaying = isPlaying
+        playerNode.stop()
+        scheduleFrom(startFrame)
+
+        if wasPlaying {
+            playerNode.play()
+        }
+    }
+
+    func setPosition(_ position: Int) {
+        let clampedPosition = max(0, min(position, textLength))
+        currentPosition = clampedPosition
+        progress = textLength > 0 ? Double(clampedPosition) / Double(textLength) : 0
+
+        guard totalFrames > 0 else { return }
+        let targetFrame = AVAudioFramePosition(Double(totalFrames) * progress)
+        startFrame = max(0, min(targetFrame, totalFrames))
+    }
+
+    func setRate(multiplier: Float) {
+        guard multiplier != speed else { return }
+        speed = multiplier
+        timePitch.rate = multiplier
+    }
+
+    private func prepareAudio() {
+        guard !isPreparing else {
+            print("[Sherpa] prepareAudio ignored: already preparing")
+            return
+        }
+        guard currentGenerationID == nil else {
+            print("[Sherpa] prepareAudio ignored: generation in progress")
+            return
+        }
+        guard let record = modelRecord else {
+            lastErrorMessage = "Select a Sherpa model before playback."
+            return
+        }
+        guard let tokensPath = record.tokensPath else {
+            lastErrorMessage = "Selected model is missing tokens.txt."
+            return
+        }
+        guard !text.isEmpty else { return }
+        guard beginGeneration() else {
+            print("[Sherpa] prepareAudio ignored: in-flight gate")
+            return
+        }
+
+        isPreparing = true
+        generationPhase = "Starting"
+        let startTime = Date()
+        let generationID = UUID()
+        currentGenerationID = generationID
+        print("[Sherpa] Generation ID \(generationID.uuidString)")
+        startGenerationWatchdog(for: generationID, timeout: generationTimeout(for: text.count))
+        print("[Sherpa] Starting generation for \(text.count) chars")
+
+        workQueue.async { [weak self] in
+            guard let self else { return }
+            do {
+                self.logPhase("Initializing model config", uiMessage: "Initializing model…", generationID: generationID)
+                print("[Sherpa] Checking model files")
+                guard fileManager.fileExists(atPath: record.modelPath) else {
+                    print("[Sherpa] Missing model file at \(record.modelPath)")
+                    throw SherpaSpeechError.missingModelFile("model")
+                }
+                guard fileManager.fileExists(atPath: tokensPath) else {
+                    print("[Sherpa] Missing tokens file at \(tokensPath)")
+                    throw SherpaSpeechError.missingModelFile("tokens")
+                }
+
+                print("[Sherpa] Resolving data dir")
+                let dataDir = self.dataDirPath(for: record)
+                var vitsConfig = sherpaOnnxOfflineTtsVitsModelConfig(
+                    model: record.modelPath,
+                    tokens: tokensPath,
+                    dataDir: dataDir
+                )
+                var modelConfig = sherpaOnnxOfflineTtsModelConfig(
+                    vits: vitsConfig,
+                    numThreads: 2,
+                    provider: "cpu"
+                )
+                var config = sherpaOnnxOfflineTtsConfig(model: modelConfig)
+
+                self.logPhase("Creating TTS instance", uiMessage: "Loading model…", generationID: generationID)
+                guard let tts = SherpaOnnxOfflineTtsWrapper(config: &config) else {
+                    throw SherpaSpeechError.invalidModelConfig
+                }
+                self.logPhase("Generating audio", uiMessage: "Generating audio…", generationID: generationID)
+                let generateStart = Date()
+                let audio = tts.generate(text: self.text, speed: 1.0)
+                let generateDuration = Date().timeIntervalSince(generateStart)
+                print("[Sherpa] Generated audio in \(String(format: "%.2f", generateDuration))s")
+                let samples = audio.samples
+
+                if samples.isEmpty {
+                    throw SherpaSpeechError.emptyAudio
+                }
+
+                self.logPhase("Writing audio", uiMessage: "Writing audio…", generationID: generationID)
+                let writeStart = Date()
+                let prepared = try self.writeAudio(samples: samples, sampleRate: Double(audio.sampleRate))
+                let writeDuration = Date().timeIntervalSince(writeStart)
+                print("[Sherpa] Wrote audio in \(String(format: "%.2f", writeDuration))s")
+
+                DispatchQueue.main.async {
+                    guard self.currentGenerationID == generationID else { return }
+                    self.cancelGenerationWatchdog()
+                    self.audioFile = prepared.file
+                    self.audioFileURL = prepared.url
+                    self.totalFrames = prepared.file.length
+                    self.startFrame = 0
+                    self.currentPosition = 0
+                    self.progress = 0.0
+                    self.isPreparing = false
+                    self.generationPhase = nil
+                    self.currentGenerationID = nil
+                    self.endGeneration(reason: "prepare-complete")
+
+                    let totalDuration = Date().timeIntervalSince(startTime)
+                    print("[Sherpa] Preparation finished in \(String(format: "%.2f", totalDuration))s")
+
+                    if self.shouldAutoPlayAfterPrepare {
+                        self.shouldAutoPlayAfterPrepare = false
+                        self.startPlayback()
+                    }
+                }
+            } catch {
+                DispatchQueue.main.async {
+                    guard self.currentGenerationID == generationID else { return }
+                    self.cancelGenerationWatchdog()
+                    self.isPreparing = false
+                    self.generationPhase = nil
+                    self.currentGenerationID = nil
+                    self.endGeneration(reason: "prepare-error")
+                    print("[Sherpa] Generation error: \(error.localizedDescription)")
+                    self.lastErrorMessage = error.localizedDescription
+                }
+            }
+        }
+    }
+
+    private func startPlayback() {
+        guard audioFile != nil else { return }
+        scheduleFrom(startFrame)
+        playerNode.play()
+        isPlaying = true
+        isPaused = false
+        startProgressTimer()
+    }
+
+    private func scheduleFrom(_ frame: AVAudioFramePosition) {
+        guard let audioFile else { return }
+        playerNode.stop()
+        let remainingFrames = max(0, audioFile.length - frame)
+        let frameCount = AVAudioFrameCount(remainingFrames)
+        print("[Sherpa] Scheduling playback from frame \(frame)")
+        playerNode.scheduleSegment(audioFile, startingFrame: frame, frameCount: frameCount, at: nil) { [weak self] in
+            DispatchQueue.main.async {
+                self?.finishPlayback()
+            }
+        }
+    }
+
+    private func finishPlayback() {
+        stopProgressTimer()
+        isPlaying = false
+        isPaused = false
+        currentPosition = textLength
+        progress = 1.0
+    }
+
+    private func currentFrame() -> AVAudioFramePosition {
+        guard let nodeTime = playerNode.lastRenderTime,
+              let playerTime = playerNode.playerTime(forNodeTime: nodeTime) else {
+            return startFrame
+        }
+        return startFrame + AVAudioFramePosition(playerTime.sampleTime)
+    }
+
+    private func updateProgress(for frame: AVAudioFramePosition) {
+        guard totalFrames > 0 else {
+            progress = 0.0
+            currentPosition = 0
+            return
+        }
+        let clampedFrame = max(0, min(frame, totalFrames))
+        progress = Double(clampedFrame) / Double(totalFrames)
+        currentPosition = Int(Double(textLength) * progress)
+    }
+
+    private func startProgressTimer() {
+        stopProgressTimer()
+        progressTimer = Timer.scheduledTimer(withTimeInterval: 0.2, repeats: true) { [weak self] _ in
+            guard let self else { return }
+            self.updateProgress(for: self.currentFrame())
+        }
+    }
+
+    private func stopProgressTimer() {
+        progressTimer?.invalidate()
+        progressTimer = nil
+    }
+
+    private func clearAudio() {
+        if let url = audioFileURL {
+            try? FileManager.default.removeItem(at: url)
+        }
+        audioFile = nil
+        audioFileURL = nil
+        totalFrames = 0
+        startFrame = 0
+    }
+
+    private func generationTimeout(for textCount: Int) -> TimeInterval {
+        let estimated = Double(textCount) * 0.03
+        return max(30.0, min(300.0, estimated))
+    }
+
+    private func startGenerationWatchdog(for generationID: UUID, timeout: TimeInterval) {
+        generationTimeoutWorkItem?.cancel()
+        let workItem = DispatchWorkItem { [weak self] in
+            guard let self else { return }
+            guard self.currentGenerationID == generationID else { return }
+            print("[Sherpa] Generation timed out")
+            self.isPreparing = false
+            self.generationPhase = nil
+            self.shouldAutoPlayAfterPrepare = false
+            self.currentGenerationID = nil
+            self.endGeneration(reason: "prepare-timeout")
+            self.lastErrorMessage = "Sherpa-onnx generation timed out. Try again with a shorter selection."
+        }
+        generationTimeoutWorkItem = workItem
+        DispatchQueue.main.asyncAfter(deadline: .now() + timeout, execute: workItem)
+    }
+
+    private func cancelGenerationWatchdog() {
+        generationTimeoutWorkItem?.cancel()
+        generationTimeoutWorkItem = nil
+    }
+
+    private func resetGenerationState() {
+        endGeneration(reason: "reset")
+        currentGenerationID = nil
+        generationPhase = nil
+        isPreparing = false
+        cancelGenerationWatchdog()
+    }
+
+    private func logPhase(_ message: String, uiMessage: String, generationID: UUID) {
+        print("[Sherpa] \(message)")
+        DispatchQueue.main.async {
+            guard self.currentGenerationID == generationID else { return }
+            self.generationPhase = uiMessage
+        }
+    }
+
+    private func beginGeneration() -> Bool {
+        generationLock.lock()
+        defer { generationLock.unlock() }
+        if generationInFlight {
+            return false
+        }
+        generationInFlight = true
+        return true
+    }
+
+    private func endGeneration(reason: String) {
+        generationLock.lock()
+        generationInFlight = false
+        generationLock.unlock()
+        print("[Sherpa] Generation cleared (\(reason))")
+    }
+
+    private func writeAudio(samples: [Float], sampleRate: Double) throws -> (file: AVAudioFile, url: URL) {
+        let format = AVAudioFormat(standardFormatWithSampleRate: sampleRate, channels: 1)!
+        let frameCount = AVAudioFrameCount(samples.count)
+        let buffer = AVAudioPCMBuffer(pcmFormat: format, frameCapacity: frameCount)!
+        buffer.frameLength = frameCount
+
+        if let channelData = buffer.floatChannelData?.pointee {
+            samples.withUnsafeBufferPointer { bufferPointer in
+                channelData.assign(from: bufferPointer.baseAddress!, count: samples.count)
+            }
+        }
+
+        let cacheDir = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask)[0]
+        let fileURL = cacheDir.appendingPathComponent("sherpa-tts-\(UUID().uuidString).caf")
+        let file = try AVAudioFile(forWriting: fileURL, settings: format.settings)
+        try file.write(from: buffer)
+
+        let readFile = try AVAudioFile(forReading: fileURL)
+        return (file: readFile, url: fileURL)
+    }
+
+    private func configureAudioSession() {
+        do {
+            let audioSession = AVAudioSession.sharedInstance()
+            try audioSession.setCategory(.playback, mode: .spokenAudio, options: [.duckOthers])
+            try audioSession.setActive(true)
+        } catch {
+            print("Failed to configure audio session: \(error)")
+        }
+    }
+
+    private func dataDirPath(for record: SherpaModelRecord) -> String {
+        let root = URL(fileURLWithPath: record.localDirectory, isDirectory: true)
+        guard let enumerator = fileManager.enumerator(at: root, includingPropertiesForKeys: nil) else {
+            return ""
+        }
+        for case let fileURL as URL in enumerator where fileURL.lastPathComponent == "phontab" {
+            return fileURL.deletingLastPathComponent().path
+        }
+        return ""
+    }
+}
+
+private enum SherpaSpeechError: LocalizedError {
+    case emptyAudio
+    case missingModelFile(String)
+    case invalidModelConfig
+
+    var errorDescription: String? {
+        switch self {
+        case .emptyAudio:
+            return "Sherpa-onnx returned empty audio."
+        case .missingModelFile(let name):
+            return "Sherpa-onnx model is missing \(name) file. Re-download the model in Settings."
+        case .invalidModelConfig:
+            return "Sherpa-onnx failed to initialize with the selected model."
+        }
+    }
+}

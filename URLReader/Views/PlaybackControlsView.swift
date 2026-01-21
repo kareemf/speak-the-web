@@ -8,9 +8,9 @@ struct PlaybackControlsView: View {
 
     /// Determines the appropriate icon for the play button
     private var playButtonIcon: String {
-        if viewModel.speechService.isPlaying {
+        if viewModel.playbackIsPlaying {
             return "pause.circle.fill"
-        } else if viewModel.speechService.isFinished {
+        } else if viewModel.playbackIsFinished {
             return "arrow.counterclockwise.circle.fill"
         } else {
             return "play.circle.fill"
@@ -18,9 +18,17 @@ struct PlaybackControlsView: View {
     }
 
     var body: some View {
-        let displayProgress = isDragging ? dragProgress : viewModel.speechService.progress
+        let displayProgress = isDragging ? dragProgress : viewModel.playbackProgress
 
         VStack(spacing: 12) {
+            if viewModel.isGeneratingAudio {
+                let phaseText = viewModel.sherpaGenerationPhase ?? "Generating audio…"
+                VStack(spacing: 6) {
+                    ProgressView(phaseText)
+                        .font(.caption)
+                }
+            }
+
             // Progress bar
             VStack(spacing: 4) {
                 GeometryReader { geometry in
@@ -59,7 +67,7 @@ struct PlaybackControlsView: View {
                                 isDragging = false
                                 if let article = viewModel.article {
                                     let position = Int(Double(article.content.count) * clampedPercentage)
-                                    viewModel.speechService.seekTo(position: position)
+                                    viewModel.seekTo(position: position)
                                 }
                             }
                     )
@@ -80,24 +88,30 @@ struct PlaybackControlsView: View {
             // Main controls
             HStack(spacing: 32) {
                 // Skip backward
-                Button(action: { viewModel.speechService.skipBackward() }) {
+                Button(action: { viewModel.skipBackward() }) {
                     Image(systemName: "gobackward.15")
                         .font(.title2)
                 }
 
                 // Play/Pause/Replay
-                Button(action: { viewModel.speechService.togglePlayPause() }) {
-                    Image(systemName: playButtonIcon)
-                        .font(.system(size: 56))
+                Button(action: { viewModel.togglePlayPause() }) {
+                    ZStack {
+                        Image(systemName: playButtonIcon)
+                            .font(.system(size: 56))
+                        if viewModel.isGeneratingAudio {
+                            ProgressView()
+                        }
+                    }
                 }
 
                 // Skip forward
-                Button(action: { viewModel.speechService.skipForward() }) {
+                Button(action: { viewModel.skipForward() }) {
                     Image(systemName: "goforward.30")
                         .font(.title2)
                 }
             }
             .foregroundColor(.accentColor)
+            .disabled(viewModel.isGeneratingAudio)
 
             // Speed control
             HStack {
@@ -113,10 +127,12 @@ struct PlaybackControlsView: View {
                 .pickerStyle(.segmented)
             }
             .padding(.horizontal)
+            .disabled(viewModel.isGeneratingAudio)
 
         }
         .padding()
         .background(Color(UIColor.secondarySystemGroupedBackground))
+        .allowsHitTesting(!viewModel.isGeneratingAudio)
     }
 }
 
