@@ -106,7 +106,7 @@ struct PlaybackControlsView: View {
 
                 // Skip forward
                 Button(action: { viewModel.skipForward() }) {
-                    Image(systemName: "goforward.30")
+                    Image(systemName: "goforward.15")
                         .font(.title2)
                 }
             }

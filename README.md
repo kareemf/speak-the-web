@@ -7,7 +7,7 @@ An iOS app that reads web pages aloud using text-to-speech. Share a URL from Saf
 ### Core Features
 - **URL Input**: Paste or type any URL to fetch article content
 - **Safari Share Extension**: Share directly from Safari's share sheet ("Read Aloud")
-- **Text-to-Speech**: Using iOS's AVSpeechSynthesizer
+- **Text-to-Speech**: Choose iOS AVSpeechSynthesizer voices or sherpa-onnx with Piper voices
 - **Playback Controls**:
   - Play / Pause / Stop / Skip
   - Seekable progress bar
@@ -35,6 +35,29 @@ An iOS app that reads web pages aloud using text-to-speech. Share a URL from Saf
    ```bash
    xcode-select --install
    ```
+
+### Install Sherpa-ONNX (Local SwiftPM Package)
+
+[Sherpa-ONNX](https://github.com/k2-fsa/sherpa-onnx) is wrapped as a local SwiftPM package under `Vendor/SherpaOnnx`. It relies on an upstream build script that produces two xcframeworks (`sherpa-onnx.xcframework` and `onnxruntime.xcframework`) and a thin wrapper script to copy them into `Vendor/SherpaOnnx/Artifacts`. Build failures are expected if the artifacts are missing.
+
+#### Requirements
+
+```bash
+brew install wget cmake
+```
+
+#### Build Sherpa-onnx xcframeworks
+
+```bash
+./Vendor/SherpaOnnx/Scripts/build-ios.sh
+```
+
+To update the upstream clone, remove it and re-run the wrapper to fetch the original `build-ios.sh`:
+
+```bash
+rm -rf Vendor/SherpaOnnx/build/sherpa-onnx
+./Vendor/SherpaOnnx/Scripts/build-ios.sh
+```
 
 ### Building from Command Line
 
@@ -120,29 +143,6 @@ git config core.hooksPath .githooks
 The pre-commit hook will fail (with actionable messaging) if any tool is missing or surfaces issues. Fix them (e.g., run `swiftformat .`, resolve lint warnings, rerun XcodeGen) and reattempt the commit. Formatting fixes performed by the hook are automatically staged, so you can simply re-run your commit afterward.
 
 
-### Install Sherpa-ONNX (Local SwiftPM Package)
-
-[Sherpa-ONNX](https://github.com/k2-fsa/sherpa-onnx) is wrapped as a local SwiftPM package under `Vendor/SherpaOnnx`. It relies on an upstream build script that produces two xcframeworks (`sherpa-onnx.xcframework` and `onnxruntime.xcframework`) and a thin wrapper script to copy them into `Vendor/SherpaOnnx/Artifacts`.
-
-#### Requirements
-
-```bash
-brew install wget cmake
-```
-
-#### Build Sherpa-onnx xcframeworks
-
-```bash
-./Vendor/SherpaOnnx/Scripts/build-ios.sh
-```
-
-To update the upstream clone, remove it and re-run the wrapper to fetch the original `build-ios.sh`:
-
-```bash
-rm -rf Vendor/SherpaOnnx/build/sherpa-onnx
-./Vendor/SherpaOnnx/Scripts/build-ios.sh
-```
-
 ## Testing
 
 ### Running Tests from Command Line
@@ -169,37 +169,6 @@ xcodebuild test \
 2. Press `Cmd + U` to run all tests
 
 
-## Project Structure
-
-```
-URLReader/
-├── URLReader.xcodeproj/          # Xcode project file
-├── URLReader/                    # Main app target
-│   ├── URLReaderApp.swift        # App entry point & deep link handling
-│   ├── Info.plist                # App configuration
-│   ├── URLReader.entitlements    # App Groups entitlement
-│   ├── Models/
-│   │   └── Article.swift         # Article & section data models
-│   ├── Services/
-│   │   ├── ContentExtractor.swift # HTML fetching & parsing
-│   │   └── SpeechService.swift    # Text-to-speech engine
-│   ├── ViewModels/
-│   │   └── ReaderViewModel.swift  # Main view model
-│   ├── Views/
-│   │   ├── ContentView.swift      # Root view
-│   │   ├── URLInputView.swift     # URL input screen
-│   │   ├── ArticleReaderView.swift # Article display
-│   │   ├── PlaybackControlsView.swift # Playback UI
-│   │   ├── TableOfContentsView.swift  # TOC navigation
-│   │   └── VoiceSettingsView.swift    # Voice/speed settings
-│   └── Assets.xcassets/          # App icons & colors
-├── ShareExtension/               # Safari Share Extension target
-│   ├── ShareViewController.swift  # Share UI controller
-│   ├── Info.plist                # Extension configuration
-│   └── ShareExtension.entitlements # App Groups entitlement
-└── README.md                     # This file
-```
-
 ## Architecture
 
 ### Design Pattern
@@ -213,6 +182,8 @@ URLReader/
 |-----------|----------------|
 | `ContentExtractor` | Fetches URLs, parses HTML, extracts text and headings |
 | `SpeechService` | Wraps AVSpeechSynthesizer, manages playback state |
+| `SherpaSpeechService` | Generates audio with sherpa-onnx and handles playback |
+| `SherpaOnnxModelStore` | Downloads, extracts, and tracks Piper model files |
 | `ReaderViewModel` | Coordinates UI state, handles user actions |
 | `ShareViewController` | Receives URLs from Safari, launches main app |
 
@@ -220,7 +191,7 @@ URLReader/
 ```
 Safari → ShareExtension → App Groups → URLReaderApp → ReaderViewModel
                                               ↓
-URL Input → ContentExtractor → Article → SpeechService → Audio Output
+URL Input → ContentExtractor → Article → SpeechService/SherpaSpeechService → Audio Output
 ```
 
 ## Safari Share Extension

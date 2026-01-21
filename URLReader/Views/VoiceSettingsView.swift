@@ -4,21 +4,10 @@ import AVFoundation
 /// View for selecting voice and adjusting speech settings
 struct AVSpeechSettingsView: View {
     @ObservedObject var viewModel: ReaderViewModel
+    @State private var previewSynthesizer = AVSpeechSynthesizer()
 
     var body: some View {
         List {
-            // Speed Section
-            Section("Playback Speed") {
-                Picker("Speed", selection: $viewModel.selectedRateIndex) {
-                    ForEach(0..<SpeechService.ratePresets.count, id: \.self) { index in
-                        Text(SpeechService.ratePresets[index].name)
-                            .tag(index)
-                    }
-                }
-                .pickerStyle(.wheel)
-                .frame(height: 120)
-            }
-
             // Voice Section
             Section("Voice") {
                 ForEach(groupedVoices.keys.sorted(), id: \.self) { language in
@@ -42,23 +31,6 @@ struct AVSpeechSettingsView: View {
                     Label("Preview Current Voice", systemImage: "play.circle")
                 }
             }
-
-            // Info Section
-            Section {
-                HStack {
-                    Text("Current Voice")
-                    Spacer()
-                    Text(viewModel.speechService.selectedVoice?.name ?? "Default")
-                        .foregroundColor(.secondary)
-                }
-
-                HStack {
-                    Text("Current Speed")
-                    Spacer()
-                    Text(viewModel.currentRateName)
-                        .foregroundColor(.secondary)
-                }
-            }
         }
         .listStyle(.insetGrouped)
         .navigationTitle("AVSpeech")
@@ -77,13 +49,24 @@ struct AVSpeechSettingsView: View {
     }
 
     private func previewVoice() {
+        configurePreviewAudioSession()
         let previewText = "Hello! This is a preview of the selected voice at the current speed."
         let utterance = AVSpeechUtterance(string: previewText)
         utterance.voice = viewModel.speechService.selectedVoice
         utterance.rate = AVSpeechUtteranceDefaultSpeechRate * viewModel.currentRateMultiplier
 
-        let synthesizer = AVSpeechSynthesizer()
-        synthesizer.speak(utterance)
+        previewSynthesizer.stopSpeaking(at: .immediate)
+        previewSynthesizer.speak(utterance)
+    }
+
+    private func configurePreviewAudioSession() {
+        do {
+            let audioSession = AVAudioSession.sharedInstance()
+            try audioSession.setCategory(.playback, mode: .spokenAudio, options: [.duckOthers])
+            try audioSession.setActive(true)
+        } catch {
+            print("Failed to configure preview audio session: \(error)")
+        }
     }
 }
 
