@@ -15,12 +15,22 @@ class ReaderViewModel: ObservableObject {
     @Published var showError: Bool = false
     @Published var showTableOfContents: Bool = false
     @Published var showVoiceSettings: Bool = false
-    @Published var selectedRateIndex: Int = 2 // Default to 1x
+    @Published var showArticle: Bool = false
+    @Published var readerMode: ReaderMode = .text
+    @Published var selectedRateIndex: Int = 2 { // Default to 1x
+        didSet {
+            UserDefaults.standard.set(selectedRateIndex, forKey: "selectedRateIndex")
+        }
+    }
+    @Published var recentArticles: [RecentArticle] = []
+
+    private static let rateIndexKey = "selectedRateIndex"
 
     // MARK: - Services
 
     let speechService = SpeechService()
     private let contentExtractor = ContentExtractor()
+    private let recentArticlesManager = RecentArticlesManager()
 
     // MARK: - Computed Properties
 
@@ -61,12 +71,46 @@ class ReaderViewModel: ObservableObject {
     // MARK: - Initialization
 
     init() {
+        // Load recent articles
+        recentArticles = recentArticlesManager.load()
+
+        // Load persisted rate index
+        let savedRateIndex = UserDefaults.standard.integer(forKey: Self.rateIndexKey)
+        if savedRateIndex > 0 && savedRateIndex < SpeechService.ratePresets.count {
+            selectedRateIndex = savedRateIndex
+        }
+
+        // Apply the rate immediately
+        speechService.setRate(multiplier: currentRateMultiplier)
+
         // Observe rate changes
         $selectedRateIndex
             .dropFirst()
             .sink { [weak self] index in
                 guard let self = self else { return }
                 self.speechService.setRate(multiplier: self.currentRateMultiplier)
+            }
+            .store(in: &cancellables)
+
+        // Relay speech service updates so SwiftUI refreshes when playback/voice changes.
+        speechService.objectWillChange
+            .receive(on: RunLoop.main)
+            .sink { [weak self] _ in
+                self?.objectWillChange.send()
+            }
+            .store(in: &cancellables)
+
+        speechService.$currentPosition
+            .removeDuplicates()
+            .debounce(for: .seconds(1), scheduler: RunLoop.main)
+            .sink { [weak self] position in
+                guard let self = self, let article = self.article else { return }
+                self.recentArticles = self.recentArticlesManager.updateProgress(
+                    urlString: article.url.absoluteString,
+                    position: position,
+                    contentLength: article.content.count,
+                    wordCount: article.wordCount
+                )
             }
             .store(in: &cancellables)
     }
@@ -91,6 +135,11 @@ class ReaderViewModel: ObservableObject {
             let extractedArticle = try await contentExtractor.extract(from: urlInput)
             article = extractedArticle
             speechService.loadContent(extractedArticle.content)
+
+            // Save to recent articles
+            recentArticlesManager.save(extractedArticle)
+            recentArticles = recentArticlesManager.load()
+            showArticle = true
         } catch {
             errorMessage = error.localizedDescription
             showError = true
@@ -106,6 +155,7 @@ class ReaderViewModel: ObservableObject {
         urlInput = ""
         errorMessage = nil
         showError = false
+        showArticle = false
     }
 
     /// Navigates to a specific section
@@ -125,6 +175,52 @@ class ReaderViewModel: ObservableObject {
         Task {
             await fetchContent()
         }
+    }
+
+    /// Loads a recent article
+    func loadRecentArticle(_ recent: RecentArticle) {
+        if let cached = recentArticlesManager.loadCachedArticle(for: recent.url) {
+            let cachedArticle = Article(cached: cached)
+            article = cachedArticle
+            speechService.loadContent(cachedArticle.content)
+            if cached.lastPosition > 0 {
+                speechService.setPosition(cached.lastPosition)
+            }
+            showArticle = true
+            return
+        }
+
+        loadURL(recent.url)
+    }
+
+    /// Clears all recent articles
+    func clearRecentArticles() {
+        recentArticlesManager.clear()
+        recentArticles = []
+    }
+
+    /// Removes a recent article and clears its cached payload
+    func removeRecentArticle(_ recent: RecentArticle) {
+        recentArticles = recentArticlesManager.remove(urlString: recent.url)
+    }
+
+    func recentProgress(for recent: RecentArticle) -> Double {
+        guard recent.contentLength > 0 else { return 0.0 }
+        return min(1.0, max(0.0, Double(recent.lastPosition) / Double(recent.contentLength)))
+    }
+
+    func recentRemainingText(for recent: RecentArticle) -> String {
+        guard recent.wordCount > 0 else { return "—" }
+        let remainingProgress = 1.0 - recentProgress(for: recent)
+        let totalSeconds = Double(recent.wordCount) / (200.0 / 60.0) / Double(currentRateMultiplier)
+        let remainingSeconds = Int(totalSeconds * remainingProgress)
+        let minutes = remainingSeconds / 60
+        let seconds = remainingSeconds % 60
+        return String(format: "%d:%02d remaining", minutes, seconds)
+    }
+
+    func setReaderMode(_ mode: ReaderMode) {
+        readerMode = mode
     }
 }
 

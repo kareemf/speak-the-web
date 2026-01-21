@@ -3,44 +3,48 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 56;
+	objectVersion = 77;
 	objects = {
 
 /* Begin PBXBuildFile section */
-		A10000010000000000000001 /* URLReaderApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000010000000000000001 /* URLReaderApp.swift */; };
-		A10000020000000000000002 /* Article.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000020000000000000002 /* Article.swift */; };
-		A10000030000000000000003 /* ContentExtractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000030000000000000003 /* ContentExtractor.swift */; };
-		A10000040000000000000004 /* SpeechService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000040000000000000004 /* SpeechService.swift */; };
-		A10000050000000000000005 /* ReaderViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000050000000000000005 /* ReaderViewModel.swift */; };
-		A10000060000000000000006 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000060000000000000006 /* ContentView.swift */; };
-		A10000070000000000000007 /* URLInputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000070000000000000007 /* URLInputView.swift */; };
-		A10000080000000000000008 /* ArticleReaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000080000000000000008 /* ArticleReaderView.swift */; };
-		A10000090000000000000009 /* PlaybackControlsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000090000000000000009 /* PlaybackControlsView.swift */; };
-		A1000010000000000000000A /* TableOfContentsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000010000000000000000A /* TableOfContentsView.swift */; };
-		A1000011000000000000000B /* VoiceSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000011000000000000000B /* VoiceSettingsView.swift */; };
-		A1000012000000000000000C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A2000012000000000000000C /* Assets.xcassets */; };
-		C10000010000000000000001 /* ShareViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C20000010000000000000001 /* ShareViewController.swift */; };
-		C10000020000000000000002 /* URLReaderShare.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = C30000000000000000000001 /* URLReaderShare.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		159DAE5957C13455D1886750 /* SpeechService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50FC8F82C631ABEF4B11E5DE /* SpeechService.swift */; };
+		16B29CACA2456DA2D2C97CFD /* ReaderMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = B297243EF5ABBC553443E7E1 /* ReaderMode.swift */; };
+		3E540ED61B4201D7D9A2CF0D /* ReaderWebViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C96FA06FFF40C100CDE678F /* ReaderWebViews.swift */; };
+		3E673A92CFC2A3F0D03821AB /* PlaybackControlsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CEEEC11DDCB80D6006DF829 /* PlaybackControlsView.swift */; };
+		3F675CAE5D4F32F289CB9EC3 /* RecentArticle.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA5167FDD71D6AA5130C11D0 /* RecentArticle.swift */; };
+		42E899370C769AEF73485126 /* SelectableTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6A865223BB056996BF10106 /* SelectableTextView.swift */; };
+		46B0F985B66CF9029B6B0191 /* VoiceSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D1B5BE16D7D801CA175C010 /* VoiceSettingsView.swift */; };
+		58CBFE5CD8CD806F6C1D819F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5186DC41F065782B3102EC7B /* Assets.xcassets */; };
+		6CBDFF460F01EF17E3426558 /* Article.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D54287956AF94ECD5D699EF /* Article.swift */; };
+		7BA4F38F2580363F8C4201BE /* URLInputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE3D85301AE537AFFAFE8462 /* URLInputView.swift */; };
+		9B6AA94961884E8F10FBAEEA /* URLReaderApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2432B3BE5277F79CD46DB22E /* URLReaderApp.swift */; };
+		9D0A51B7F445CE77453A29A4 /* TableOfContentsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9565D6B189EAFA8762A49A9 /* TableOfContentsView.swift */; };
+		C1708AC40A3B767426114486 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F67E8BCCCC1EE6181DBD3E20 /* ContentView.swift */; };
+		C625B8A508CAD99A05EECC64 /* ShareViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9E19C8D977CAB04ECC28FBB /* ShareViewController.swift */; };
+		DB58FC9753C33F6AD9ED8770 /* URLReaderShare.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 47266E86AB3F17B599224D74 /* URLReaderShare.appex */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		DDF02680D0045FED88EB78C9 /* ContentExtractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = C55EFAD3E6251CA3C173E771 /* ContentExtractor.swift */; };
+		DF7D9A990AE670F316BFE40B /* ReaderViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D47C7E812E533483E3575157 /* ReaderViewModel.swift */; };
+		FD45E02576D5011E5A92E0D6 /* ArticleReaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FB56B74B8A60502F7C15D7B /* ArticleReaderView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		C40000000000000000000001 /* PBXContainerItemProxy */ = {
+		78CE91A982D150E30BD8C80D /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = A90000000000000000000001 /* Project object */;
+			containerPortal = 7C15DF92AC5C315365C97B64 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = C60000000000000000000001;
+			remoteGlobalIDString = DDB7C2576E8BD154B766E99B;
 			remoteInfo = URLReaderShare;
 		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		C50000000000000000000001 /* Embed Foundation Extensions */ = {
+		71CFF547F1B280064FFAB43C /* Embed Foundation Extensions */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
-				C10000020000000000000002 /* URLReaderShare.appex in Embed Foundation Extensions */,
+				DB58FC9753C33F6AD9ED8770 /* URLReaderShare.appex in Embed Foundation Extensions */,
 			);
 			name = "Embed Foundation Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -48,122 +52,113 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		A20000010000000000000001 /* URLReaderApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLReaderApp.swift; sourceTree = "<group>"; };
-		A20000020000000000000002 /* Article.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Article.swift; sourceTree = "<group>"; };
-		A20000030000000000000003 /* ContentExtractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentExtractor.swift; sourceTree = "<group>"; };
-		A20000040000000000000004 /* SpeechService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeechService.swift; sourceTree = "<group>"; };
-		A20000050000000000000005 /* ReaderViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReaderViewModel.swift; sourceTree = "<group>"; };
-		A20000060000000000000006 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
-		A20000070000000000000007 /* URLInputView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLInputView.swift; sourceTree = "<group>"; };
-		A20000080000000000000008 /* ArticleReaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleReaderView.swift; sourceTree = "<group>"; };
-		A20000090000000000000009 /* PlaybackControlsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaybackControlsView.swift; sourceTree = "<group>"; };
-		A2000010000000000000000A /* TableOfContentsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableOfContentsView.swift; sourceTree = "<group>"; };
-		A2000011000000000000000B /* VoiceSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceSettingsView.swift; sourceTree = "<group>"; };
-		A2000012000000000000000C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		A2000013000000000000000D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		A2000014000000000000000E /* URLReader.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = URLReader.entitlements; sourceTree = "<group>"; };
-		A30000000000000000000001 /* URLReader.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = URLReader.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		C20000010000000000000001 /* ShareViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareViewController.swift; sourceTree = "<group>"; };
-		C20000020000000000000002 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		C20000030000000000000003 /* ShareExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ShareExtension.entitlements; sourceTree = "<group>"; };
-		C30000000000000000000001 /* URLReaderShare.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = URLReaderShare.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		00450E9C1A5BCAAFD9D4E9C8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		0C96FA06FFF40C100CDE678F /* ReaderWebViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReaderWebViews.swift; sourceTree = "<group>"; };
+		2432B3BE5277F79CD46DB22E /* URLReaderApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLReaderApp.swift; sourceTree = "<group>"; };
+		39336359D162C1447E2E0BDC /* ShareExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ShareExtension.entitlements; sourceTree = "<group>"; };
+		3B9C649F433619C0A3DD1E75 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		3CEEEC11DDCB80D6006DF829 /* PlaybackControlsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaybackControlsView.swift; sourceTree = "<group>"; };
+		3FB56B74B8A60502F7C15D7B /* ArticleReaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleReaderView.swift; sourceTree = "<group>"; };
+		47266E86AB3F17B599224D74 /* URLReaderShare.appex */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = "wrapper.app-extension"; path = URLReaderShare.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		4D54287956AF94ECD5D699EF /* Article.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Article.swift; sourceTree = "<group>"; };
+		50FC8F82C631ABEF4B11E5DE /* SpeechService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeechService.swift; sourceTree = "<group>"; };
+		5186DC41F065782B3102EC7B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		7D1B5BE16D7D801CA175C010 /* VoiceSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceSettingsView.swift; sourceTree = "<group>"; };
+		A6A865223BB056996BF10106 /* SelectableTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectableTextView.swift; sourceTree = "<group>"; };
+		ABC219EE441A6774D031D327 /* URLReader.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = URLReader.entitlements; sourceTree = "<group>"; };
+		B297243EF5ABBC553443E7E1 /* ReaderMode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReaderMode.swift; sourceTree = "<group>"; };
+		C55EFAD3E6251CA3C173E771 /* ContentExtractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentExtractor.swift; sourceTree = "<group>"; };
+		C7FB69FBA56BBFE703C27994 /* URLReader.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = URLReader.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		C9565D6B189EAFA8762A49A9 /* TableOfContentsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableOfContentsView.swift; sourceTree = "<group>"; };
+		C9E19C8D977CAB04ECC28FBB /* ShareViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareViewController.swift; sourceTree = "<group>"; };
+		CA5167FDD71D6AA5130C11D0 /* RecentArticle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentArticle.swift; sourceTree = "<group>"; };
+		CE3D85301AE537AFFAFE8462 /* URLInputView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLInputView.swift; sourceTree = "<group>"; };
+		D47C7E812E533483E3575157 /* ReaderViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReaderViewModel.swift; sourceTree = "<group>"; };
+		F67E8BCCCC1EE6181DBD3E20 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
-/* Begin PBXFrameworksBuildPhase section */
-		A40000000000000000000001 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		C70000000000000000000001 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXFrameworksBuildPhase section */
-
 /* Begin PBXGroup section */
-		A50000000000000000000001 = {
+		13CC6B8957130FCBEA84513E /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				A50000010000000000000002 /* URLReader */,
-				C80000000000000000000001 /* ShareExtension */,
-				A50000020000000000000003 /* Products */,
-			);
-			sourceTree = "<group>";
-		};
-		A50000010000000000000002 /* URLReader */ = {
-			isa = PBXGroup;
-			children = (
-				A20000010000000000000001 /* URLReaderApp.swift */,
-				A50000030000000000000004 /* Models */,
-				A50000040000000000000005 /* Services */,
-				A50000050000000000000006 /* ViewModels */,
-				A50000060000000000000007 /* Views */,
-				A2000012000000000000000C /* Assets.xcassets */,
-				A2000013000000000000000D /* Info.plist */,
-				A2000014000000000000000E /* URLReader.entitlements */,
-			);
-			path = URLReader;
-			sourceTree = "<group>";
-		};
-		A50000020000000000000003 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				A30000000000000000000001 /* URLReader.app */,
-				C30000000000000000000001 /* URLReaderShare.appex */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
-		A50000030000000000000004 /* Models */ = {
-			isa = PBXGroup;
-			children = (
-				A20000020000000000000002 /* Article.swift */,
-			);
-			path = Models;
-			sourceTree = "<group>";
-		};
-		A50000040000000000000005 /* Services */ = {
-			isa = PBXGroup;
-			children = (
-				A20000030000000000000003 /* ContentExtractor.swift */,
-				A20000040000000000000004 /* SpeechService.swift */,
-			);
-			path = Services;
-			sourceTree = "<group>";
-		};
-		A50000050000000000000006 /* ViewModels */ = {
-			isa = PBXGroup;
-			children = (
-				A20000050000000000000005 /* ReaderViewModel.swift */,
-			);
-			path = ViewModels;
-			sourceTree = "<group>";
-		};
-		A50000060000000000000007 /* Views */ = {
-			isa = PBXGroup;
-			children = (
-				A20000060000000000000006 /* ContentView.swift */,
-				A20000070000000000000007 /* URLInputView.swift */,
-				A20000080000000000000008 /* ArticleReaderView.swift */,
-				A20000090000000000000009 /* PlaybackControlsView.swift */,
-				A2000010000000000000000A /* TableOfContentsView.swift */,
-				A2000011000000000000000B /* VoiceSettingsView.swift */,
+				3FB56B74B8A60502F7C15D7B /* ArticleReaderView.swift */,
+				F67E8BCCCC1EE6181DBD3E20 /* ContentView.swift */,
+				3CEEEC11DDCB80D6006DF829 /* PlaybackControlsView.swift */,
+				0C96FA06FFF40C100CDE678F /* ReaderWebViews.swift */,
+				A6A865223BB056996BF10106 /* SelectableTextView.swift */,
+				C9565D6B189EAFA8762A49A9 /* TableOfContentsView.swift */,
+				CE3D85301AE537AFFAFE8462 /* URLInputView.swift */,
+				7D1B5BE16D7D801CA175C010 /* VoiceSettingsView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
 		};
-		C80000000000000000000001 /* ShareExtension */ = {
+		2EDC83145A2490A27CAEFC64 = {
 			isa = PBXGroup;
 			children = (
-				C20000010000000000000001 /* ShareViewController.swift */,
-				C20000020000000000000002 /* Info.plist */,
-				C20000030000000000000003 /* ShareExtension.entitlements */,
+				EEE9708EF516A8DC9C80141B /* ShareExtension */,
+				6485B95DE3FAB8C9147F3CD2 /* URLReader */,
+				DB907875E70226678E207DAE /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		6485B95DE3FAB8C9147F3CD2 /* URLReader */ = {
+			isa = PBXGroup;
+			children = (
+				D3611E753A2DD375E5710083 /* Models */,
+				C67905AE095DA9F63F3716D2 /* Services */,
+				7ED6B8CACAA1293CEA4696F9 /* ViewModels */,
+				13CC6B8957130FCBEA84513E /* Views */,
+				5186DC41F065782B3102EC7B /* Assets.xcassets */,
+				00450E9C1A5BCAAFD9D4E9C8 /* Info.plist */,
+				ABC219EE441A6774D031D327 /* URLReader.entitlements */,
+				2432B3BE5277F79CD46DB22E /* URLReaderApp.swift */,
+			);
+			path = URLReader;
+			sourceTree = "<group>";
+		};
+		7ED6B8CACAA1293CEA4696F9 /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				D47C7E812E533483E3575157 /* ReaderViewModel.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		C67905AE095DA9F63F3716D2 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				C55EFAD3E6251CA3C173E771 /* ContentExtractor.swift */,
+				50FC8F82C631ABEF4B11E5DE /* SpeechService.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		D3611E753A2DD375E5710083 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				4D54287956AF94ECD5D699EF /* Article.swift */,
+				B297243EF5ABBC553443E7E1 /* ReaderMode.swift */,
+				CA5167FDD71D6AA5130C11D0 /* RecentArticle.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		DB907875E70226678E207DAE /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				C7FB69FBA56BBFE703C27994 /* URLReader.app */,
+				47266E86AB3F17B599224D74 /* URLReaderShare.appex */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		EEE9708EF516A8DC9C80141B /* ShareExtension */ = {
+			isa = PBXGroup;
+			children = (
+				3B9C649F433619C0A3DD1E75 /* Info.plist */,
+				39336359D162C1447E2E0BDC /* ShareExtension.entitlements */,
+				C9E19C8D977CAB04ECC28FBB /* ShareViewController.swift */,
 			);
 			path = ShareExtension;
 			sourceTree = "<group>";
@@ -171,143 +166,220 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		A60000000000000000000001 /* URLReader */ = {
+		60F9D59E807B1B6EDBFEC988 /* URLReader */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = A80000000000000000000001 /* Build configuration list for PBXNativeTarget "URLReader" */;
+			buildConfigurationList = 2A02B89E1E747C4DBEF21453 /* Build configuration list for PBXNativeTarget "URLReader" */;
 			buildPhases = (
-				A70000000000000000000001 /* Sources */,
-				A40000000000000000000001 /* Frameworks */,
-				A70000010000000000000002 /* Resources */,
-				C50000000000000000000001 /* Embed Foundation Extensions */,
+				57AC08FEA3C81FEB50B3F3DF /* Sources */,
+				B65FE1469EA92AB2EB95A504 /* Resources */,
+				71CFF547F1B280064FFAB43C /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				C90000000000000000000001 /* PBXTargetDependency */,
+				0B93D034D120B82934889C4A /* PBXTargetDependency */,
 			);
 			name = URLReader;
+			packageProductDependencies = (
+			);
 			productName = URLReader;
-			productReference = A30000000000000000000001 /* URLReader.app */;
+			productReference = C7FB69FBA56BBFE703C27994 /* URLReader.app */;
 			productType = "com.apple.product-type.application";
 		};
-		C60000000000000000000001 /* URLReaderShare */ = {
+		DDB7C2576E8BD154B766E99B /* URLReaderShare */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = CA0000000000000000000001 /* Build configuration list for PBXNativeTarget "URLReaderShare" */;
+			buildConfigurationList = 3A56D60AAD3E7C1EFA20CB74 /* Build configuration list for PBXNativeTarget "URLReaderShare" */;
 			buildPhases = (
-				CB0000000000000000000001 /* Sources */,
-				C70000000000000000000001 /* Frameworks */,
-				CC0000000000000000000001 /* Resources */,
+				A4D3C3DA294BEE4CFE9708A5 /* Sources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
 			name = URLReaderShare;
+			packageProductDependencies = (
+			);
 			productName = URLReaderShare;
-			productReference = C30000000000000000000001 /* URLReaderShare.appex */;
+			productReference = 47266E86AB3F17B599224D74 /* URLReaderShare.appex */;
 			productType = "com.apple.product-type.app-extension";
 		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
-		A90000000000000000000001 /* Project object */ = {
+		7C15DF92AC5C315365C97B64 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				BuildIndependentTargetsInParallel = 1;
-				LastSwiftUpdateCheck = 1500;
+				BuildIndependentTargetsInParallel = YES;
 				LastUpgradeCheck = 1500;
 				TargetAttributes = {
-					A60000000000000000000001 = {
-						CreatedOnToolsVersion = 15.0;
+					60F9D59E807B1B6EDBFEC988 = {
+						DevelopmentTeam = 8C7EB23ZZP;
+						ProvisioningStyle = Automatic;
 					};
-					C60000000000000000000001 = {
-						CreatedOnToolsVersion = 15.0;
+					DDB7C2576E8BD154B766E99B = {
+						DevelopmentTeam = 8C7EB23ZZP;
+						ProvisioningStyle = Automatic;
 					};
 				};
 			};
-			buildConfigurationList = A80000010000000000000002 /* Build configuration list for PBXProject "URLReader" */;
+			buildConfigurationList = 1A687F0B24E502805488836F /* Build configuration list for PBXProject "URLReader" */;
 			compatibilityVersion = "Xcode 14.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
-				en,
 				Base,
+				en,
 			);
-			mainGroup = A50000000000000000000001;
-			productRefGroup = A50000020000000000000003 /* Products */;
+			mainGroup = 2EDC83145A2490A27CAEFC64;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				A60000000000000000000001 /* URLReader */,
-				C60000000000000000000001 /* URLReaderShare */,
+				60F9D59E807B1B6EDBFEC988 /* URLReader */,
+				DDB7C2576E8BD154B766E99B /* URLReaderShare */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		A70000010000000000000002 /* Resources */ = {
+		B65FE1469EA92AB2EB95A504 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A1000012000000000000000C /* Assets.xcassets in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		CC0000000000000000000001 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
+				58CBFE5CD8CD806F6C1D819F /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		A70000000000000000000001 /* Sources */ = {
+		57AC08FEA3C81FEB50B3F3DF /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A10000010000000000000001 /* URLReaderApp.swift in Sources */,
-				A10000020000000000000002 /* Article.swift in Sources */,
-				A10000030000000000000003 /* ContentExtractor.swift in Sources */,
-				A10000040000000000000004 /* SpeechService.swift in Sources */,
-				A10000050000000000000005 /* ReaderViewModel.swift in Sources */,
-				A10000060000000000000006 /* ContentView.swift in Sources */,
-				A10000070000000000000007 /* URLInputView.swift in Sources */,
-				A10000080000000000000008 /* ArticleReaderView.swift in Sources */,
-				A10000090000000000000009 /* PlaybackControlsView.swift in Sources */,
-				A1000010000000000000000A /* TableOfContentsView.swift in Sources */,
-				A1000011000000000000000B /* VoiceSettingsView.swift in Sources */,
+				6CBDFF460F01EF17E3426558 /* Article.swift in Sources */,
+				FD45E02576D5011E5A92E0D6 /* ArticleReaderView.swift in Sources */,
+				DDF02680D0045FED88EB78C9 /* ContentExtractor.swift in Sources */,
+				C1708AC40A3B767426114486 /* ContentView.swift in Sources */,
+				3E673A92CFC2A3F0D03821AB /* PlaybackControlsView.swift in Sources */,
+				16B29CACA2456DA2D2C97CFD /* ReaderMode.swift in Sources */,
+				DF7D9A990AE670F316BFE40B /* ReaderViewModel.swift in Sources */,
+				3E540ED61B4201D7D9A2CF0D /* ReaderWebViews.swift in Sources */,
+				3F675CAE5D4F32F289CB9EC3 /* RecentArticle.swift in Sources */,
+				42E899370C769AEF73485126 /* SelectableTextView.swift in Sources */,
+				159DAE5957C13455D1886750 /* SpeechService.swift in Sources */,
+				9D0A51B7F445CE77453A29A4 /* TableOfContentsView.swift in Sources */,
+				7BA4F38F2580363F8C4201BE /* URLInputView.swift in Sources */,
+				9B6AA94961884E8F10FBAEEA /* URLReaderApp.swift in Sources */,
+				46B0F985B66CF9029B6B0191 /* VoiceSettingsView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		CB0000000000000000000001 /* Sources */ = {
+		A4D3C3DA294BEE4CFE9708A5 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C10000010000000000000001 /* ShareViewController.swift in Sources */,
+				C625B8A508CAD99A05EECC64 /* ShareViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		C90000000000000000000001 /* PBXTargetDependency */ = {
+		0B93D034D120B82934889C4A /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = C60000000000000000000001 /* URLReaderShare */;
-			targetProxy = C40000000000000000000001 /* PBXContainerItemProxy */;
+			target = DDB7C2576E8BD154B766E99B /* URLReaderShare */;
+			targetProxy = 78CE91A982D150E30BD8C80D /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
-		B10000000000000000000001 /* Debug */ = {
+		28E5B550F9B3825EA083672F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = ShareExtension/ShareExtension.entitlements;
+				INFOPLIST_FILE = ShareExtension/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Read Aloud";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.kareemf.URLReader.ShareExtension;
+				PRODUCT_NAME = URLReaderShare;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		32AB126444A77DB2BED29584 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = URLReader/URLReader.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				INFOPLIST_FILE = URLReader/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "URL Reader";
+				INFOPLIST_KEY_CFBundleExecutable = "$(EXECUTABLE_NAME)";
+				INFOPLIST_KEY_CFBundleIdentifier = "$(PRODUCT_BUNDLE_IDENTIFIER)";
+				INFOPLIST_KEY_CFBundleName = "$(PRODUCT_NAME)";
+				INFOPLIST_KEY_CFBundleShortVersionString = "$(MARKETING_VERSION)";
+				INFOPLIST_KEY_CFBundleVersion = "$(CURRENT_PROJECT_VERSION)";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UIRequiresFullScreen = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.kareemf.URLReader;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		45057B6063816FE81F6B26AD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = ShareExtension/ShareExtension.entitlements;
+				INFOPLIST_FILE = ShareExtension/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Read Aloud";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.kareemf.URLReader.ShareExtension;
+				PRODUCT_NAME = URLReaderShare;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		511883C9B97734C22CA6ADAF /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_ENABLE_OBJC_WEAK = YES;
@@ -333,18 +405,20 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = 8C7EB23ZZP;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
-				ENABLE_USER_SCRIPT_SANDBOXING = YES;
-				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
 					"$(inherited)",
+					"DEBUG=1",
 				);
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
@@ -353,24 +427,59 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
-				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MARKETING_VERSION = 1.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
 		};
-		B10000010000000000000002 /* Release */ = {
+		6B607E47A5EDF3D1229D3BE2 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = URLReader/URLReader.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				INFOPLIST_FILE = URLReader/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "URL Reader";
+				INFOPLIST_KEY_CFBundleExecutable = "$(EXECUTABLE_NAME)";
+				INFOPLIST_KEY_CFBundleIdentifier = "$(PRODUCT_BUNDLE_IDENTIFIER)";
+				INFOPLIST_KEY_CFBundleName = "$(PRODUCT_NAME)";
+				INFOPLIST_KEY_CFBundleShortVersionString = "$(MARKETING_VERSION)";
+				INFOPLIST_KEY_CFBundleVersion = "$(CURRENT_PROJECT_VERSION)";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UIRequiresFullScreen = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.kareemf.URLReader;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		C92661BBFF861B6FDB3FB4B7 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_ENABLE_OBJC_WEAK = YES;
@@ -396,12 +505,14 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = 8C7EB23ZZP;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				ENABLE_USER_SCRIPT_SANDBOXING = YES;
-				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
@@ -410,162 +521,48 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
-				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MARKETING_VERSION = 1.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
-				VALIDATE_PRODUCT = YES;
-			};
-			name = Release;
-		};
-		B10000020000000000000003 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = URLReader/URLReader.entitlements;
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 8C7EB23ZZP;
-				ENABLE_PREVIEWS = YES;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = URLReader/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = "URL Reader";
-				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
-				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
-				INFOPLIST_KEY_UIRequiredDeviceCapabilities = armv7;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.kareemf.URLReader;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Debug;
-		};
-		B10000030000000000000004 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = URLReader/URLReader.entitlements;
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 8C7EB23ZZP;
-				ENABLE_PREVIEWS = YES;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = URLReader/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = "URL Reader";
-				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
-				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
-				INFOPLIST_KEY_UIRequiredDeviceCapabilities = armv7;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.kareemf.URLReader;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Release;
-		};
-		D10000000000000000000001 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_ENTITLEMENTS = ShareExtension/ShareExtension.entitlements;
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 8C7EB23ZZP;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = ShareExtension/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = "Read Aloud";
-				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@executable_path/../../Frameworks",
-				);
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.kareemf.URLReader.ShareExtension;
-				PRODUCT_NAME = URLReaderShare;
-				SKIP_INSTALL = YES;
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Debug;
-		};
-		D10000010000000000000002 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_ENTITLEMENTS = ShareExtension/ShareExtension.entitlements;
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 8C7EB23ZZP;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = ShareExtension/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = "Read Aloud";
-				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@executable_path/../../Frameworks",
-				);
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.kareemf.URLReader.ShareExtension;
-				PRODUCT_NAME = URLReaderShare;
-				SKIP_INSTALL = YES;
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
 		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		A80000000000000000000001 /* Build configuration list for PBXNativeTarget "URLReader" */ = {
+		1A687F0B24E502805488836F /* Build configuration list for PBXProject "URLReader" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				B10000020000000000000003 /* Debug */,
-				B10000030000000000000004 /* Release */,
+				511883C9B97734C22CA6ADAF /* Debug */,
+				C92661BBFF861B6FDB3FB4B7 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Debug;
 		};
-		A80000010000000000000002 /* Build configuration list for PBXProject "URLReader" */ = {
+		2A02B89E1E747C4DBEF21453 /* Build configuration list for PBXNativeTarget "URLReader" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				B10000000000000000000001 /* Debug */,
-				B10000010000000000000002 /* Release */,
+				6B607E47A5EDF3D1229D3BE2 /* Debug */,
+				32AB126444A77DB2BED29584 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Debug;
 		};
-		CA0000000000000000000001 /* Build configuration list for PBXNativeTarget "URLReaderShare" */ = {
+		3A56D60AAD3E7C1EFA20CB74 /* Build configuration list for PBXNativeTarget "URLReaderShare" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				D10000000000000000000001 /* Debug */,
-				D10000010000000000000002 /* Release */,
+				45057B6063816FE81F6B26AD /* Debug */,
+				28E5B550F9B3825EA083672F /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Debug;
 		};
 /* End XCConfigurationList section */
 	};
-	rootObject = A90000000000000000000001 /* Project object */;
+	rootObject = 7C15DF92AC5C315365C97B64 /* Project object */;
 }

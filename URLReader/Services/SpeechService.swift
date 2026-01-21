@@ -15,12 +15,22 @@ class SpeechService: NSObject, ObservableObject {
     @Published var availableVoices: [AVSpeechSynthesisVoice] = []
     @Published var selectedVoice: AVSpeechSynthesisVoice?
 
+    /// Returns true when playback has finished (at 100%)
+    var isFinished: Bool {
+        progress >= 1.0 && !isPlaying && !isPaused
+    }
+
     // MARK: - Properties
 
     private let synthesizer = AVSpeechSynthesizer()
     private var utterance: AVSpeechUtterance?
     private var textToSpeak: String = ""
     private var textLength: Int = 0
+    private let userDefaults = UserDefaults.standard
+
+    // MARK: - Persistence Keys
+
+    private static let selectedVoiceKey = "selectedVoiceIdentifier"
 
     /// Speech rate (0.0 to 1.0, default 0.5)
     var rate: Float = AVSpeechUtteranceDefaultSpeechRate {
@@ -72,6 +82,11 @@ class SpeechService: NSObject, ObservableObject {
             isPaused = false
             isPlaying = true
         } else if !isPlaying {
+            // If finished (at 100%), restart from beginning
+            if isFinished {
+                currentPosition = 0
+                progress = 0.0
+            }
             speak(from: currentPosition)
         }
     }
@@ -102,6 +117,7 @@ class SpeechService: NSObject, ObservableObject {
         currentPosition = 0
         progress = 0.0
         currentWord = ""
+        utterance = nil
     }
 
     /// Skips forward by the specified number of characters
@@ -127,6 +143,13 @@ class SpeechService: NSObject, ObservableObject {
         }
     }
 
+    /// Sets the position without starting playback
+    func setPosition(_ position: Int) {
+        currentPosition = max(0, min(position, textLength))
+        updateProgress()
+        currentWord = ""
+    }
+
     /// Seeks to a specific section
     func seekToSection(_ section: ArticleSection) {
         seekTo(position: section.startIndex)
@@ -140,6 +163,9 @@ class SpeechService: NSObject, ObservableObject {
     /// Sets the voice to use for speech
     func setVoice(_ voice: AVSpeechSynthesisVoice) {
         selectedVoice = voice
+        // Persist the selection
+        userDefaults.set(voice.identifier, forKey: Self.selectedVoiceKey)
+
         if isPlaying || isPaused {
             let currentPos = currentPosition
             stop()
@@ -206,8 +232,18 @@ class SpeechService: NSObject, ObservableObject {
             return v1.name < v2.name
         }
 
-        // Select default voice
-        selectedVoice = availableVoices.first { $0.language.hasPrefix("en") && $0.quality == .enhanced }
+        // Check for previously selected voice
+        if let savedIdentifier = userDefaults.string(forKey: Self.selectedVoiceKey),
+           let savedVoice = availableVoices.first(where: { $0.identifier == savedIdentifier }) {
+            selectedVoice = savedVoice
+            return
+        }
+
+        // Default voice - prefer Samantha (en-US)
+        selectedVoice = availableVoices.first { $0.name == "Samantha" && $0.language == "en-US" }
+            ?? availableVoices.first { $0.name == "Samantha" }
+            ?? availableVoices.first { $0.language == "en-US" && $0.quality == .enhanced }
+            ?? availableVoices.first { $0.language == "en-US" }
             ?? availableVoices.first { $0.language.hasPrefix("en") }
             ?? availableVoices.first
     }
@@ -228,6 +264,7 @@ class SpeechService: NSObject, ObservableObject {
 extension SpeechService: AVSpeechSynthesizerDelegate {
 
     func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didStart utterance: AVSpeechUtterance) {
+        guard utterance === self.utterance else { return }
         DispatchQueue.main.async {
             self.isPlaying = true
             self.isPaused = false
@@ -235,6 +272,7 @@ extension SpeechService: AVSpeechSynthesizerDelegate {
     }
 
     func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didFinish utterance: AVSpeechUtterance) {
+        guard utterance === self.utterance else { return }
         DispatchQueue.main.async {
             self.isPlaying = false
             self.isPaused = false
@@ -244,6 +282,7 @@ extension SpeechService: AVSpeechSynthesizerDelegate {
     }
 
     func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didPause utterance: AVSpeechUtterance) {
+        guard utterance === self.utterance else { return }
         DispatchQueue.main.async {
             self.isPaused = true
             self.isPlaying = false
@@ -251,6 +290,7 @@ extension SpeechService: AVSpeechSynthesizerDelegate {
     }
 
     func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didContinue utterance: AVSpeechUtterance) {
+        guard utterance === self.utterance else { return }
         DispatchQueue.main.async {
             self.isPaused = false
             self.isPlaying = true
@@ -258,6 +298,7 @@ extension SpeechService: AVSpeechSynthesizerDelegate {
     }
 
     func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didCancel utterance: AVSpeechUtterance) {
+        guard utterance === self.utterance else { return }
         DispatchQueue.main.async {
             self.isPlaying = false
             self.isPaused = false
@@ -265,6 +306,7 @@ extension SpeechService: AVSpeechSynthesizerDelegate {
     }
 
     func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, willSpeakRangeOfSpeechString characterRange: NSRange, utterance: AVSpeechUtterance) {
+        guard utterance === self.utterance else { return }
         DispatchQueue.main.async {
             // Update current position based on the range being spoken
             let utteranceText = utterance.speechString

@@ -140,11 +140,17 @@ class ContentExtractor {
                            "noscript", "iframe", "form", "button", "input", "select",
                            "textarea", "svg", "canvas", "video", "audio"]
         for tag in unwantedTags {
-            workingHTML = workingHTML.replacingOccurrences(
-                of: "<\(tag)[^>]*>.*?</\(tag)>",
-                with: "",
-                options: [.regularExpression, .caseInsensitive, .dotMatchesLineSeparators]
-            )
+            // Use NSRegularExpression for dotMatchesLineSeparators support
+            if let regex = try? NSRegularExpression(
+                pattern: "<\(tag)[^>]*>[\\s\\S]*?</\(tag)>",
+                options: .caseInsensitive
+            ) {
+                workingHTML = regex.stringByReplacingMatches(
+                    in: workingHTML,
+                    range: NSRange(workingHTML.startIndex..., in: workingHTML),
+                    withTemplate: ""
+                )
+            }
             // Also remove self-closing variants
             workingHTML = workingHTML.replacingOccurrences(
                 of: "<\(tag)[^>]*/?>",
@@ -163,8 +169,17 @@ class ContentExtractor {
 
         var contentHTML = workingHTML
         for selector in contentSelectors {
-            if let match = workingHTML.range(of: selector, options: [.regularExpression, .caseInsensitive, .dotMatchesLineSeparators]) {
-                contentHTML = String(workingHTML[match])
+            // Use NSRegularExpression for dotMatchesLineSeparators support
+            if let regex = try? NSRegularExpression(
+                pattern: selector,
+                options: .caseInsensitive
+            ),
+               let match = regex.firstMatch(
+                in: workingHTML,
+                range: NSRange(workingHTML.startIndex..., in: workingHTML)
+               ),
+               let range = Range(match.range, in: workingHTML) {
+                contentHTML = String(workingHTML[range])
                 break
             }
         }
@@ -248,8 +263,8 @@ class ContentExtractor {
             "&mdash;": "—",
             "&lsquo;": "'",
             "&rsquo;": "'",
-            "&ldquo;": """,
-            "&rdquo;": """,
+            "&ldquo;": "\u{201C}",
+            "&rdquo;": "\u{201D}",
             "&hellip;": "…",
             "&copy;": "©",
             "&reg;": "®",

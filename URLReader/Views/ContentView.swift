@@ -5,46 +5,33 @@ struct ContentView: View {
     @EnvironmentObject var viewModel: ReaderViewModel
 
     var body: some View {
-        NavigationView {
+        NavigationStack {
             ZStack {
                 // Background
                 Color(UIColor.systemGroupedBackground)
                     .ignoresSafeArea()
 
-                VStack(spacing: 0) {
-                    if viewModel.hasContent {
-                        // Article View
-                        ArticleReaderView(viewModel: viewModel)
-                    } else {
-                        // URL Input View
-                        URLInputView(viewModel: viewModel)
-                    }
-                }
+                URLInputView(viewModel: viewModel)
             }
-            .navigationTitle(viewModel.article?.title ?? "URL Reader")
-            .navigationBarTitleDisplayMode(viewModel.hasContent ? .inline : .large)
-            .toolbar {
-                if viewModel.hasContent {
-                    ToolbarItem(placement: .navigationBarLeading) {
-                        Button(action: { viewModel.clearContent() }) {
-                            Image(systemName: "xmark")
-                        }
-                    }
+            .navigationDestination(isPresented: $viewModel.showArticle) {
+                ArticleReaderView(viewModel: viewModel)
+                    .navigationTitle(viewModel.article?.title ?? "")
+                    .navigationBarTitleDisplayMode(.inline)
+                    .toolbar {
+                        ToolbarItem(placement: .navigationBarTrailing) {
+                            HStack {
+                                if let article = viewModel.article, !article.sections.isEmpty {
+                                    Button(action: { viewModel.showTableOfContents = true }) {
+                                        Image(systemName: "list.bullet")
+                                    }
+                                }
 
-                    ToolbarItem(placement: .navigationBarTrailing) {
-                        HStack {
-                            if !viewModel.article!.sections.isEmpty {
-                                Button(action: { viewModel.showTableOfContents = true }) {
-                                    Image(systemName: "list.bullet")
+                                Button(action: { viewModel.showVoiceSettings = true }) {
+                                    Image(systemName: "gearshape")
                                 }
                             }
-
-                            Button(action: { viewModel.showVoiceSettings = true }) {
-                                Image(systemName: "gearshape")
-                            }
                         }
                     }
-                }
             }
             .sheet(isPresented: $viewModel.showTableOfContents) {
                 TableOfContentsView(viewModel: viewModel)
@@ -56,6 +43,11 @@ struct ContentView: View {
                 Button("OK", role: .cancel) {}
             } message: {
                 Text(viewModel.errorMessage ?? "An unknown error occurred")
+            }
+            .onChange(of: viewModel.showArticle) { isShowing in
+                if !isShowing {
+                    viewModel.clearContent()
+                }
             }
         }
     }

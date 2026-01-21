@@ -3,8 +3,23 @@ import SwiftUI
 /// View containing playback controls for the text-to-speech
 struct PlaybackControlsView: View {
     @ObservedObject var viewModel: ReaderViewModel
+    @State private var isDragging = false
+    @State private var dragProgress = 0.0
+
+    /// Determines the appropriate icon for the play button
+    private var playButtonIcon: String {
+        if viewModel.speechService.isPlaying {
+            return "pause.circle.fill"
+        } else if viewModel.speechService.isFinished {
+            return "arrow.counterclockwise.circle.fill"
+        } else {
+            return "play.circle.fill"
+        }
+    }
 
     var body: some View {
+        let displayProgress = isDragging ? dragProgress : viewModel.speechService.progress
+
         VStack(spacing: 12) {
             // Progress bar
             VStack(spacing: 4) {
@@ -13,20 +28,35 @@ struct PlaybackControlsView: View {
                         // Background track
                         Rectangle()
                             .fill(Color.secondary.opacity(0.2))
-                            .frame(height: 4)
-                            .cornerRadius(2)
+                            .frame(height: 10)
+                            .cornerRadius(5)
 
                         // Progress track
                         Rectangle()
                             .fill(Color.accentColor)
-                            .frame(width: geometry.size.width * viewModel.speechService.progress, height: 4)
-                            .cornerRadius(2)
+                            .frame(width: geometry.size.width * displayProgress, height: 10)
+                            .cornerRadius(5)
+
+                        // Grab handle
+                        Circle()
+                            .fill(Color.accentColor)
+                            .frame(width: 22, height: 22)
+                            .shadow(color: Color.black.opacity(0.15), radius: 2, x: 0, y: 1)
+                            .offset(x: max(0, min(geometry.size.width - 22, geometry.size.width * displayProgress - 11)))
                     }
                     .gesture(
                         DragGesture(minimumDistance: 0)
+                            .onChanged { value in
+                                let percentage = value.location.x / geometry.size.width
+                                let clampedPercentage = max(0, min(1, percentage))
+                                dragProgress = clampedPercentage
+                                isDragging = true
+                            }
                             .onEnded { value in
                                 let percentage = value.location.x / geometry.size.width
                                 let clampedPercentage = max(0, min(1, percentage))
+                                dragProgress = clampedPercentage
+                                isDragging = false
                                 if let article = viewModel.article {
                                     let position = Int(Double(article.content.count) * clampedPercentage)
                                     viewModel.speechService.seekTo(position: position)
@@ -34,7 +64,7 @@ struct PlaybackControlsView: View {
                             }
                     )
                 }
-                .frame(height: 4)
+                .frame(height: 22)
 
                 // Progress text
                 HStack {
@@ -55,9 +85,9 @@ struct PlaybackControlsView: View {
                         .font(.title2)
                 }
 
-                // Play/Pause
+                // Play/Pause/Replay
                 Button(action: { viewModel.speechService.togglePlayPause() }) {
-                    Image(systemName: viewModel.speechService.isPlaying ? "pause.circle.fill" : "play.circle.fill")
+                    Image(systemName: playButtonIcon)
                         .font(.system(size: 56))
                 }
 
@@ -84,13 +114,6 @@ struct PlaybackControlsView: View {
             }
             .padding(.horizontal)
 
-            // Stop button
-            Button(action: { viewModel.speechService.stop() }) {
-                Label("Stop", systemImage: "stop.fill")
-                    .font(.subheadline)
-            }
-            .foregroundColor(.secondary)
-            .padding(.bottom, 8)
         }
         .padding()
         .background(Color(UIColor.secondarySystemGroupedBackground))
