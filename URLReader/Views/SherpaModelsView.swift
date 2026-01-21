@@ -138,12 +138,6 @@ private struct SherpaModelRow: View {
                     }
                     .buttonStyle(.borderedProminent)
                     .disabled(isBusy)
-                    .overlay {
-                        if isBusy {
-                            ProgressView()
-                                .progressViewStyle(.circular)
-                        }
-                    }
                 }
             }
         }

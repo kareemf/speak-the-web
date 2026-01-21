@@ -59,6 +59,8 @@
 - Model downloads/extraction/selection are working and persisted; missing files are validated and cleared with a user-facing error.
 - Sherpa playback is working; generation shows phase state and has a watchdog timeout.
 - Playback speed changes use `AVAudioUnitTimePitch` (no regeneration).
+- Engine switching now applies the current playback speed.
+- Sherpa seeking, skip controls, and TOC jumps update progress correctly without ending playback.
 
 ## Current issues
 - Debug logging is still enabled in Sherpa playback and view model.

@@ -22,6 +22,7 @@ class ReaderViewModel: ObservableObject {
             UserDefaults.standard.set(selectedSpeechEngine.rawValue, forKey: Self.engineKey)
             speechService.stop()
             sherpaSpeechService.stop()
+            applyCurrentRateToEngines()
         }
     }
     @Published var selectedRateIndex: Int = 2 { // Default to 1x
@@ -126,8 +127,7 @@ class ReaderViewModel: ObservableObject {
         }
 
         // Apply the rate immediately
-        speechService.setRate(multiplier: currentRateMultiplier)
-        sherpaSpeechService.setRate(multiplier: currentRateMultiplier)
+        applyCurrentRateToEngines()
 
         // Observe rate changes
         $selectedRateIndex
@@ -380,6 +380,11 @@ class ReaderViewModel: ObservableObject {
         Task { @MainActor in
             self.showError = true
         }
+    }
+
+    private func applyCurrentRateToEngines() {
+        speechService.setRate(multiplier: currentRateMultiplier)
+        sherpaSpeechService.setRate(multiplier: currentRateMultiplier)
     }
 }
 

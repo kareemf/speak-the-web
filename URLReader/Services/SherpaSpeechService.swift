@@ -20,6 +20,7 @@ final class SherpaSpeechService: ObservableObject {
     private let timePitch = AVAudioUnitTimePitch()
     private let instanceID = UUID()
     private let generationLock = NSLock()
+    private var scheduleToken = UUID()
     private var generationInFlight = false
     private var audioFile: AVAudioFile?
     private var audioFileURL: URL?
@@ -110,6 +111,7 @@ final class SherpaSpeechService: ObservableObject {
     }
 
     func stop() {
+        invalidateScheduleToken()
         playerNode.stop()
         isPlaying = false
         isPaused = false
@@ -292,13 +294,15 @@ final class SherpaSpeechService: ObservableObject {
 
     private func scheduleFrom(_ frame: AVAudioFramePosition) {
         guard let audioFile else { return }
+        let token = invalidateScheduleToken()
         playerNode.stop()
         let remainingFrames = max(0, audioFile.length - frame)
         let frameCount = AVAudioFrameCount(remainingFrames)
         print("[Sherpa] Scheduling playback from frame \(frame)")
         playerNode.scheduleSegment(audioFile, startingFrame: frame, frameCount: frameCount, at: nil) { [weak self] in
             DispatchQueue.main.async {
-                self?.finishPlayback()
+                guard let self, self.scheduleToken == token else { return }
+                self.finishPlayback()
             }
         }
     }
@@ -394,6 +398,13 @@ final class SherpaSpeechService: ObservableObject {
             guard self.currentGenerationID == generationID else { return }
             self.generationPhase = uiMessage
         }
+    }
+
+    @discardableResult
+    private func invalidateScheduleToken() -> UUID {
+        let token = UUID()
+        scheduleToken = token
+        return token
     }
 
     private func beginGeneration() -> Bool {
