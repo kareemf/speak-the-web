@@ -61,10 +61,12 @@
 - Playback speed changes use `AVAudioUnitTimePitch` (no regeneration).
 - Engine switching now applies the current playback speed.
 - Sherpa seeking, skip controls, and TOC jumps update progress correctly without ending playback.
+- Sherpa models persist in the App Group container with file protection updates.
+- Sherpa audio generation is cached on disk with LRU eviction and recents cleanup.
+- Lock screen and headphone remote playback controls are wired via Now Playing metadata.
 
 ## Current issues
-- Debug logging is still enabled in Sherpa playback and view model.
-- Playback error alerts could offer a direct "Go to Models" action for faster recovery.
+- None currently.
 
 ## Next steps / triage
 - Remove or gate debug logging for release builds.
