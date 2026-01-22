@@ -10,6 +10,7 @@
 		159DAE5957C13455D1886750 /* SpeechService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50FC8F82C631ABEF4B11E5DE /* SpeechService.swift */; };
 		16B29CACA2456DA2D2C97CFD /* ReaderMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = B297243EF5ABBC553443E7E1 /* ReaderMode.swift */; };
 		2DF3F3E7C8B49399D82CF2BE /* SherpaAudioCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = E627D93B5253D7DABE07FE41 /* SherpaAudioCache.swift */; };
+		2E83D048D361AF90E250CF4D /* HelpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E522C6FB7B75C83730FABDE /* HelpView.swift */; };
 		369BCB84996C0761D5BC3614 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CA63389F895AB182DAAC91E /* SettingsView.swift */; };
 		3E540ED61B4201D7D9A2CF0D /* ReaderWebViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C96FA06FFF40C100CDE678F /* ReaderWebViews.swift */; };
 		3E673A92CFC2A3F0D03821AB /* PlaybackControlsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CEEEC11DDCB80D6006DF829 /* PlaybackControlsView.swift */; };
@@ -20,6 +21,7 @@
 		6CBDFF460F01EF17E3426558 /* Article.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D54287956AF94ECD5D699EF /* Article.swift */; };
 		7A01D4539DBB5AC00DF959FA /* SherpaSpeechService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10DBDD1D16ABF83E1CDBE34 /* SherpaSpeechService.swift */; };
 		7BA4F38F2580363F8C4201BE /* URLInputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE3D85301AE537AFFAFE8462 /* URLInputView.swift */; };
+		8AC6A89ABFFF727726040395 /* Website in Resources */ = {isa = PBXBuildFile; fileRef = ECA5314980ECE18630EF6AA6 /* Website */; };
 		9B6AA94961884E8F10FBAEEA /* URLReaderApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2432B3BE5277F79CD46DB22E /* URLReaderApp.swift */; };
 		9D0A51B7F445CE77453A29A4 /* TableOfContentsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9565D6B189EAFA8762A49A9 /* TableOfContentsView.swift */; };
 		AA5DC2AAF2312CD69B1E5C84 /* SherpaModelsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABEFF49161B4A0C73B5C131B /* SherpaModelsView.swift */; };
@@ -75,6 +77,7 @@
 		4D54287956AF94ECD5D699EF /* Article.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Article.swift; sourceTree = "<group>"; };
 		50FC8F82C631ABEF4B11E5DE /* SpeechService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeechService.swift; sourceTree = "<group>"; };
 		5186DC41F065782B3102EC7B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		6E522C6FB7B75C83730FABDE /* HelpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelpView.swift; sourceTree = "<group>"; };
 		7D1B5BE16D7D801CA175C010 /* VoiceSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceSettingsView.swift; sourceTree = "<group>"; };
 		A6A865223BB056996BF10106 /* SelectableTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectableTextView.swift; sourceTree = "<group>"; };
 		ABC219EE441A6774D031D327 /* URLReader.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = URLReader.entitlements; sourceTree = "<group>"; };
@@ -89,9 +92,10 @@
 		CE3D85301AE537AFFAFE8462 /* URLInputView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLInputView.swift; sourceTree = "<group>"; };
 		D47C7E812E533483E3575157 /* ReaderViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReaderViewModel.swift; sourceTree = "<group>"; };
 		D62C2E20837FF349BDF384C6 /* SherpaOnnxModelStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SherpaOnnxModelStore.swift; sourceTree = "<group>"; };
-		E627D93B5253D7DABE07FE41 /* SherpaAudioCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SherpaAudioCache.swift; sourceTree = "<group>"; };
 		DF66A3444EACB04D82B567D1 /* SherpaModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SherpaModel.swift; sourceTree = "<group>"; };
 		E4B540C5F2A13DB79A2DA761 /* SherpaOnnx */ = {isa = PBXFileReference; lastKnownFileType = folder; name = SherpaOnnx; path = Vendor/SherpaOnnx; sourceTree = SOURCE_ROOT; };
+		E627D93B5253D7DABE07FE41 /* SherpaAudioCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SherpaAudioCache.swift; sourceTree = "<group>"; };
+		ECA5314980ECE18630EF6AA6 /* Website */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Website; sourceTree = SOURCE_ROOT; };
 		F10DBDD1D16ABF83E1CDBE34 /* SherpaSpeechService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SherpaSpeechService.swift; sourceTree = "<group>"; };
 		F67E8BCCCC1EE6181DBD3E20 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -114,6 +118,7 @@
 			children = (
 				3FB56B74B8A60502F7C15D7B /* ArticleReaderView.swift */,
 				F67E8BCCCC1EE6181DBD3E20 /* ContentView.swift */,
+				6E522C6FB7B75C83730FABDE /* HelpView.swift */,
 				3CEEEC11DDCB80D6006DF829 /* PlaybackControlsView.swift */,
 				0C96FA06FFF40C100CDE678F /* ReaderWebViews.swift */,
 				A6A865223BB056996BF10106 /* SelectableTextView.swift */,
@@ -140,6 +145,7 @@
 				26C65DCC849156F33CA59631 /* Packages */,
 				EEE9708EF516A8DC9C80141B /* ShareExtension */,
 				6485B95DE3FAB8C9147F3CD2 /* URLReader */,
+				ECA5314980ECE18630EF6AA6 /* Website */,
 				DB907875E70226678E207DAE /* Products */,
 			);
 			sourceTree = "<group>";
@@ -303,6 +309,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				58CBFE5CD8CD806F6C1D819F /* Assets.xcassets in Resources */,
+				8AC6A89ABFFF727726040395 /* Website in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -317,6 +324,7 @@
 				FD45E02576D5011E5A92E0D6 /* ArticleReaderView.swift in Sources */,
 				DDF02680D0045FED88EB78C9 /* ContentExtractor.swift in Sources */,
 				C1708AC40A3B767426114486 /* ContentView.swift in Sources */,
+				2E83D048D361AF90E250CF4D /* HelpView.swift in Sources */,
 				3E673A92CFC2A3F0D03821AB /* PlaybackControlsView.swift in Sources */,
 				16B29CACA2456DA2D2C97CFD /* ReaderMode.swift in Sources */,
 				DF7D9A990AE670F316BFE40B /* ReaderViewModel.swift in Sources */,

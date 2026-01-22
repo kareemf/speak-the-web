@@ -3,6 +3,7 @@ import SwiftUI
 /// Main content view of the app
 struct ContentView: View {
     @EnvironmentObject var viewModel: ReaderViewModel
+    @State private var showHelp = false
 
     var body: some View {
         NavigationStack {
@@ -12,6 +13,16 @@ struct ContentView: View {
                     .ignoresSafeArea()
 
                 URLInputView(viewModel: viewModel)
+            }
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button(action: { showHelp = true }) {
+                        Image(systemName: "questionmark.circle")
+                    }
+                }
+            }
+            .sheet(isPresented: $showHelp) {
+                HelpView()
             }
             .navigationDestination(isPresented: $viewModel.showArticle) {
                 ArticleReaderView(viewModel: viewModel)
@@ -39,7 +50,7 @@ struct ContentView: View {
             .sheet(isPresented: $viewModel.showVoiceSettings) {
                 SettingsView(viewModel: viewModel, modelStore: viewModel.sherpaModelStore)
             }
-            .onChange(of: viewModel.showArticle) { isShowing in
+            .onChange(of: viewModel.showArticle) { _, isShowing in
                 if !isShowing {
                     viewModel.clearContent()
                 }
