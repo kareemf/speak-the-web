@@ -22,11 +22,13 @@ class SpeechService: NSObject, ObservableObject {
 
     // MARK: - Properties
 
-    private let synthesizer = AVSpeechSynthesizer()
+    private var synthesizer = AVSpeechSynthesizer()
     private var utterance: AVSpeechUtterance?
     private var textToSpeak: String = ""
     private var textLength: Int = 0
     private let userDefaults = UserDefaults.standard
+    private var playAttemptID = UUID()
+    private var didRetryStartForAttempt = false
 
     // MARK: - Persistence Keys
 
@@ -59,9 +61,8 @@ class SpeechService: NSObject, ObservableObject {
 
     override init() {
         super.init()
-        synthesizer.delegate = self
+        configureSynthesizer()
         loadAvailableVoices()
-        configureAudioSession()
     }
 
     // MARK: - Public Methods
@@ -118,6 +119,7 @@ class SpeechService: NSObject, ObservableObject {
         progress = 0.0
         currentWord = ""
         utterance = nil
+        didRetryStartForAttempt = false
     }
 
     /// Skips forward by the specified number of characters
@@ -175,11 +177,17 @@ class SpeechService: NSObject, ObservableObject {
 
     // MARK: - Private Methods
 
-    private func speak(from position: Int) {
+    private func speak(from position: Int, attemptID: UUID? = nil) {
         guard position < textLength else {
             stop()
             return
         }
+
+        let resolvedAttemptID = attemptID ?? UUID()
+        if attemptID == nil {
+            didRetryStartForAttempt = false
+        }
+        playAttemptID = resolvedAttemptID
 
         let startIndex = textToSpeak.index(textToSpeak.startIndex, offsetBy: position)
         let textToRead = String(textToSpeak[startIndex...])
@@ -201,6 +209,7 @@ class SpeechService: NSObject, ObservableObject {
         isPaused = false
 
         synthesizer.speak(newUtterance)
+        scheduleStartCheck(for: resolvedAttemptID)
     }
 
     private func updateProgress() {
@@ -248,14 +257,29 @@ class SpeechService: NSObject, ObservableObject {
             ?? availableVoices.first
     }
 
-    private func configureAudioSession() {
-        do {
-            let audioSession = AVAudioSession.sharedInstance()
-            try audioSession.setCategory(.playback, mode: .spokenAudio, options: [.duckOthers])
-            try audioSession.setActive(true)
-        } catch {
-            print("Failed to configure audio session: \(error)")
+    private func scheduleStartCheck(for attemptID: UUID) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) { [weak self] in
+            guard let self else { return }
+            guard self.playAttemptID == attemptID else { return }
+            guard self.isPlaying, !self.isPaused else { return }
+            guard !self.synthesizer.isSpeaking else { return }
+            guard !self.didRetryStartForAttempt else { return }
+
+            self.didRetryStartForAttempt = true
+            print("[AVSpeech] Speech did not start, retrying")
+            self.resetSynthesizer()
+            self.speak(from: self.currentPosition, attemptID: attemptID)
         }
+    }
+
+    private func configureSynthesizer() {
+        synthesizer.delegate = self
+    }
+
+    private func resetSynthesizer() {
+        synthesizer.stopSpeaking(at: .immediate)
+        synthesizer = AVSpeechSynthesizer()
+        configureSynthesizer()
     }
 }
 
@@ -268,6 +292,7 @@ extension SpeechService: AVSpeechSynthesizerDelegate {
         DispatchQueue.main.async {
             self.isPlaying = true
             self.isPaused = false
+            self.didRetryStartForAttempt = false
         }
     }
 
