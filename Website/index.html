@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>URL Reader - Listen to Web Articles</title>
+    <meta name="description" content="Web articles read aloud. URL Reader reads articles aloud with natural voices, background playback, and offline support.">
+    <meta name="theme-color" content="#007aff">
+    <link rel="stylesheet" href="css/style.css">
+    <!-- TODO: Add app-icon.png to images folder -->
+    <link rel="apple-touch-icon" href="images/app-icon.png">
+</head>
+<body>
+    <nav>
+        <div class="container">
+            <a href="index.html" class="nav-brand">
+                <!-- TODO: Add app-icon.png to images folder -->
+                <img src="images/app-icon.png" alt="URL Reader Icon">
+                <span>URL Reader</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="help.html">Help</a></li>
+                <li><a href="privacy.html">Privacy</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <div class="container">
+            <!-- TODO: Add app-icon.png to images folder -->
+            <img src="images/app-icon.png" alt="URL Reader App Icon" class="hero-icon">
+            <h1>URL Reader</h1>
+            <p class="tagline">Web articles read aloud.</p>
+
+            <!-- TODO: Replace # with actual App Store URL -->
+            <a href="#" class="app-store-badge">
+                <img src="https://developer.apple.com/assets/elements/badges/download-on-the-app-store.svg" alt="Download on the App Store">
+            </a>
+
+            <div class="hero-screenshot">
+                <img src="images/article-reader-view-render-text.PNG" alt="URL Reader App Screenshot">
+            </div>
+        </div>
+    </section>
+
+    <section class="features">
+        <div class="container">
+            <h2>Features</h2>
+
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92-1.31-2.92-2.92-2.92z"/></svg>
+                    </div>
+                    <h3>Safari Share Extension</h3>
+                    <p>No copy-paste required. From Safari, just tap Share and select the app.</p>
+                    <div class="feature-image">
+                        <img src="images/safari-share-extension-1.PNG" alt="Safari Share Extension">
+                    </div>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg>
+                    </div>
+                    <h3>Natural Voices</h3>
+                    <p>Choose from Apple's built-in voices or download high-quality, offline, on-device voice models.</p>
+                    <div class="feature-image">
+                        <img src="images/setting.png" alt="Voice Settings">
+                    </div>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 4h14v-2H7v2zm0 4h14v-2H7v2zM7 7v2h14V7H7z"/></svg>
+                    </div>
+                    <h3>Table of Contents</h3>
+                    <p>Navigate articles by section. Tap headings to jump directly to that part of the content.</p>
+                    <div class="feature-image">
+                        <img src="images/article-reader-view-table-of-contents.PNG" alt="Table of Contents">
+                    </div>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 3c-4.97 0-9 4.03-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42C8.27 19.99 10.51 21 13 21c4.97 0 9-4.03 9-9s-4.03-9-9-9zm-1 5v5l4.28 2.54.72-1.21-3.5-2.08V8H12z"/></svg>
+                    </div>
+                    <h3>Recent Articles</h3>
+                    <p>Your reading history with progress tracking. Resume where you left off. Text and generated speech are cached for offline listening</p>
+                    <div class="feature-image">
+                        <img src="images/home-screen-url-input-recent-articles.png" alt="Recent Articles">
+                    </div>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/></svg>
+                    </div>
+                    <h3>Playback Controls</h3>
+                    <p>Skip forward/back, adjust speed from 0.5x to 2x, and seek to any part of the article.</p>
+                    <div class="feature-image">                    
+                        <img src="images/article-reader-view-render-safari.PNG" alt="URL Reader App Screenshot">
+                    </div>                    
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3v9.28c-.47-.17-.97-.28-1.5-.28C8.01 12 6 14.01 6 16.5S8.01 21 10.5 21c2.31 0 4.2-1.75 4.45-4H15V6h4V3h-7z"/></svg>
+                    </div>
+                    <h3>Background Playback</h3>
+                    <p>Keep listening after you switch apps or lock your phone. Works with Lock Screen controls.</p>
+                </div>
+
+                 <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 3v9.28c-.47-.17-.97-.28-1.5-.28C8.01 12 6 14.01 6 16.5S8.01 21 10.5 21c2.31 0 4.2-1.75 4.45-4H15V6h4V3h-7z"/></svg>
+                    </div>
+                    <h3>Privacy, respected</h3>
+                    <p>No telemetry, no ads, no tracking. Processing happens on-device</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta">
+        <div class="container">
+            <h2>Start Listening Today</h2>
+            <p>Download URL Reader and turn your reading list into a listening list.</p>
+            <!-- TODO: Replace # with actual App Store URL -->
+            <a href="#" class="app-store-badge">
+                <img src="https://developer.apple.com/assets/elements/badges/download-on-the-app-store.svg" alt="Download on the App Store">
+            </a>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <ul class="footer-links">
+                <li><a href="help.html">Help</a></li>
+                <li><a href="privacy.html">Privacy Policy</a></li>
+                <!-- TODO: Replace with actual support email -->
+                <li><a href="mailto:support@example.com">Contact</a></li>
+                <!-- TODO: Replace with actual GitHub repo URL -->
+                <li><a href="https://github.com/example/url-reader">GitHub</a></li>
+            </ul>
+            <p class="copyright">&copy; <script>document.write(new Date().getFullYear())</script> URL Reader. All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+</html>
