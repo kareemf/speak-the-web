@@ -22,7 +22,7 @@ class SpeechService: NSObject, ObservableObject {
 
     // MARK: - Properties
 
-    private let synthesizer = AVSpeechSynthesizer()
+    private var synthesizer = AVSpeechSynthesizer()
     private var utterance: AVSpeechUtterance?
     private var textToSpeak: String = ""
     private var textLength: Int = 0
@@ -61,7 +61,6 @@ class SpeechService: NSObject, ObservableObject {
         super.init()
         synthesizer.delegate = self
         loadAvailableVoices()
-        configureAudioSession()
     }
 
     // MARK: - Public Methods
@@ -218,6 +217,13 @@ class SpeechService: NSObject, ObservableObject {
         }
     }
 
+    private func resetSynthesizer() {
+        synthesizer.stopSpeaking(at: .immediate)
+        synthesizer.delegate = nil
+        synthesizer = AVSpeechSynthesizer()
+        synthesizer.delegate = self
+    }
+
     private func loadAvailableVoices() {
         // Get all available voices, prioritizing English voices
         let allVoices = AVSpeechSynthesisVoice.speechVoices()
@@ -255,15 +261,6 @@ class SpeechService: NSObject, ObservableObject {
             ?? availableVoices.first
     }
 
-    private func configureAudioSession() {
-        do {
-            let audioSession = AVAudioSession.sharedInstance()
-            try audioSession.setCategory(.playback, mode: .spokenAudio, options: [.duckOthers])
-            try audioSession.setActive(true)
-        } catch {
-            print("Failed to configure audio session: \(error)")
-        }
-    }
 }
 
 // MARK: - AVSpeechSynthesizerDelegate

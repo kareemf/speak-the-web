@@ -125,3 +125,25 @@ Add structured logs that make ownership and state transitions explicit.
 - Log pre-activation session state (category, mode, options) and error source (setCategory vs setActive) to isolate the failing call.
 - Run once with Bluetooth disconnected and route to built-in speaker to rule out A2DP route constraints.
 - Consider removing `MPNowPlayingInfoCenter.playbackState` updates (private entitlement) to reduce noise in logs.
+
+## Implementation Plan (Current PR)
+Phase 1: Audio session safety and diagnostics
+- Remove all AVAudioSession configuration from `SpeechService`, `SherpaSpeechService`, and voice preview.
+- Update `AudioSessionCoordinator` to use `.playback` + `.default` + `[.duckOthers]` and add pre-state logging plus separate setCategory/setActive error logs.
+- Test: confirm first-play AVSpeech works and `Code=-50` is gone.
+- Flip: once confirmed, switch `AudioSessionCoordinator` mode to `.spokenAudio` and retest in this PR.
+
+Phase 2: Controller wiring and selectedAtLaunch
+- Route playback through `MediaPlaybackController` and stop using services directly in `ReaderViewModel`.
+- Instantiate only the selected engine at launch; lazy-init the other engine on first use.
+- Keep AVAudioSession activation only on play intent.
+- Test: switching engines stops the previous engine and playback remains stable.
+
+Phase 3: Now Playing integration
+- Drive `NowPlayingManager` from `MediaPlaybackController` state.
+- Remove `MPNowPlayingInfoCenter.playbackState` updates.
+- Test: Control Center play/pause/skip/seek works and Now Playing info updates without entitlement warnings.
+
+Phase 4: Post-verify cleanup
+- Confirm logging is sufficient and remove any temporary debug-only behavior if added.
+- Test: run through AVSpeech and Sherpa playback flows end-to-end.

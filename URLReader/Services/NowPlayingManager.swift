@@ -5,8 +5,8 @@ final class NowPlayingManager {
     struct Info {
         let title: String
         let artist: String?
-        let duration: TimeInterval
-        let elapsed: TimeInterval
+        let duration: TimeInterval?
+        let elapsed: TimeInterval?
         let rate: Float
         let isPlaying: Bool
     }
@@ -80,24 +80,28 @@ final class NowPlayingManager {
     func updateNowPlaying(_ info: Info?) {
         guard let info else {
             MPNowPlayingInfoCenter.default().nowPlayingInfo = nil
-            MPNowPlayingInfoCenter.default().playbackState = .stopped
             return
         }
 
         var nowPlaying: [String: Any] = [
             MPMediaItemPropertyTitle: info.title,
-            MPNowPlayingInfoPropertyElapsedPlaybackTime: info.elapsed,
-            MPMediaItemPropertyPlaybackDuration: info.duration,
             MPNowPlayingInfoPropertyPlaybackRate: info.isPlaying ? info.rate : 0,
             MPNowPlayingInfoPropertyDefaultPlaybackRate: info.rate,
             MPNowPlayingInfoPropertyMediaType: MPNowPlayingInfoMediaType.audio.rawValue
         ]
+
+        if let elapsed = info.elapsed {
+            nowPlaying[MPNowPlayingInfoPropertyElapsedPlaybackTime] = elapsed
+        }
+
+        if let duration = info.duration {
+            nowPlaying[MPMediaItemPropertyPlaybackDuration] = duration
+        }
 
         if let artist = info.artist {
             nowPlaying[MPMediaItemPropertyArtist] = artist
         }
 
         MPNowPlayingInfoCenter.default().nowPlayingInfo = nowPlaying
-        MPNowPlayingInfoCenter.default().playbackState = info.isPlaying ? .playing : .paused
     }
 }

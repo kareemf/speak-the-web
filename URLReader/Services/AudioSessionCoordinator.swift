@@ -21,19 +21,33 @@ final class AudioSessionCoordinator {
     func activate(for engine: SpeechEngineType, reason: String = "play") -> Bool {
         let category: AVAudioSession.Category = .playback
         let mode: AVAudioSession.Mode = .spokenAudio
-        let options: AVAudioSession.CategoryOptions = [.duckOthers, .allowAirPlay, .allowBluetoothA2DP]
+        let options: AVAudioSession.CategoryOptions = [.duckOthers]
+
+        log(action: "activate-pre",
+            engine: engine,
+            reason: reason,
+            category: session.category,
+            mode: session.mode,
+            options: session.categoryOptions,
+            error: nil)
 
         do {
             if session.category != category || session.mode != mode || session.categoryOptions != options {
                 try session.setCategory(category, mode: mode, options: options)
             }
+        } catch {
+            log(action: "set-category-failed", engine: engine, reason: reason, category: category, mode: mode, options: options, error: error)
+            return false
+        }
+
+        do {
             try session.setActive(true)
             activeEngine = engine
             isActive = true
             log(action: "activate", engine: engine, reason: reason, category: category, mode: mode, options: options, error: nil)
             return true
         } catch {
-            log(action: "activate", engine: engine, reason: reason, category: category, mode: mode, options: options, error: error)
+            log(action: "set-active-failed", engine: engine, reason: reason, category: category, mode: mode, options: options, error: error)
             return false
         }
     }
@@ -161,7 +175,7 @@ final class AudioSessionCoordinator {
             (.mixWithOthers, "mixWithOthers"),
             (.duckOthers, "duckOthers"),
             (.interruptSpokenAudioAndMixWithOthers, "interruptSpokenAudioAndMixWithOthers"),
-            (.allowBluetooth, "allowBluetooth"),
+            (.allowBluetoothHFP, "allowBluetoothHFP"),
             (.allowBluetoothA2DP, "allowBluetoothA2DP"),
             (.allowAirPlay, "allowAirPlay"),
             (.defaultToSpeaker, "defaultToSpeaker")

@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		159DAE5957C13455D1886750 /* SpeechService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50FC8F82C631ABEF4B11E5DE /* SpeechService.swift */; };
 		16B29CACA2456DA2D2C97CFD /* ReaderMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = B297243EF5ABBC553443E7E1 /* ReaderMode.swift */; };
+		1859021EF961CBA8E088C661 /* MediaPlaybackController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88616E6A7FEA72A959863E55 /* MediaPlaybackController.swift */; };
+		2C14928F8DFF1A807D4C68C7 /* NowPlayingManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B68F623C8FBCD150C43C919 /* NowPlayingManager.swift */; };
 		2DF3F3E7C8B49399D82CF2BE /* SherpaAudioCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = E627D93B5253D7DABE07FE41 /* SherpaAudioCache.swift */; };
 		2E83D048D361AF90E250CF4D /* HelpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E522C6FB7B75C83730FABDE /* HelpView.swift */; };
 		369BCB84996C0761D5BC3614 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CA63389F895AB182DAAC91E /* SettingsView.swift */; };
@@ -25,6 +27,7 @@
 		9B6AA94961884E8F10FBAEEA /* URLReaderApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2432B3BE5277F79CD46DB22E /* URLReaderApp.swift */; };
 		9D0A51B7F445CE77453A29A4 /* TableOfContentsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9565D6B189EAFA8762A49A9 /* TableOfContentsView.swift */; };
 		AA5DC2AAF2312CD69B1E5C84 /* SherpaModelsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABEFF49161B4A0C73B5C131B /* SherpaModelsView.swift */; };
+		B6111F3FDC4A09005605ECA4 /* AudioSessionCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BE3E37EED6D3DC32EA4903B /* AudioSessionCoordinator.swift */; };
 		C1708AC40A3B767426114486 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F67E8BCCCC1EE6181DBD3E20 /* ContentView.swift */; };
 		C475AED55F3C68ECD11E8E7A /* SherpaModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF66A3444EACB04D82B567D1 /* SherpaModel.swift */; };
 		C625B8A508CAD99A05EECC64 /* ShareViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9E19C8D977CAB04ECC28FBB /* ShareViewController.swift */; };
@@ -73,12 +76,15 @@
 		3FB56B74B8A60502F7C15D7B /* ArticleReaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleReaderView.swift; sourceTree = "<group>"; };
 		411C7D264E56E015DCA95DF6 /* SherpaOnnxRuntime.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SherpaOnnxRuntime.swift; sourceTree = "<group>"; };
 		47266E86AB3F17B599224D74 /* URLReaderShare.appex */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = "wrapper.app-extension"; path = URLReaderShare.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		4BE3E37EED6D3DC32EA4903B /* AudioSessionCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioSessionCoordinator.swift; sourceTree = "<group>"; };
 		4CA63389F895AB182DAAC91E /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		4D54287956AF94ECD5D699EF /* Article.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Article.swift; sourceTree = "<group>"; };
 		50FC8F82C631ABEF4B11E5DE /* SpeechService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeechService.swift; sourceTree = "<group>"; };
 		5186DC41F065782B3102EC7B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		5B68F623C8FBCD150C43C919 /* NowPlayingManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NowPlayingManager.swift; sourceTree = "<group>"; };
 		6E522C6FB7B75C83730FABDE /* HelpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelpView.swift; sourceTree = "<group>"; };
 		7D1B5BE16D7D801CA175C010 /* VoiceSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceSettingsView.swift; sourceTree = "<group>"; };
+		88616E6A7FEA72A959863E55 /* MediaPlaybackController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaPlaybackController.swift; sourceTree = "<group>"; };
 		A6A865223BB056996BF10106 /* SelectableTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectableTextView.swift; sourceTree = "<group>"; };
 		ABC219EE441A6774D031D327 /* URLReader.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = URLReader.entitlements; sourceTree = "<group>"; };
 		ABEFF49161B4A0C73B5C131B /* SherpaModelsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SherpaModelsView.swift; sourceTree = "<group>"; };
@@ -176,7 +182,10 @@
 		C67905AE095DA9F63F3716D2 /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				4BE3E37EED6D3DC32EA4903B /* AudioSessionCoordinator.swift */,
 				C55EFAD3E6251CA3C173E771 /* ContentExtractor.swift */,
+				88616E6A7FEA72A959863E55 /* MediaPlaybackController.swift */,
+				5B68F623C8FBCD150C43C919 /* NowPlayingManager.swift */,
 				E627D93B5253D7DABE07FE41 /* SherpaAudioCache.swift */,
 				D62C2E20837FF349BDF384C6 /* SherpaOnnxModelStore.swift */,
 				411C7D264E56E015DCA95DF6 /* SherpaOnnxRuntime.swift */,
@@ -322,9 +331,12 @@
 			files = (
 				6CBDFF460F01EF17E3426558 /* Article.swift in Sources */,
 				FD45E02576D5011E5A92E0D6 /* ArticleReaderView.swift in Sources */,
+				B6111F3FDC4A09005605ECA4 /* AudioSessionCoordinator.swift in Sources */,
 				DDF02680D0045FED88EB78C9 /* ContentExtractor.swift in Sources */,
 				C1708AC40A3B767426114486 /* ContentView.swift in Sources */,
 				2E83D048D361AF90E250CF4D /* HelpView.swift in Sources */,
+				1859021EF961CBA8E088C661 /* MediaPlaybackController.swift in Sources */,
+				2C14928F8DFF1A807D4C68C7 /* NowPlayingManager.swift in Sources */,
 				3E673A92CFC2A3F0D03821AB /* PlaybackControlsView.swift in Sources */,
 				16B29CACA2456DA2D2C97CFD /* ReaderMode.swift in Sources */,
 				DF7D9A990AE670F316BFE40B /* ReaderViewModel.swift in Sources */,

@@ -49,7 +49,7 @@ struct AVSpeechSettingsView: View {
     }
 
     private func previewVoice() {
-        configurePreviewAudioSession()
+        viewModel.activateVoicePreviewSession()
         let previewText = "Hello! This is a preview of the selected voice at the current speed."
         let utterance = AVSpeechUtterance(string: previewText)
         utterance.voice = viewModel.speechService.selectedVoice
@@ -57,16 +57,6 @@ struct AVSpeechSettingsView: View {
 
         previewSynthesizer.stopSpeaking(at: .immediate)
         previewSynthesizer.speak(utterance)
-    }
-
-    private func configurePreviewAudioSession() {
-        do {
-            let audioSession = AVAudioSession.sharedInstance()
-            try audioSession.setCategory(.playback, mode: .spokenAudio, options: [.duckOthers])
-            try audioSession.setActive(true)
-        } catch {
-            print("Failed to configure preview audio session: \(error)")
-        }
     }
 }
 
