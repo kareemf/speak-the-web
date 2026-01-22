@@ -219,6 +219,10 @@ final class MediaPlaybackController: ObservableObject {
         service(for: engine, createIfNeeded: true)?.progress ?? 0.0
     }
 
+    func currentPosition(for engine: SpeechEngineType) -> Int {
+        service(for: engine, createIfNeeded: false)?.currentPosition ?? lastKnownPosition
+    }
+
     func isPlaying(for engine: SpeechEngineType) -> Bool {
         service(for: engine, createIfNeeded: true)?.isPlaying ?? false
     }
@@ -466,6 +470,15 @@ private enum PlaybackService {
             return service.progress
         case .sherpa(let service):
             return service.progress
+        }
+    }
+
+    var currentPosition: Int {
+        switch self {
+        case .avSpeech(let service):
+            return service.currentPosition
+        case .sherpa(let service):
+            return service.currentPosition
         }
     }
 

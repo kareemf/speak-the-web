@@ -206,6 +206,7 @@ class ReaderViewModel: ObservableObject {
 
     /// Clears the current content and resets the state
     func clearContent() {
+        persistCurrentPosition()
         playbackController.stopAll()
         playbackController.loadContent("")
         playbackController.setArticleURL(nil)
@@ -220,6 +221,7 @@ class ReaderViewModel: ObservableObject {
     /// Navigates to a specific section
     func navigateToSection(_ section: ArticleSection) {
         playbackController.seekToSection(section, engine: selectedSpeechEngine)
+        persistCurrentPosition()
         showTableOfContents = false
     }
 
@@ -314,16 +316,19 @@ class ReaderViewModel: ObservableObject {
     func skipForward() {
         guard canUseEngine(selectedSpeechEngine) else { return }
         playbackController.skipForward(engine: selectedSpeechEngine)
+        persistCurrentPosition()
     }
 
     func skipBackward() {
         guard canUseEngine(selectedSpeechEngine) else { return }
         playbackController.skipBackward(engine: selectedSpeechEngine)
+        persistCurrentPosition()
     }
 
     func seekTo(position: Int) {
         guard canUseEngine(selectedSpeechEngine) else { return }
         playbackController.seek(engine: selectedSpeechEngine, position: position)
+        persistCurrentPosition()
     }
 
     func activateVoicePreviewSession() {
@@ -359,6 +364,17 @@ class ReaderViewModel: ObservableObject {
 
     private func applyCurrentRateToEngines() {
         playbackController.setRate(multiplier: currentRateMultiplier)
+    }
+
+    private func persistCurrentPosition() {
+        guard let article else { return }
+        let position = playbackController.currentPosition(for: selectedSpeechEngine)
+        recentArticles = recentArticlesManager.updateProgress(
+            urlString: article.url.absoluteString,
+            position: position,
+            contentLength: article.content.count,
+            wordCount: article.wordCount
+        )
     }
 
     private func bindPositionUpdates(for engine: SpeechEngineType) {
