@@ -91,6 +91,13 @@ class SpeechService: NSObject, ObservableObject {
         }
     }
 
+    /// Prepares the synthesizer after an audio session activation.
+    func prepareForPlayback() {
+        guard !isPlaying, !isPaused else { return }
+        guard !synthesizer.isSpeaking else { return }
+        resetSynthesizer()
+    }
+
     /// Pauses playback
     func pause() {
         if isPlaying && !isPaused {
