@@ -327,6 +327,16 @@ class ReaderViewModel: ObservableObject {
         return String(format: "%d:%02d remaining", minutes, seconds)
     }
 
+    func recentCachedAudioLabel(for recent: RecentArticle) -> String? {
+        guard let cachedInfo = sherpaSpeechService.cachedAudioInfo(forArticleURL: recent.url) else {
+            return nil
+        }
+        let voiceName = cachedInfo.voiceName
+            ?? sherpaModelStore.downloadedRecords[cachedInfo.modelId]?.displayName
+            ?? cachedInfo.modelId
+        return "Cached: \(voiceName)"
+    }
+
     func setReaderMode(_ mode: ReaderMode) {
         readerMode = mode
     }

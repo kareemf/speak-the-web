@@ -125,7 +125,8 @@ struct URLInputView: View {
                         RecentArticleRow(
                             article: recent,
                             progress: viewModel.recentProgress(for: recent),
-                            remainingText: viewModel.recentRemainingText(for: recent)
+                            remainingText: viewModel.recentRemainingText(for: recent),
+                            cachedLabel: viewModel.recentCachedAudioLabel(for: recent)
                         ) {
                             viewModel.loadRecentArticle(recent)
                         }
@@ -200,6 +201,7 @@ struct RecentArticleRow: View {
     let article: RecentArticle
     let progress: Double
     let remainingText: String
+    let cachedLabel: String?
     let onTap: () -> Void
 
     var body: some View {
@@ -236,6 +238,13 @@ struct RecentArticleRow: View {
                 }
                 .font(.caption2)
                 .foregroundColor(.secondary)
+
+                if let cachedLabel {
+                    Text(cachedLabel)
+                        .font(.caption2)
+                        .foregroundColor(.secondary)
+                        .lineLimit(1)
+                }
 
                 GeometryReader { geometry in
                     ZStack(alignment: .leading) {

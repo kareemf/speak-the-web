@@ -95,6 +95,10 @@ final class SherpaSpeechService: ObservableObject {
         audioCache.totalBytes()
     }
 
+    func cachedAudioInfo(forArticleURL urlString: String) -> SherpaAudioCache.CachedAudioInfo? {
+        audioCache.cachedInfo(forArticleURL: urlString)
+    }
+
     func togglePlayPause() {
         print("[Sherpa] togglePlayPause (isPreparing=\(isPreparing), isPlaying=\(isPlaying), isPaused=\(isPaused))")
         if isPreparing {
@@ -326,6 +330,7 @@ final class SherpaSpeechService: ObservableObject {
                         key: cacheKey,
                         articleURL: articleURL ?? "",
                         modelId: record.id,
+                        voiceName: record.displayName,
                         generationSpeed: generationSpeed
                     )
                 }

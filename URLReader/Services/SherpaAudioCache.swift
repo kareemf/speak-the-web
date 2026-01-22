@@ -6,11 +6,17 @@ final class SherpaAudioCache {
         let key: String
         let articleURL: String
         let modelId: String
+        let voiceName: String?
         let generationSpeed: Float
         let fileName: String
         var fileSizeBytes: Int
         var lastUsed: Date
         let createdAt: Date
+    }
+
+    struct CachedAudioInfo {
+        let modelId: String
+        let voiceName: String?
     }
 
     private struct CacheIndex: Codable {
@@ -65,7 +71,7 @@ final class SherpaAudioCache {
         }
     }
 
-    func store(fileURL: URL, key: String, articleURL: String, modelId: String, generationSpeed: Float) {
+    func store(fileURL: URL, key: String, articleURL: String, modelId: String, voiceName: String?, generationSpeed: Float) {
         queue.sync {
             let fileName = fileURL.lastPathComponent
             let fileSize = fileSizeBytes(for: fileURL)
@@ -73,6 +79,7 @@ final class SherpaAudioCache {
                 key: key,
                 articleURL: articleURL,
                 modelId: modelId,
+                voiceName: voiceName,
                 generationSpeed: generationSpeed,
                 fileName: fileName,
                 fileSizeBytes: fileSize,
