@@ -20,9 +20,6 @@ struct URLInputView: View {
                         Text("Read Article Aloud")
                             .font(.title3)
                             .fontWeight(.bold)
-                        Text("Enter a URL to listen")
-                            .font(.caption)
-                            .foregroundColor(.secondary)
                     }
 
                     Spacer()
