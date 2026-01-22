@@ -12,7 +12,7 @@ struct ContentView: View {
                 Color(UIColor.systemGroupedBackground)
                     .ignoresSafeArea()
 
-                URLInputView(viewModel: viewModel)
+                HomeView(viewModel: viewModel)
             }
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {

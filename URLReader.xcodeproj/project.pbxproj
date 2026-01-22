@@ -22,11 +22,11 @@
 		58CBFE5CD8CD806F6C1D819F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5186DC41F065782B3102EC7B /* Assets.xcassets */; };
 		6CBDFF460F01EF17E3426558 /* Article.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D54287956AF94ECD5D699EF /* Article.swift */; };
 		7A01D4539DBB5AC00DF959FA /* SherpaSpeechService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10DBDD1D16ABF83E1CDBE34 /* SherpaSpeechService.swift */; };
-		7BA4F38F2580363F8C4201BE /* URLInputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE3D85301AE537AFFAFE8462 /* URLInputView.swift */; };
 		8AC6A89ABFFF727726040395 /* Website in Resources */ = {isa = PBXBuildFile; fileRef = ECA5314980ECE18630EF6AA6 /* Website */; };
 		9B6AA94961884E8F10FBAEEA /* URLReaderApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2432B3BE5277F79CD46DB22E /* URLReaderApp.swift */; };
 		9D0A51B7F445CE77453A29A4 /* TableOfContentsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9565D6B189EAFA8762A49A9 /* TableOfContentsView.swift */; };
 		AA5DC2AAF2312CD69B1E5C84 /* SherpaModelsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABEFF49161B4A0C73B5C131B /* SherpaModelsView.swift */; };
+		ACC7389DF1AA29754E144380 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA4721B4853BE2C3139C77C9 /* HomeView.swift */; };
 		B6111F3FDC4A09005605ECA4 /* AudioSessionCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BE3E37EED6D3DC32EA4903B /* AudioSessionCoordinator.swift */; };
 		C1708AC40A3B767426114486 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F67E8BCCCC1EE6181DBD3E20 /* ContentView.swift */; };
 		C475AED55F3C68ECD11E8E7A /* SherpaModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF66A3444EACB04D82B567D1 /* SherpaModel.swift */; };
@@ -95,7 +95,6 @@
 		C9E19C8D977CAB04ECC28FBB /* ShareViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareViewController.swift; sourceTree = "<group>"; };
 		CA5167FDD71D6AA5130C11D0 /* RecentArticle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentArticle.swift; sourceTree = "<group>"; };
 		CD3BF8A9AF584A00DF28729A /* SpeechEngineType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeechEngineType.swift; sourceTree = "<group>"; };
-		CE3D85301AE537AFFAFE8462 /* URLInputView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLInputView.swift; sourceTree = "<group>"; };
 		D47C7E812E533483E3575157 /* ReaderViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReaderViewModel.swift; sourceTree = "<group>"; };
 		D62C2E20837FF349BDF384C6 /* SherpaOnnxModelStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SherpaOnnxModelStore.swift; sourceTree = "<group>"; };
 		DF66A3444EACB04D82B567D1 /* SherpaModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SherpaModel.swift; sourceTree = "<group>"; };
@@ -104,6 +103,7 @@
 		ECA5314980ECE18630EF6AA6 /* Website */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Website; sourceTree = SOURCE_ROOT; };
 		F10DBDD1D16ABF83E1CDBE34 /* SherpaSpeechService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SherpaSpeechService.swift; sourceTree = "<group>"; };
 		F67E8BCCCC1EE6181DBD3E20 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		FA4721B4853BE2C3139C77C9 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -125,13 +125,13 @@
 				3FB56B74B8A60502F7C15D7B /* ArticleReaderView.swift */,
 				F67E8BCCCC1EE6181DBD3E20 /* ContentView.swift */,
 				6E522C6FB7B75C83730FABDE /* HelpView.swift */,
+				FA4721B4853BE2C3139C77C9 /* HomeView.swift */,
 				3CEEEC11DDCB80D6006DF829 /* PlaybackControlsView.swift */,
 				0C96FA06FFF40C100CDE678F /* ReaderWebViews.swift */,
 				A6A865223BB056996BF10106 /* SelectableTextView.swift */,
 				4CA63389F895AB182DAAC91E /* SettingsView.swift */,
 				ABEFF49161B4A0C73B5C131B /* SherpaModelsView.swift */,
 				C9565D6B189EAFA8762A49A9 /* TableOfContentsView.swift */,
-				CE3D85301AE537AFFAFE8462 /* URLInputView.swift */,
 				7D1B5BE16D7D801CA175C010 /* VoiceSettingsView.swift */,
 			);
 			path = Views;
@@ -335,6 +335,7 @@
 				DDF02680D0045FED88EB78C9 /* ContentExtractor.swift in Sources */,
 				C1708AC40A3B767426114486 /* ContentView.swift in Sources */,
 				2E83D048D361AF90E250CF4D /* HelpView.swift in Sources */,
+				ACC7389DF1AA29754E144380 /* HomeView.swift in Sources */,
 				1859021EF961CBA8E088C661 /* MediaPlaybackController.swift in Sources */,
 				2C14928F8DFF1A807D4C68C7 /* NowPlayingManager.swift in Sources */,
 				3E673A92CFC2A3F0D03821AB /* PlaybackControlsView.swift in Sources */,
@@ -353,7 +354,6 @@
 				C8CCC1356282B058EB2F4E44 /* SpeechEngineType.swift in Sources */,
 				159DAE5957C13455D1886750 /* SpeechService.swift in Sources */,
 				9D0A51B7F445CE77453A29A4 /* TableOfContentsView.swift in Sources */,
-				7BA4F38F2580363F8C4201BE /* URLInputView.swift in Sources */,
 				9B6AA94961884E8F10FBAEEA /* URLReaderApp.swift in Sources */,
 				46B0F985B66CF9029B6B0191 /* VoiceSettingsView.swift in Sources */,
 			);

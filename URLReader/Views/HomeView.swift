@@ -1,7 +1,7 @@
 import SwiftUI
 
-/// View for entering a URL to read
-struct URLInputView: View {
+/// Landing view for entering a URL to read
+struct HomeView: View {
     @ObservedObject var viewModel: ReaderViewModel
     @FocusState private var isURLFieldFocused: Bool
     @State private var showClearConfirmation = false
@@ -271,5 +271,5 @@ struct RecentArticleRow: View {
 }
 
 #Preview {
-    URLInputView(viewModel: ReaderViewModel())
+    HomeView(viewModel: ReaderViewModel())
 }
