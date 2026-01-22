@@ -59,6 +59,7 @@ final class SherpaSpeechService: ObservableObject {
         engine.connect(playerNode, to: timePitch, format: nil)
         engine.connect(timePitch, to: engine.mainMixerNode, format: nil)
         timePitch.rate = speed
+        configureAudioSession()
     }
 
     func updateModel(record: SherpaModelRecord?) {
@@ -536,8 +537,19 @@ final class SherpaSpeechService: ObservableObject {
         return (file: readFile, url: fileURL)
     }
 
+    private func configureAudioSession() {
+        do {
+            let audioSession = AVAudioSession.sharedInstance()
+            try audioSession.setCategory(.playback, mode: .spokenAudio, options: [.duckOthers])
+            try audioSession.setActive(true)
+        } catch {
+            print("Failed to configure audio session: \(error)")
+        }
+    }
+
     private func ensureEngineRunning() {
         guard !engine.isRunning else { return }
+        configureAudioSession()
         do {
             try engine.start()
             print("[Sherpa] Audio engine restarted")

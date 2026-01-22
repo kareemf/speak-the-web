@@ -20,14 +20,15 @@ class ReaderViewModel: ObservableObject {
     @Published var selectedSpeechEngine: SpeechEngineType = .avSpeech {
         didSet {
             UserDefaults.standard.set(selectedSpeechEngine.rawValue, forKey: Self.engineKey)
-            playbackController.stopAll()
+            speechService.stop()
+            sherpaSpeechService.stop()
             applyCurrentRateToEngines()
         }
     }
     @Published var selectedRateIndex: Int = 2 { // Default to 1x
         didSet {
             UserDefaults.standard.set(selectedRateIndex, forKey: "selectedRateIndex")
-            playbackController.setRate(multiplier: currentRateMultiplier)
+            sherpaSpeechService.setRate(multiplier: currentRateMultiplier)
         }
     }
     @Published var recentArticles: [RecentArticle] = []
@@ -37,9 +38,8 @@ class ReaderViewModel: ObservableObject {
 
     // MARK: - Services
 
-    private let playbackController = MediaPlaybackController()
-    var speechService: SpeechService { playbackController.speechService }
-    var sherpaSpeechService: SherpaSpeechService { playbackController.sherpaSpeechService }
+    let speechService = SpeechService()
+    let sherpaSpeechService = SherpaSpeechService()
     private let contentExtractor = ContentExtractor()
     private let recentArticlesManager = RecentArticlesManager()
     private let nowPlayingManager = NowPlayingManager()
@@ -130,7 +130,24 @@ class ReaderViewModel: ObservableObject {
         // Apply the rate immediately
         applyCurrentRateToEngines()
 
-        playbackController.objectWillChange
+        // Observe rate changes
+        $selectedRateIndex
+            .dropFirst()
+            .sink { [weak self] index in
+                guard let self = self else { return }
+                self.speechService.setRate(multiplier: self.currentRateMultiplier)
+            }
+            .store(in: &cancellables)
+
+        // Relay speech service updates so SwiftUI refreshes when playback/voice changes.
+        speechService.objectWillChange
+            .receive(on: RunLoop.main)
+            .sink { [weak self] _ in
+                self?.objectWillChange.send()
+            }
+            .store(in: &cancellables)
+
+        sherpaSpeechService.objectWillChange
             .receive(on: RunLoop.main)
             .sink { [weak self] _ in
                 self?.objectWillChange.send()
@@ -214,14 +231,16 @@ class ReaderViewModel: ObservableObject {
         showError = false
 
         // Stop any current playback
-        playbackController.stopAll()
+        speechService.stop()
+        sherpaSpeechService.stop()
         article = nil
 
         do {
             let extractedArticle = try await contentExtractor.extract(from: urlInput)
             article = extractedArticle
-            playbackController.loadContent(extractedArticle.content)
-            playbackController.setArticleURL(extractedArticle.url.absoluteString)
+            speechService.loadContent(extractedArticle.content)
+            sherpaSpeechService.loadContent(extractedArticle.content)
+            sherpaSpeechService.setArticleURL(extractedArticle.url.absoluteString)
             sherpaSpeechService.updateModel(record: sherpaModelStore.selectedRecord)
 
             // Save to recent articles
@@ -238,8 +257,9 @@ class ReaderViewModel: ObservableObject {
 
     /// Clears the current content and resets the state
     func clearContent() {
-        playbackController.stopAll()
-        playbackController.setArticleURL(nil)
+        speechService.stop()
+        sherpaSpeechService.stop()
+        sherpaSpeechService.setArticleURL(nil)
         article = nil
         urlInput = ""
         errorMessage = nil
@@ -275,8 +295,9 @@ class ReaderViewModel: ObservableObject {
         if let cached = recentArticlesManager.loadCachedArticle(for: recent.url) {
             let cachedArticle = Article(cached: cached)
             article = cachedArticle
-            playbackController.loadContent(cachedArticle.content)
-            playbackController.setArticleURL(cached.url)
+            speechService.loadContent(cachedArticle.content)
+            sherpaSpeechService.loadContent(cachedArticle.content)
+            sherpaSpeechService.setArticleURL(cached.url)
             sherpaSpeechService.updateModel(record: sherpaModelStore.selectedRecord)
             if cached.lastPosition > 0 {
                 speechService.setPosition(cached.lastPosition)
@@ -324,31 +345,55 @@ class ReaderViewModel: ObservableObject {
     func togglePlayPause() {
         print("[ReaderViewModel] togglePlayPause (engine=\(selectedSpeechEngine.rawValue))")
         guard canUseSelectedEngine() else { return }
-        playbackController.togglePlayPause(engine: selectedSpeechEngine)
+        if selectedSpeechEngine == .sherpaOnnx {
+            sherpaSpeechService.togglePlayPause()
+        } else {
+            speechService.togglePlayPause()
+        }
     }
 
     func play() {
         guard canUseSelectedEngine() else { return }
-        playbackController.play(engine: selectedSpeechEngine)
+        if selectedSpeechEngine == .sherpaOnnx {
+            sherpaSpeechService.play()
+        } else {
+            speechService.play()
+        }
     }
 
     func pause() {
-        playbackController.pause(engine: selectedSpeechEngine)
+        if selectedSpeechEngine == .sherpaOnnx {
+            sherpaSpeechService.pause()
+        } else {
+            speechService.pause()
+        }
     }
 
     func skipForward() {
         guard canUseSelectedEngine() else { return }
-        playbackController.skipForward(engine: selectedSpeechEngine)
+        if selectedSpeechEngine == .sherpaOnnx {
+            sherpaSpeechService.skipForward()
+        } else {
+            speechService.skipForward()
+        }
     }
 
     func skipBackward() {
         guard canUseSelectedEngine() else { return }
-        playbackController.skipBackward(engine: selectedSpeechEngine)
+        if selectedSpeechEngine == .sherpaOnnx {
+            sherpaSpeechService.skipBackward()
+        } else {
+            speechService.skipBackward()
+        }
     }
 
     func seekTo(position: Int) {
         guard canUseSelectedEngine() else { return }
-        playbackController.seek(engine: selectedSpeechEngine, position: position)
+        if selectedSpeechEngine == .sherpaOnnx {
+            sherpaSpeechService.seekTo(position: position)
+        } else {
+            speechService.seekTo(position: position)
+        }
     }
 
     private func canUseSelectedEngine() -> Bool {
@@ -379,7 +424,8 @@ class ReaderViewModel: ObservableObject {
     }
 
     private func applyCurrentRateToEngines() {
-        playbackController.setRate(multiplier: currentRateMultiplier)
+        speechService.setRate(multiplier: currentRateMultiplier)
+        sherpaSpeechService.setRate(multiplier: currentRateMultiplier)
     }
 
     private func configureNowPlayingCommands() {
