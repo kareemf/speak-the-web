@@ -23,6 +23,7 @@ final class SherpaOnnxModelStore: NSObject, ObservableObject {
 
     private var session: URLSession
     private let fileManager = FileManager.default
+    private let appGroupId = "group.com.kareemf.URLReader"
     private let baseDirectory: URL
     private let registryURL: URL
 
@@ -31,7 +32,12 @@ final class SherpaOnnxModelStore: NSObject, ObservableObject {
         session = URLSession(configuration: configuration, delegate: nil, delegateQueue: nil)
 
         let appSupport = fileManager.urls(for: .applicationSupportDirectory, in: .userDomainMask)[0]
-        baseDirectory = appSupport.appendingPathComponent("URLReader/VoiceModels", isDirectory: true)
+        if let groupURL = fileManager.containerURL(forSecurityApplicationGroupIdentifier: appGroupId) {
+            baseDirectory = groupURL.appendingPathComponent("VoiceModels", isDirectory: true)
+        } else {
+            baseDirectory = appSupport.appendingPathComponent("URLReader/VoiceModels", isDirectory: true)
+        }
+
         registryURL = baseDirectory.appendingPathComponent("model-registry.json")
 
         super.init()
@@ -143,7 +149,8 @@ final class SherpaOnnxModelStore: NSObject, ObservableObject {
     func isDownloaded(_ model: SherpaModel) -> Bool {
         guard let record = downloadedRecords[model.id] else { return false }
         guard validateRecordPaths(record) else {
-            invalidateRecord(id: model.id, message: "Downloaded Sherpa model files are missing. Please re-download.")
+            downloadedRecords.removeValue(forKey: model.id)
+            persistRegistry()
             return false
         }
         return true
@@ -258,6 +265,8 @@ final class SherpaOnnxModelStore: NSObject, ObservableObject {
             }
         }
 
+        applyFileProtection(to: modelDirectory)
+
         let uncompressedSize = directorySize(at: modelDirectory)
         let modelPath = findFirstFile(withExtension: "onnx", in: modelDirectory)
         let tokensPath = findFirstFile(named: "tokens.txt", in: modelDirectory)
@@ -292,6 +301,17 @@ final class SherpaOnnxModelStore: NSObject, ObservableObject {
             total += resourceValues?.fileSize ?? 0
         }
         return total
+    }
+
+    private func applyFileProtection(to directory: URL) {
+        let protection = FileProtectionType.completeUntilFirstUserAuthentication
+        let attributes: [FileAttributeKey: Any] = [.protectionKey: protection]
+        try? fileManager.setAttributes(attributes, ofItemAtPath: directory.path)
+        if let enumerator = fileManager.enumerator(at: directory, includingPropertiesForKeys: nil) {
+            for case let fileURL as URL in enumerator {
+                try? fileManager.setAttributes(attributes, ofItemAtPath: fileURL.path)
+            }
+        }
     }
 
     private func validateRecordPaths(_ record: SherpaModelRecord) -> Bool {
