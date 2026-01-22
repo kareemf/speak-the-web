@@ -221,6 +221,7 @@ class ReaderViewModel: ObservableObject {
             article = extractedArticle
             speechService.loadContent(extractedArticle.content)
             sherpaSpeechService.loadContent(extractedArticle.content)
+            sherpaSpeechService.setArticleURL(extractedArticle.url.absoluteString)
             sherpaSpeechService.updateModel(record: sherpaModelStore.selectedRecord)
 
             // Save to recent articles
@@ -239,6 +240,7 @@ class ReaderViewModel: ObservableObject {
     func clearContent() {
         speechService.stop()
         sherpaSpeechService.stop()
+        sherpaSpeechService.setArticleURL(nil)
         article = nil
         urlInput = ""
         errorMessage = nil
@@ -276,6 +278,7 @@ class ReaderViewModel: ObservableObject {
             article = cachedArticle
             speechService.loadContent(cachedArticle.content)
             sherpaSpeechService.loadContent(cachedArticle.content)
+            sherpaSpeechService.setArticleURL(cached.url)
             sherpaSpeechService.updateModel(record: sherpaModelStore.selectedRecord)
             if cached.lastPosition > 0 {
                 speechService.setPosition(cached.lastPosition)
@@ -292,11 +295,13 @@ class ReaderViewModel: ObservableObject {
     func clearRecentArticles() {
         recentArticlesManager.clear()
         recentArticles = []
+        sherpaSpeechService.clearCachedAudio()
     }
 
     /// Removes a recent article and clears its cached payload
     func removeRecentArticle(_ recent: RecentArticle) {
         recentArticles = recentArticlesManager.remove(urlString: recent.url)
+        sherpaSpeechService.removeCachedAudio(for: recent.url)
     }
 
     func recentProgress(for recent: RecentArticle) -> Double {

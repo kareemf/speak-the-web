@@ -15,6 +15,16 @@ final class SherpaSpeechService: ObservableObject {
         progress >= 1.0 && !isPlaying && !isPaused
     }
 
+    var duration: TimeInterval? {
+        guard audioSampleRate > 0, totalFrames > 0 else { return nil }
+        return Double(totalFrames) / audioSampleRate
+    }
+
+    var currentTime: TimeInterval? {
+        guard audioSampleRate > 0, totalFrames > 0 else { return nil }
+        return Double(currentFrame()) / audioSampleRate
+    }
+
     private let engine = AVAudioEngine()
     private let playerNode = AVAudioPlayerNode()
     private let timePitch = AVAudioUnitTimePitch()
@@ -22,9 +32,11 @@ final class SherpaSpeechService: ObservableObject {
     private let generationLock = NSLock()
     private var scheduleToken = UUID()
     private var generationInFlight = false
+    private let audioCache = SherpaAudioCache(maxEntries: 10, maxBytes: 100 * 1024 * 1024)
     private var audioFile: AVAudioFile?
     private var audioFileURL: URL?
     private var totalFrames: AVAudioFramePosition = 0
+    private var audioSampleRate: Double = 0
     private var startFrame: AVAudioFramePosition = 0
     private var progressTimer: Timer?
     private let workQueue = DispatchQueue(label: "SherpaSpeechService")
@@ -37,6 +49,8 @@ final class SherpaSpeechService: ObservableObject {
     private var speed: Float = 1.0
     private var currentGenerationID: UUID?
     private var generationTimeoutWorkItem: DispatchWorkItem?
+    private var audioIsCached = false
+    private var currentArticleURL: String?
 
     init() {
         print("[Sherpa] Init service \(instanceID.uuidString)")
@@ -46,7 +60,6 @@ final class SherpaSpeechService: ObservableObject {
         engine.connect(timePitch, to: engine.mainMixerNode, format: nil)
         timePitch.rate = speed
         configureAudioSession()
-        try? engine.start()
     }
 
     func updateModel(record: SherpaModelRecord?) {
@@ -66,6 +79,18 @@ final class SherpaSpeechService: ObservableObject {
         clearAudio()
     }
 
+    func setArticleURL(_ url: String?) {
+        currentArticleURL = url
+    }
+
+    func removeCachedAudio(for urlString: String) {
+        audioCache.removeEntries(forArticleURL: urlString)
+    }
+
+    func clearCachedAudio() {
+        audioCache.clear()
+    }
+
     func togglePlayPause() {
         print("[Sherpa] togglePlayPause (isPreparing=\(isPreparing), isPlaying=\(isPlaying), isPaused=\(isPaused))")
         if isPreparing {
@@ -80,6 +105,7 @@ final class SherpaSpeechService: ObservableObject {
 
     func play() {
         print("[Sherpa] play (isPreparing=\(isPreparing), isPlaying=\(isPlaying), isPaused=\(isPaused), hasAudio=\(audioFile != nil))")
+        ensureEngineRunning()
         guard !isPreparing else { return }
         if isPaused {
             playerNode.play()
@@ -135,7 +161,7 @@ final class SherpaSpeechService: ObservableObject {
         currentPosition = clampedPosition
         progress = textLength > 0 ? Double(clampedPosition) / Double(textLength) : 0
 
-        guard let audioFile, totalFrames > 0 else { return }
+        guard audioFile != nil, totalFrames > 0 else { return }
 
         let targetFrame = AVAudioFramePosition(Double(totalFrames) * progress)
         startFrame = max(0, min(targetFrame, totalFrames))
@@ -191,6 +217,13 @@ final class SherpaSpeechService: ObservableObject {
         isPreparing = true
         generationPhase = "Starting"
         let startTime = Date()
+        let generationSpeed: Float = 1.0
+        let cacheKey = audioCache.cacheKey(
+            text: text,
+            modelId: record.id,
+            generationSpeed: generationSpeed
+        )
+        let articleURL = currentArticleURL
         let generationID = UUID()
         currentGenerationID = generationID
         print("[Sherpa] Generation ID \(generationID.uuidString)")
@@ -200,6 +233,38 @@ final class SherpaSpeechService: ObservableObject {
         workQueue.async { [weak self] in
             guard let self else { return }
             do {
+                self.logPhase("Checking cache", uiMessage: "Checking cache…", generationID: generationID)
+                if let cachedURL = self.audioCache.cachedFileURL(for: cacheKey) {
+                    do {
+                        let cachedFile = try AVAudioFile(forReading: cachedURL)
+                        DispatchQueue.main.async {
+                            guard self.currentGenerationID == generationID else { return }
+                            self.cancelGenerationWatchdog()
+                            self.audioFile = cachedFile
+                            self.audioFileURL = cachedURL
+                            self.totalFrames = cachedFile.length
+                            self.audioSampleRate = cachedFile.processingFormat.sampleRate
+                            self.startFrame = 0
+                            self.currentPosition = 0
+                            self.progress = 0.0
+                            self.audioIsCached = true
+                            self.isPreparing = false
+                            self.generationPhase = nil
+                            self.currentGenerationID = nil
+                            self.endGeneration(reason: "cache-hit")
+                            print("[Sherpa] Loaded cached audio")
+
+                            if self.shouldAutoPlayAfterPrepare {
+                                self.shouldAutoPlayAfterPrepare = false
+                                self.startPlayback()
+                            }
+                        }
+                        return
+                    } catch {
+                        self.audioCache.removeEntry(forKey: cacheKey)
+                    }
+                }
+
                 self.logPhase("Initializing model config", uiMessage: "Initializing model…", generationID: generationID)
                 print("[Sherpa] Checking model files")
                 guard fileManager.fileExists(atPath: record.modelPath) else {
@@ -213,12 +278,12 @@ final class SherpaSpeechService: ObservableObject {
 
                 print("[Sherpa] Resolving data dir")
                 let dataDir = self.dataDirPath(for: record)
-                var vitsConfig = sherpaOnnxOfflineTtsVitsModelConfig(
+                let vitsConfig = sherpaOnnxOfflineTtsVitsModelConfig(
                     model: record.modelPath,
                     tokens: tokensPath,
                     dataDir: dataDir
                 )
-                var modelConfig = sherpaOnnxOfflineTtsModelConfig(
+                let modelConfig = sherpaOnnxOfflineTtsModelConfig(
                     vits: vitsConfig,
                     numThreads: 2,
                     provider: "cpu"
@@ -231,7 +296,7 @@ final class SherpaSpeechService: ObservableObject {
                 }
                 self.logPhase("Generating audio", uiMessage: "Generating audio…", generationID: generationID)
                 let generateStart = Date()
-                let audio = tts.generate(text: self.text, speed: 1.0)
+                let audio = tts.generate(text: self.text, speed: generationSpeed)
                 let generateDuration = Date().timeIntervalSince(generateStart)
                 print("[Sherpa] Generated audio in \(String(format: "%.2f", generateDuration))s")
                 let samples = audio.samples
@@ -242,9 +307,24 @@ final class SherpaSpeechService: ObservableObject {
 
                 self.logPhase("Writing audio", uiMessage: "Writing audio…", generationID: generationID)
                 let writeStart = Date()
-                let prepared = try self.writeAudio(samples: samples, sampleRate: Double(audio.sampleRate))
+                let shouldCache = !(articleURL ?? "").isEmpty
+                let destinationURL = shouldCache ? self.audioCache.destinationURL(for: cacheKey) : nil
+                let prepared = try self.writeAudio(
+                    samples: samples,
+                    sampleRate: Double(audio.sampleRate),
+                    destinationURL: destinationURL
+                )
                 let writeDuration = Date().timeIntervalSince(writeStart)
                 print("[Sherpa] Wrote audio in \(String(format: "%.2f", writeDuration))s")
+                if shouldCache {
+                    self.audioCache.store(
+                        fileURL: prepared.url,
+                        key: cacheKey,
+                        articleURL: articleURL ?? "",
+                        modelId: record.id,
+                        generationSpeed: generationSpeed
+                    )
+                }
 
                 DispatchQueue.main.async {
                     guard self.currentGenerationID == generationID else { return }
@@ -252,12 +332,14 @@ final class SherpaSpeechService: ObservableObject {
                     self.audioFile = prepared.file
                     self.audioFileURL = prepared.url
                     self.totalFrames = prepared.file.length
+                    self.audioSampleRate = Double(audio.sampleRate)
                     self.startFrame = 0
                     self.currentPosition = 0
                     self.progress = 0.0
                     self.isPreparing = false
                     self.generationPhase = nil
                     self.currentGenerationID = nil
+                    self.audioIsCached = shouldCache
                     self.endGeneration(reason: "prepare-complete")
 
                     let totalDuration = Date().timeIntervalSince(startTime)
@@ -348,13 +430,15 @@ final class SherpaSpeechService: ObservableObject {
     }
 
     private func clearAudio() {
-        if let url = audioFileURL {
+        if let url = audioFileURL, !audioIsCached {
             try? FileManager.default.removeItem(at: url)
         }
         audioFile = nil
         audioFileURL = nil
         totalFrames = 0
+        audioSampleRate = 0
         startFrame = 0
+        audioIsCached = false
     }
 
     private func generationTimeout(for textCount: Int) -> TimeInterval {
@@ -424,7 +508,7 @@ final class SherpaSpeechService: ObservableObject {
         print("[Sherpa] Generation cleared (\(reason))")
     }
 
-    private func writeAudio(samples: [Float], sampleRate: Double) throws -> (file: AVAudioFile, url: URL) {
+    private func writeAudio(samples: [Float], sampleRate: Double, destinationURL: URL? = nil) throws -> (file: AVAudioFile, url: URL) {
         let format = AVAudioFormat(standardFormatWithSampleRate: sampleRate, channels: 1)!
         let frameCount = AVAudioFrameCount(samples.count)
         let buffer = AVAudioPCMBuffer(pcmFormat: format, frameCapacity: frameCount)!
@@ -432,12 +516,20 @@ final class SherpaSpeechService: ObservableObject {
 
         if let channelData = buffer.floatChannelData?.pointee {
             samples.withUnsafeBufferPointer { bufferPointer in
-                channelData.assign(from: bufferPointer.baseAddress!, count: samples.count)
+                channelData.update(from: bufferPointer.baseAddress!, count: samples.count)
             }
         }
 
-        let cacheDir = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask)[0]
-        let fileURL = cacheDir.appendingPathComponent("sherpa-tts-\(UUID().uuidString).caf")
+        let fileURL: URL
+        if let destinationURL {
+            fileURL = destinationURL
+            if FileManager.default.fileExists(atPath: destinationURL.path) {
+                try? FileManager.default.removeItem(at: destinationURL)
+            }
+        } else {
+            let cacheDir = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask)[0]
+            fileURL = cacheDir.appendingPathComponent("sherpa-tts-\(UUID().uuidString).caf")
+        }
         let file = try AVAudioFile(forWriting: fileURL, settings: format.settings)
         try file.write(from: buffer)
 
@@ -452,6 +544,18 @@ final class SherpaSpeechService: ObservableObject {
             try audioSession.setActive(true)
         } catch {
             print("Failed to configure audio session: \(error)")
+        }
+    }
+
+    private func ensureEngineRunning() {
+        guard !engine.isRunning else { return }
+        configureAudioSession()
+        do {
+            try engine.start()
+            print("[Sherpa] Audio engine restarted")
+        } catch {
+            print("[Sherpa] Failed to restart audio engine: \(error)")
+            lastErrorMessage = "Audio engine failed to start. Try again."
         }
     }
 
