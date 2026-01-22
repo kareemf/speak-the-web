@@ -87,9 +87,17 @@ final class SherpaAudioCache {
                 createdAt: Date()
             )
             entries[key] = entry
-            pruneIfNeeded()
+            pruneIfNeeded(allowOversizedKey: key)
             persistIndex()
             print("[SherpaCache] Stored \(fileName) (\(fileSize) bytes)")
+        }
+    }
+
+    func cachedInfo(forArticleURL urlString: String) -> CachedAudioInfo? {
+        queue.sync {
+            let matches = entries.values.filter { $0.articleURL == urlString }
+            guard let entry = matches.max(by: { $0.lastUsed < $1.lastUsed }) else { return nil }
+            return CachedAudioInfo(modelId: entry.modelId, voiceName: entry.voiceName)
         }
     }
 
@@ -161,8 +169,22 @@ final class SherpaAudioCache {
         }
     }
 
-    private func pruneIfNeeded() {
+    private func pruneIfNeeded(allowOversizedKey: String? = nil) {
         var totalBytes = entries.values.reduce(0) { $0 + $1.fileSizeBytes }
+        if let key = allowOversizedKey,
+           let oversizedEntry = entries[key],
+           oversizedEntry.fileSizeBytes > maxBytes {
+            let entriesToRemove = entries.values
+                .filter { $0.key != key }
+                .sorted { $0.lastUsed < $1.lastUsed }
+            for entry in entriesToRemove {
+                entries.removeValue(forKey: entry.key)
+                let url = directoryURL.appendingPathComponent(entry.fileName)
+                try? fileManager.removeItem(at: url)
+                totalBytes -= entry.fileSizeBytes
+            }
+            return
+        }
         var sorted = entries.values.sorted { $0.lastUsed < $1.lastUsed }
 
         while entries.count > maxEntries || totalBytes > maxBytes {
