@@ -247,13 +247,12 @@ final class SherpaSpeechService: ObservableObject {
                         DispatchQueue.main.async {
                             guard self.currentGenerationID == generationID else { return }
                             self.cancelGenerationWatchdog()
+                            let pendingPosition = self.currentPosition
                             self.audioFile = cachedFile
                             self.audioFileURL = cachedURL
                             self.totalFrames = cachedFile.length
                             self.audioSampleRate = cachedFile.processingFormat.sampleRate
-                            self.startFrame = 0
-                            self.currentPosition = 0
-                            self.progress = 0.0
+                            self.setPosition(pendingPosition)
                             self.audioIsCached = true
                             self.isPreparing = false
                             self.generationPhase = nil
@@ -337,13 +336,12 @@ final class SherpaSpeechService: ObservableObject {
                 DispatchQueue.main.async {
                     guard self.currentGenerationID == generationID else { return }
                     self.cancelGenerationWatchdog()
+                    let pendingPosition = self.currentPosition
                     self.audioFile = prepared.file
                     self.audioFileURL = prepared.url
                     self.totalFrames = prepared.file.length
                     self.audioSampleRate = Double(audio.sampleRate)
-                    self.startFrame = 0
-                    self.currentPosition = 0
-                    self.progress = 0.0
+                    self.setPosition(pendingPosition)
                     self.isPreparing = false
                     self.generationPhase = nil
                     self.currentGenerationID = nil
