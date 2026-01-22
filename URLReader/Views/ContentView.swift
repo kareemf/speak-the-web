@@ -16,8 +16,14 @@ struct ContentView: View {
             }
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    Button(action: { showHelp = true }) {
-                        Image(systemName: "questionmark.circle")
+                    HStack {
+                        Button(action: { showHelp = true }) {
+                            Image(systemName: "questionmark.circle")
+                        }
+                        
+                        Button(action: { viewModel.showVoiceSettings = true }) {
+                            Image(systemName: "gearshape")
+                        }
                     }
                 }
             }
