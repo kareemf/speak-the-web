@@ -125,6 +125,12 @@ final class SherpaAudioCache {
         }
     }
 
+    func totalBytes() -> Int {
+        queue.sync {
+            entries.values.reduce(0) { $0 + $1.fileSizeBytes }
+        }
+    }
+
     private func loadIndex() {
         guard fileManager.fileExists(atPath: indexURL.path),
               let data = try? Data(contentsOf: indexURL) else {

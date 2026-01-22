@@ -298,6 +298,14 @@ class ReaderViewModel: ObservableObject {
         sherpaSpeechService.clearCachedAudio()
     }
 
+    func clearSherpaCachedAudio() {
+        sherpaSpeechService.clearCachedAudio()
+    }
+
+    func sherpaCachedAudioSizeBytes() -> Int {
+        sherpaSpeechService.cachedAudioSizeBytes()
+    }
+
     /// Removes a recent article and clears its cached payload
     func removeRecentArticle(_ recent: RecentArticle) {
         recentArticles = recentArticlesManager.remove(urlString: recent.url)

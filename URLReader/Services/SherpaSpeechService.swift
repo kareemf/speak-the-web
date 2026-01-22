@@ -32,7 +32,7 @@ final class SherpaSpeechService: ObservableObject {
     private let generationLock = NSLock()
     private var scheduleToken = UUID()
     private var generationInFlight = false
-    private let audioCache = SherpaAudioCache(maxEntries: 10, maxBytes: 100 * 1024 * 1024)
+    private let audioCache = SherpaAudioCache(maxEntries: 10, maxBytes: 200 * 1024 * 1024)
     private var audioFile: AVAudioFile?
     private var audioFileURL: URL?
     private var totalFrames: AVAudioFramePosition = 0
@@ -89,6 +89,10 @@ final class SherpaSpeechService: ObservableObject {
 
     func clearCachedAudio() {
         audioCache.clear()
+    }
+
+    func cachedAudioSizeBytes() -> Int {
+        audioCache.totalBytes()
     }
 
     func togglePlayPause() {

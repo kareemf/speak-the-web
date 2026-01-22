@@ -4,6 +4,7 @@ struct SettingsView: View {
     @ObservedObject var viewModel: ReaderViewModel
     @ObservedObject var modelStore: SherpaOnnxModelStore
     @Environment(\.dismiss) private var dismiss
+    @State private var sherpaCacheSizeBytes: Int?
 
     var body: some View {
         NavigationStack {
@@ -80,11 +81,28 @@ struct SettingsView: View {
                             .font(.footnote)
                             .foregroundColor(.secondary)
                     }
+
+                    Button(role: .destructive) {
+                        viewModel.clearSherpaCachedAudio()
+                        refreshSherpaCacheSize()
+                    } label: {
+                        HStack {
+                            Text("Clear Cached Audio")
+                            Spacer()
+                            if let sherpaCacheSizeText = sherpaCacheSizeText {
+                                Text(sherpaCacheSizeText)
+                                    .foregroundColor(.secondary)
+                            }
+                        }
+                    }
                 }
             }
             .listStyle(.insetGrouped)
             .navigationTitle("Settings")
             .navigationBarTitleDisplayMode(.inline)
+            .onAppear {
+                refreshSherpaCacheSize()
+            }
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button("Done") {
@@ -102,6 +120,16 @@ struct SettingsView: View {
         case .sherpaOnnx:
             return "Slow generation, more natural sounding voices. Additional storage needed per voice."
         }
+    }
+
+    private var sherpaCacheSizeText: String? {
+        guard let sherpaCacheSizeBytes else { return nil }
+        let megabytes = Double(sherpaCacheSizeBytes) / 1_048_576.0
+        return String(format: "%.1f MB", megabytes)
+    }
+
+    private func refreshSherpaCacheSize() {
+        sherpaCacheSizeBytes = viewModel.sherpaCachedAudioSizeBytes()
     }
 }
 

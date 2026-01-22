@@ -116,6 +116,9 @@ TestResults/
 .idea/
 *.iml
 
+# Claude
+.claude/
+
 # Environment files (may contain secrets)
 .env
 .env.*
