@@ -1,4 +1,5 @@
 import SwiftUI
+import UIKit
 
 @main
 struct URLReaderApp: App {
@@ -12,6 +13,7 @@ struct URLReaderApp: App {
                     handleIncomingURL(url)
                 }
                 .onAppear {
+                    UIApplication.shared.beginReceivingRemoteControlEvents()
                     checkForSharedURL()
                 }
         }

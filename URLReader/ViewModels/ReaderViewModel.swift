@@ -42,6 +42,7 @@ class ReaderViewModel: ObservableObject {
     let sherpaSpeechService = SherpaSpeechService()
     private let contentExtractor = ContentExtractor()
     private let recentArticlesManager = RecentArticlesManager()
+    private let nowPlayingManager = NowPlayingManager()
     let sherpaModelStore = SherpaOnnxModelStore()
 
     // MARK: - Computed Properties
@@ -197,6 +198,24 @@ class ReaderViewModel: ObservableObject {
             }
             .store(in: &cancellables)
 
+        let nowPlayingPublishers: [AnyPublisher<Void, Never>] = [
+            $article.map { _ in () }.eraseToAnyPublisher(),
+            $selectedSpeechEngine.map { _ in () }.eraseToAnyPublisher(),
+            speechService.$currentPosition.map { _ in () }.eraseToAnyPublisher(),
+            sherpaSpeechService.$currentPosition.map { _ in () }.eraseToAnyPublisher(),
+            speechService.$isPlaying.map { _ in () }.eraseToAnyPublisher(),
+            sherpaSpeechService.$isPlaying.map { _ in () }.eraseToAnyPublisher()
+        ]
+
+        Publishers.MergeMany(nowPlayingPublishers)
+            .throttle(for: .seconds(1), scheduler: RunLoop.main, latest: true)
+            .sink { [weak self] _ in
+                self?.updateNowPlayingInfo()
+            }
+            .store(in: &cancellables)
+
+        configureNowPlayingCommands()
+
     }
 
     private var cancellables = Set<AnyCancellable>()
@@ -333,6 +352,23 @@ class ReaderViewModel: ObservableObject {
         }
     }
 
+    func play() {
+        guard canUseSelectedEngine() else { return }
+        if selectedSpeechEngine == .sherpaOnnx {
+            sherpaSpeechService.play()
+        } else {
+            speechService.play()
+        }
+    }
+
+    func pause() {
+        if selectedSpeechEngine == .sherpaOnnx {
+            sherpaSpeechService.pause()
+        } else {
+            speechService.pause()
+        }
+    }
+
     func skipForward() {
         guard canUseSelectedEngine() else { return }
         if selectedSpeechEngine == .sherpaOnnx {
@@ -390,6 +426,66 @@ class ReaderViewModel: ObservableObject {
     private func applyCurrentRateToEngines() {
         speechService.setRate(multiplier: currentRateMultiplier)
         sherpaSpeechService.setRate(multiplier: currentRateMultiplier)
+    }
+
+    private func configureNowPlayingCommands() {
+        nowPlayingManager.configureCommands(
+            play: { [weak self] in self?.play() },
+            pause: { [weak self] in self?.pause() },
+            toggle: { [weak self] in self?.togglePlayPause() },
+            skipForward: { [weak self] in self?.skipForward() },
+            skipBackward: { [weak self] in self?.skipBackward() },
+            seek: { [weak self] time in self?.seekToTime(time) }
+        )
+    }
+
+    private func seekToTime(_ time: TimeInterval) {
+        guard let article else { return }
+        let duration = effectiveDuration()
+        guard duration > 0 else { return }
+        let clamped = max(0, min(time, duration))
+        let progress = clamped / duration
+        let position = Int(Double(article.content.count) * progress)
+        seekTo(position: position)
+    }
+
+    private func effectiveDuration() -> TimeInterval {
+        if selectedSpeechEngine == .sherpaOnnx,
+           let duration = sherpaSpeechService.duration {
+            return duration
+        }
+        return estimatedTotalDuration()
+    }
+
+    private func estimatedTotalDuration() -> TimeInterval {
+        guard let article else { return 0 }
+        return Double(article.wordCount) / (200.0 / 60.0) / Double(currentRateMultiplier)
+    }
+
+    private func updateNowPlayingInfo() {
+        guard let article, showArticle else {
+            nowPlayingManager.updateNowPlaying(nil)
+            return
+        }
+
+        let duration = effectiveDuration()
+        let elapsed: TimeInterval
+        if selectedSpeechEngine == .sherpaOnnx, let current = sherpaSpeechService.currentTime {
+            elapsed = current
+        } else {
+            elapsed = duration * playbackProgress
+        }
+
+        nowPlayingManager.updateNowPlaying(
+            NowPlayingManager.Info(
+                title: article.title,
+                artist: article.url.host,
+                duration: duration,
+                elapsed: elapsed,
+                rate: currentRateMultiplier,
+                isPlaying: playbackIsPlaying
+            )
+        )
     }
 }
 

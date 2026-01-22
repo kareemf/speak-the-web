@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		159DAE5957C13455D1886750 /* SpeechService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50FC8F82C631ABEF4B11E5DE /* SpeechService.swift */; };
 		16B29CACA2456DA2D2C97CFD /* ReaderMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = B297243EF5ABBC553443E7E1 /* ReaderMode.swift */; };
+		2C14928F8DFF1A807D4C68C7 /* NowPlayingManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B68F623C8FBCD150C43C919 /* NowPlayingManager.swift */; };
 		2DF3F3E7C8B49399D82CF2BE /* SherpaAudioCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = E627D93B5253D7DABE07FE41 /* SherpaAudioCache.swift */; };
 		369BCB84996C0761D5BC3614 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CA63389F895AB182DAAC91E /* SettingsView.swift */; };
 		3E540ED61B4201D7D9A2CF0D /* ReaderWebViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C96FA06FFF40C100CDE678F /* ReaderWebViews.swift */; };
@@ -75,6 +76,7 @@
 		4D54287956AF94ECD5D699EF /* Article.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Article.swift; sourceTree = "<group>"; };
 		50FC8F82C631ABEF4B11E5DE /* SpeechService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeechService.swift; sourceTree = "<group>"; };
 		5186DC41F065782B3102EC7B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		5B68F623C8FBCD150C43C919 /* NowPlayingManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NowPlayingManager.swift; sourceTree = "<group>"; };
 		7D1B5BE16D7D801CA175C010 /* VoiceSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceSettingsView.swift; sourceTree = "<group>"; };
 		A6A865223BB056996BF10106 /* SelectableTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectableTextView.swift; sourceTree = "<group>"; };
 		ABC219EE441A6774D031D327 /* URLReader.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = URLReader.entitlements; sourceTree = "<group>"; };
@@ -171,6 +173,7 @@
 			isa = PBXGroup;
 			children = (
 				C55EFAD3E6251CA3C173E771 /* ContentExtractor.swift */,
+				5B68F623C8FBCD150C43C919 /* NowPlayingManager.swift */,
 				E627D93B5253D7DABE07FE41 /* SherpaAudioCache.swift */,
 				D62C2E20837FF349BDF384C6 /* SherpaOnnxModelStore.swift */,
 				411C7D264E56E015DCA95DF6 /* SherpaOnnxRuntime.swift */,
@@ -317,6 +320,7 @@
 				FD45E02576D5011E5A92E0D6 /* ArticleReaderView.swift in Sources */,
 				DDF02680D0045FED88EB78C9 /* ContentExtractor.swift in Sources */,
 				C1708AC40A3B767426114486 /* ContentView.swift in Sources */,
+				2C14928F8DFF1A807D4C68C7 /* NowPlayingManager.swift in Sources */,
 				3E673A92CFC2A3F0D03821AB /* PlaybackControlsView.swift in Sources */,
 				16B29CACA2456DA2D2C97CFD /* ReaderMode.swift in Sources */,
 				DF7D9A990AE670F316BFE40B /* ReaderViewModel.swift in Sources */,
