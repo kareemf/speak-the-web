@@ -13,6 +13,7 @@ final class NowPlayingManager {
 
     private let commandCenter = MPRemoteCommandCenter.shared()
     private let logNowPlayingDebug = false
+    private let logRemoteCommandDebug = false
     private let supportedRates: [NSNumber] = [
         0.5, 0.75, 1.0, 1.25, 1.5, 1.75, 2.0
     ]
@@ -158,6 +159,7 @@ final class NowPlayingManager {
     }
 
     private func logCommand(_ name: String, result: Bool? = nil, detail: String? = nil) {
+        guard logRemoteCommandDebug else { return }
         var parts = ["[RemoteCommand]", "cmd=\(name)"]
         if let detail {
             parts.append(detail)
