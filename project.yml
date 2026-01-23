@@ -1,4 +1,4 @@
-name: URLReader
+name: SpeakTheWeb
 options:
   bundleIdPrefix: com.kareemf
   deploymentTarget:
@@ -23,11 +23,11 @@ packages:
     path: "Vendor/SherpaOnnx"
 
 targets:
-  URLReader:
+  SpeakTheWeb:
     type: application
     platform: iOS
     sources:
-      - path: URLReader
+      - path: SpeakTheWeb
         excludes:
           - "**/.DS_Store"
       - path: Website
@@ -35,13 +35,13 @@ targets:
         type: folder
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: com.kareemf.URLReader
-        INFOPLIST_FILE: URLReader/Info.plist
-        CODE_SIGN_ENTITLEMENTS: URLReader/URLReader.entitlements
+        PRODUCT_BUNDLE_IDENTIFIER: com.kareemf.SpeakTheWeb
+        INFOPLIST_FILE: SpeakTheWeb/Info.plist
+        CODE_SIGN_ENTITLEMENTS: SpeakTheWeb/SpeakTheWeb.entitlements
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
         ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
         TARGETED_DEVICE_FAMILY: "1,2"
-        INFOPLIST_KEY_CFBundleDisplayName: "URL Reader"
+        INFOPLIST_KEY_CFBundleDisplayName: "Speak the Web"
         INFOPLIST_KEY_CFBundleIdentifier: "$(PRODUCT_BUNDLE_IDENTIFIER)"
         INFOPLIST_KEY_CFBundleName: "$(PRODUCT_NAME)"
         INFOPLIST_KEY_CFBundleShortVersionString: "$(MARKETING_VERSION)"
@@ -62,18 +62,18 @@ targets:
           SWIFT_OPTIMIZATION_LEVEL: "-O"
           SWIFT_COMPILATION_MODE: wholemodule
     dependencies:
-      - target: URLReaderShare
+      - target: SpeakTheWebShare
         embed: true
         codeSign: true
       - package: SWCompression
       - package: SherpaOnnx
     entitlements:
-      path: URLReader/URLReader.entitlements
+      path: SpeakTheWeb/SpeakTheWeb.entitlements
       properties:
         com.apple.security.application-groups:
-          - group.com.kareemf.URLReader
+          - group.com.kareemf.SpeakTheWeb
 
-  URLReaderShare:
+  SpeakTheWebShare:
     type: app-extension
     platform: iOS
     sources:
@@ -82,13 +82,13 @@ targets:
           - "**/.DS_Store"
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: com.kareemf.URLReader.ShareExtension
-        PRODUCT_NAME: URLReaderShare
+        PRODUCT_BUNDLE_IDENTIFIER: com.kareemf.SpeakTheWeb.ShareExtension
+        PRODUCT_NAME: SpeakTheWebShare
         INFOPLIST_FILE: ShareExtension/Info.plist
         CODE_SIGN_ENTITLEMENTS: ShareExtension/ShareExtension.entitlements
         TARGETED_DEVICE_FAMILY: "1,2"
         SKIP_INSTALL: YES
-        INFOPLIST_KEY_CFBundleDisplayName: "Read Aloud"
+        INFOPLIST_KEY_CFBundleDisplayName: "Speak the Web"
         INFOPLIST_KEY_NSHumanReadableCopyright: ""
         LD_RUNPATH_SEARCH_PATHS:
           - "$(inherited)"
@@ -105,14 +105,14 @@ targets:
       path: ShareExtension/ShareExtension.entitlements
       properties:
         com.apple.security.application-groups:
-          - group.com.kareemf.URLReader
+          - group.com.kareemf.SpeakTheWeb
 
 schemes:
-  URLReader:
+  SpeakTheWeb:
     build:
       targets:
-        URLReader: all
-        URLReaderShare: all
+        SpeakTheWeb: all
+        SpeakTheWebShare: all
     run:
       config: Debug
     test:
@@ -124,10 +124,10 @@ schemes:
     archive:
       config: Release
 
-  URLReaderShare:
+  SpeakTheWebShare:
     build:
       targets:
-        URLReaderShare: all
+        SpeakTheWebShare: all
     run:
       config: Debug
       askForAppToLaunch: true

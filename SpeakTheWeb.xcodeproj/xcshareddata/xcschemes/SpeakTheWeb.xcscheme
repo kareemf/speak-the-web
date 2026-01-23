@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
    LastUpgradeVersion = "1500"
-   wasCreatedForAppExtension = "YES"
    version = "1.7">
    <BuildAction
       parallelizeBuildables = "YES"
@@ -16,10 +15,24 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "DDB7C2576E8BD154B766E99B"
-               BuildableName = "URLReaderShare.appex"
-               BlueprintName = "URLReaderShare"
-               ReferencedContainer = "container:URLReader.xcodeproj">
+               BlueprintIdentifier = "4AABEC964B57B885A4EF81BD"
+               BuildableName = "SpeakTheWeb.app"
+               BlueprintName = "SpeakTheWeb"
+               ReferencedContainer = "container:SpeakTheWeb.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "A72BDE17EDF5B6FEF2CF11EF"
+               BuildableName = "SpeakTheWebShare.appex"
+               BlueprintName = "SpeakTheWebShare"
+               ReferencedContainer = "container:SpeakTheWeb.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -33,35 +46,35 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "DDB7C2576E8BD154B766E99B"
-            BuildableName = "URLReaderShare.appex"
-            BlueprintName = "URLReaderShare"
-            ReferencedContainer = "container:URLReader.xcodeproj">
+            BlueprintIdentifier = "4AABEC964B57B885A4EF81BD"
+            BuildableName = "SpeakTheWeb.app"
+            BlueprintName = "SpeakTheWeb"
+            ReferencedContainer = "container:SpeakTheWeb.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
       <Testables>
       </Testables>
+      <CommandLineArguments>
+      </CommandLineArguments>
    </TestAction>
    <LaunchAction
       buildConfiguration = "Debug"
-      selectedDebuggerIdentifier = ""
-      selectedLauncherIdentifier = "Xcode.IDEFoundation.Launcher.PosixSpawn"
+      selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
+      selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       launchStyle = "0"
-      askForAppToLaunch = "YES"
       useCustomWorkingDirectory = "NO"
       ignoresPersistentStateOnLaunch = "NO"
       debugDocumentVersioning = "YES"
       debugServiceExtension = "internal"
-      allowLocationSimulation = "YES"
-      launchAutomaticallySubstyle = "2">
+      allowLocationSimulation = "YES">
       <BuildableProductRunnable
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "DDB7C2576E8BD154B766E99B"
-            BuildableName = "URLReaderShare.appex"
-            BlueprintName = "URLReaderShare"
-            ReferencedContainer = "container:URLReader.xcodeproj">
+            BlueprintIdentifier = "4AABEC964B57B885A4EF81BD"
+            BuildableName = "SpeakTheWeb.app"
+            BlueprintName = "SpeakTheWeb"
+            ReferencedContainer = "container:SpeakTheWeb.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
       <CommandLineArguments>
@@ -77,12 +90,14 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "DDB7C2576E8BD154B766E99B"
-            BuildableName = "URLReaderShare.appex"
-            BlueprintName = "URLReaderShare"
-            ReferencedContainer = "container:URLReader.xcodeproj">
+            BlueprintIdentifier = "4AABEC964B57B885A4EF81BD"
+            BuildableName = "SpeakTheWeb.app"
+            BlueprintName = "SpeakTheWeb"
+            ReferencedContainer = "container:SpeakTheWeb.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
+      <CommandLineArguments>
+      </CommandLineArguments>
    </ProfileAction>
    <AnalyzeAction
       buildConfiguration = "Debug">

@@ -20,9 +20,9 @@
         <string>$(PRODUCT_MODULE_NAME).ShareViewController</string>
     </dict>
     <key>CFBundleDisplayName</key>
-    <string>Read Aloud</string>
+    <string>Speak the Web</string>
     <key>CFBundleName</key>
-    <string>URLReaderShare</string>
+    <string>SpeakTheWebShare</string>
     <key>CFBundleIdentifier</key>
     <string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
     <key>CFBundleVersion</key>

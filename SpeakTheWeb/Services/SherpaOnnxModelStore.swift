@@ -23,7 +23,7 @@ final class SherpaOnnxModelStore: NSObject, ObservableObject {
 
     private var session: URLSession
     private let fileManager = FileManager.default
-    private let appGroupId = "group.com.kareemf.URLReader"
+    private let appGroupId = "group.com.kareemf.SpeakTheWeb"
     private let baseDirectory: URL
     private let registryURL: URL
 
@@ -35,7 +35,7 @@ final class SherpaOnnxModelStore: NSObject, ObservableObject {
         if let groupURL = fileManager.containerURL(forSecurityApplicationGroupIdentifier: appGroupId) {
             baseDirectory = groupURL.appendingPathComponent("VoiceModels", isDirectory: true)
         } else {
-            baseDirectory = appSupport.appendingPathComponent("URLReader/VoiceModels", isDirectory: true)
+            baseDirectory = appSupport.appendingPathComponent("SpeakTheWeb/VoiceModels", isDirectory: true)
         }
 
         registryURL = baseDirectory.appendingPathComponent("model-registry.json")
@@ -76,7 +76,7 @@ final class SherpaOnnxModelStore: NSObject, ObservableObject {
         do {
             let releaseURL = URL(string: "https://api.github.com/repos/k2-fsa/sherpa-onnx/releases/tags/tts-models")!
             var request = URLRequest(url: releaseURL)
-            request.setValue("URLReader", forHTTPHeaderField: "User-Agent")
+            request.setValue("SpeakTheWeb", forHTTPHeaderField: "User-Agent")
             let (data, _) = try await URLSession.shared.data(for: request)
             let release = try JSONDecoder().decode(GitHubRelease.self, from: data)
             let filtered = release.assets.compactMap { asset -> SherpaModel? in

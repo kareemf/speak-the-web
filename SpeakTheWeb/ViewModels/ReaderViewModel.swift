@@ -2,7 +2,7 @@ import Foundation
 import SwiftUI
 import Combine
 
-/// Main view model for the URL Reader app
+/// Main view model for the Speak the Web app
 @MainActor
 class ReaderViewModel: ObservableObject {
 

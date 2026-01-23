@@ -21,7 +21,7 @@ class ShareViewController: UIViewController {
 
     private let titleLabel: UILabel = {
         let label = UILabel()
-        label.text = "URL Reader"
+        label.text = "Speak the Web"
         label.font = .systemFont(ofSize: 20, weight: .bold)
         label.textAlignment = .center
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -57,7 +57,7 @@ class ShareViewController: UIViewController {
 
     private lazy var openButton: UIButton = {
         var config = UIButton.Configuration.filled()
-        config.title = "Open in URL Reader"
+        config.title = "Open in Speak the Web"
         config.image = UIImage(systemName: "play.circle.fill")
         config.imagePadding = 8
         config.cornerStyle = .large
@@ -216,13 +216,13 @@ class ShareViewController: UIViewController {
         guard let url = sharedURL else { return }
 
         // Save URL to shared UserDefaults (App Group)
-        let sharedDefaults = UserDefaults(suiteName: "group.com.kareemf.URLReader")
+        let sharedDefaults = UserDefaults(suiteName: "group.com.kareemf.SpeakTheWeb")
         sharedDefaults?.set(url.absoluteString, forKey: "SharedURL")
         sharedDefaults?.set(Date(), forKey: "SharedURLTimestamp")
         sharedDefaults?.synchronize()
 
         // Create the deep link URL
-        let deepLinkURLString = "urlreader://open?url=\(url.absoluteString.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? "")"
+        let deepLinkURLString = "speaktheweb://open?url=\(url.absoluteString.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? "")"
 
         if let deepLinkURL = URL(string: deepLinkURLString) {
             // Open the main app via URL scheme
@@ -244,7 +244,7 @@ class ShareViewController: UIViewController {
     }
 
     @objc private func cancelShare() {
-        extensionContext?.cancelRequest(withError: NSError(domain: "URLReaderShare", code: 0, userInfo: nil))
+        extensionContext?.cancelRequest(withError: NSError(domain: "SpeakTheWebShare", code: 0, userInfo: nil))
     }
 
     // Helper to open URL from extension

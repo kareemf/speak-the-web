@@ -2,7 +2,7 @@ import SwiftUI
 import UIKit
 
 @main
-struct URLReaderApp: App {
+struct SpeakTheWebApp: App {
     @StateObject private var viewModel = ReaderViewModel()
 
     var body: some Scene {
@@ -18,9 +18,9 @@ struct URLReaderApp: App {
         }
     }
 
-    /// Handles incoming URLs from deep links (urlreader://open?url=...)
+    /// Handles incoming URLs from deep links (speaktheweb://open?url=...)
     private func handleIncomingURL(_ url: URL) {
-        guard url.scheme == "urlreader",
+        guard url.scheme == "speaktheweb",
               url.host == "open",
               let components = URLComponents(url: url, resolvingAgainstBaseURL: true),
               let queryItems = components.queryItems,
@@ -36,7 +36,7 @@ struct URLReaderApp: App {
 
     /// Checks for URLs shared via App Group from the Share Extension
     private func checkForSharedURL() {
-        guard let sharedDefaults = UserDefaults(suiteName: "group.com.kareemf.URLReader"),
+        guard let sharedDefaults = UserDefaults(suiteName: "group.com.kareemf.SpeakTheWeb"),
               let sharedURLString = sharedDefaults.string(forKey: "SharedURL"),
               let timestamp = sharedDefaults.object(forKey: "SharedURLTimestamp") as? Date else {
             return

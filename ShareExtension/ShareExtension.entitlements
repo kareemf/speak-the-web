@@ -4,7 +4,7 @@
 <dict>
     <key>com.apple.security.application-groups</key>
     <array>
-        <string>group.com.kareemf.URLReader</string>
+        <string>group.com.kareemf.SpeakTheWeb</string>
     </array>
 </dict>
 </plist>

@@ -1,0 +1,681 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		0E035DC2E40758D0169101F9 /* MediaPlaybackController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2F902F6CBDFDD3BA8317361 /* MediaPlaybackController.swift */; };
+		117E71E0543FCAD2B669407E /* SpeakTheWebApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40F773F2492A77C42FD89863 /* SpeakTheWebApp.swift */; };
+		15964553BCF2D9BAAE5AC926 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E38A9936C55F6EAD9202E1D /* HomeView.swift */; };
+		1D8A806DFA8C2F6338F5532A /* ArticleReaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26B83A81EEE5E6284D68136B /* ArticleReaderView.swift */; };
+		282E1A3E71C1D6988201679E /* VoiceSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29DF09F4921AF1667B1A5D8C /* VoiceSettingsView.swift */; };
+		295F3AB4F4B2EECF8B3151BF /* SherpaAudioCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA6AA8C6CD5FF5EB8A1E12CE /* SherpaAudioCache.swift */; };
+		2DDDDD4442852B944B93975B /* Website in Resources */ = {isa = PBXBuildFile; fileRef = 4E82002644EC905BD3776B1C /* Website */; };
+		2F9CE33F85974F24D06E22FA /* SelectableTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFA14D56499822AC9CBDF9B5 /* SelectableTextView.swift */; };
+		33275A7E535A5B7A336649A4 /* ReaderWebViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 304707FD3B82E007F47B7751 /* ReaderWebViews.swift */; };
+		36C99EA4DF5756C0B84EAE98 /* HelpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09AFE615200F3B7D47BAB084 /* HelpView.swift */; };
+		4C0419E6400C3E2AEA4909CC /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E7AEDBACA49560AECC5890E8 /* Assets.xcassets */; };
+		579ADE9104539EB9822A8105 /* ShareViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 957FF7A77B1E882808E4AF2E /* ShareViewController.swift */; };
+		6117427F8AC43D33D638455B /* AudioSessionCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE6084C9E598F69CA59857C8 /* AudioSessionCoordinator.swift */; };
+		61A7AD2A74E4218EDFA79B1D /* NowPlayingManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 331B18951CAAA22CC2B17DE8 /* NowPlayingManager.swift */; };
+		638E3BC3CC184BA97A5DBF58 /* SherpaOnnxModelStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5819817DB6921E96E1C8F0A4 /* SherpaOnnxModelStore.swift */; };
+		65C701EFC0DF7CA70CF2AD8E /* RecentArticle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79E047F56604836C5281FA07 /* RecentArticle.swift */; };
+		66762E9AE5463530B4AACDC5 /* SpeakTheWebShare.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 8CCE8C8F33E80A6ECB23DCEC /* SpeakTheWebShare.appex */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		69844D2E7260DA0B5D95A3F6 /* SherpaOnnxRuntime.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6956CF3BCB8029C413AB4E84 /* SherpaOnnxRuntime.swift */; };
+		84E94CA49565EECFF65848DB /* SherpaModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4061D16324775F7D7A169D2 /* SherpaModel.swift */; };
+		8915EB9DDEAD35D3C1E217E3 /* Article.swift in Sources */ = {isa = PBXBuildFile; fileRef = D40E3C367EBF8FF1AB3225B0 /* Article.swift */; };
+		8C04E929A142746E70DE1B08 /* SherpaOnnx in Frameworks */ = {isa = PBXBuildFile; productRef = D8B0A996DABF442416D8CF40 /* SherpaOnnx */; };
+		913375942E3903E3661B1AEE /* ReaderViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6E65A9BEAD380D850C9E085 /* ReaderViewModel.swift */; };
+		9FCD506D4677779458683759 /* ReaderMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE921CA5016B762D3D79337E /* ReaderMode.swift */; };
+		A34F509F7B17A4B615E58819 /* SherpaSpeechService.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE566AF4966498534C7D3317 /* SherpaSpeechService.swift */; };
+		ABF7DC44368D8FB048EBD1DF /* SherpaModelsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 918B3EE513F0A20DFCB8280E /* SherpaModelsView.swift */; };
+		C02EA803A7B4255113175CB8 /* SpeechService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D1B71C12FF5D14644E61FAE /* SpeechService.swift */; };
+		C0B890D9854F05CEE98F9ED4 /* PlaybackControlsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDDE002C2E77C454906A9D6D /* PlaybackControlsView.swift */; };
+		C703B16594C1F4A60D0A51D7 /* TableOfContentsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 188A1DEB852AE33DDA1AA735 /* TableOfContentsView.swift */; };
+		E6885D6C72D004D198F0D81B /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4889E3311B7A665FA0E43E16 /* SettingsView.swift */; };
+		EB8ACE06F55E3DBF14179166 /* SpeechEngineType.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1AFE4DA6CC1BB66D5999D17 /* SpeechEngineType.swift */; };
+		F49BAB96DA954E5AB579A09B /* SWCompression in Frameworks */ = {isa = PBXBuildFile; productRef = 0A9BD8FFB5B83890A72B3206 /* SWCompression */; };
+		FC51A254916016F722B989D5 /* ContentExtractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = A49DC65753869F97766A19CB /* ContentExtractor.swift */; };
+		FD5BFA294134354A65B77EDF /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62D109F4D1AE1F414463A04B /* ContentView.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		FE87528F61E64C933AA9B824 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1E69165EB17F259988580A13 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = A72BDE17EDF5B6FEF2CF11EF;
+			remoteInfo = SpeakTheWebShare;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		C19B13F689608FDE94330355 /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				66762E9AE5463530B4AACDC5 /* SpeakTheWebShare.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		09AFE615200F3B7D47BAB084 /* HelpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelpView.swift; sourceTree = "<group>"; };
+		188A1DEB852AE33DDA1AA735 /* TableOfContentsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableOfContentsView.swift; sourceTree = "<group>"; };
+		267E7582048A1A0EC8BB0AE3 /* SherpaOnnx */ = {isa = PBXFileReference; lastKnownFileType = folder; name = SherpaOnnx; path = Vendor/SherpaOnnx; sourceTree = SOURCE_ROOT; };
+		26B83A81EEE5E6284D68136B /* ArticleReaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleReaderView.swift; sourceTree = "<group>"; };
+		29DF09F4921AF1667B1A5D8C /* VoiceSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceSettingsView.swift; sourceTree = "<group>"; };
+		304707FD3B82E007F47B7751 /* ReaderWebViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReaderWebViews.swift; sourceTree = "<group>"; };
+		331B18951CAAA22CC2B17DE8 /* NowPlayingManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NowPlayingManager.swift; sourceTree = "<group>"; };
+		3E38A9936C55F6EAD9202E1D /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
+		40F773F2492A77C42FD89863 /* SpeakTheWebApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeakTheWebApp.swift; sourceTree = "<group>"; };
+		4889E3311B7A665FA0E43E16 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		4E82002644EC905BD3776B1C /* Website */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Website; sourceTree = SOURCE_ROOT; };
+		5819817DB6921E96E1C8F0A4 /* SherpaOnnxModelStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SherpaOnnxModelStore.swift; sourceTree = "<group>"; };
+		62D109F4D1AE1F414463A04B /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		6956CF3BCB8029C413AB4E84 /* SherpaOnnxRuntime.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SherpaOnnxRuntime.swift; sourceTree = "<group>"; };
+		6D1B71C12FF5D14644E61FAE /* SpeechService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeechService.swift; sourceTree = "<group>"; };
+		6E5A4BF4CA1219B810168D0E /* SpeakTheWeb.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SpeakTheWeb.entitlements; sourceTree = "<group>"; };
+		79E047F56604836C5281FA07 /* RecentArticle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentArticle.swift; sourceTree = "<group>"; };
+		8CCE8C8F33E80A6ECB23DCEC /* SpeakTheWebShare.appex */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = "wrapper.app-extension"; path = SpeakTheWebShare.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		918B3EE513F0A20DFCB8280E /* SherpaModelsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SherpaModelsView.swift; sourceTree = "<group>"; };
+		957FF7A77B1E882808E4AF2E /* ShareViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareViewController.swift; sourceTree = "<group>"; };
+		A49DC65753869F97766A19CB /* ContentExtractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentExtractor.swift; sourceTree = "<group>"; };
+		B6E65A9BEAD380D850C9E085 /* ReaderViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReaderViewModel.swift; sourceTree = "<group>"; };
+		BDDE002C2E77C454906A9D6D /* PlaybackControlsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaybackControlsView.swift; sourceTree = "<group>"; };
+		C051573CD1DDA5D6DEFC98FC /* SpeakTheWeb.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = SpeakTheWeb.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		CE566AF4966498534C7D3317 /* SherpaSpeechService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SherpaSpeechService.swift; sourceTree = "<group>"; };
+		CE6084C9E598F69CA59857C8 /* AudioSessionCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioSessionCoordinator.swift; sourceTree = "<group>"; };
+		D40E3C367EBF8FF1AB3225B0 /* Article.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Article.swift; sourceTree = "<group>"; };
+		D8F897B93183D77656891261 /* ShareExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ShareExtension.entitlements; sourceTree = "<group>"; };
+		DE921CA5016B762D3D79337E /* ReaderMode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReaderMode.swift; sourceTree = "<group>"; };
+		E2F902F6CBDFDD3BA8317361 /* MediaPlaybackController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaPlaybackController.swift; sourceTree = "<group>"; };
+		E7AEDBACA49560AECC5890E8 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		F1AFE4DA6CC1BB66D5999D17 /* SpeechEngineType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeechEngineType.swift; sourceTree = "<group>"; };
+		F35E09898B10D73124AB2E00 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		F4061D16324775F7D7A169D2 /* SherpaModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SherpaModel.swift; sourceTree = "<group>"; };
+		F6E08C869E54E585A700461C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		FA6AA8C6CD5FF5EB8A1E12CE /* SherpaAudioCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SherpaAudioCache.swift; sourceTree = "<group>"; };
+		FFA14D56499822AC9CBDF9B5 /* SelectableTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectableTextView.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		B4A40D318C3B0A672077ACB4 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F49BAB96DA954E5AB579A09B /* SWCompression in Frameworks */,
+				8C04E929A142746E70DE1B08 /* SherpaOnnx in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		0A78F06449AA1EBA206F0A9C /* Packages */ = {
+			isa = PBXGroup;
+			children = (
+				267E7582048A1A0EC8BB0AE3 /* SherpaOnnx */,
+			);
+			name = Packages;
+			sourceTree = "<group>";
+		};
+		1CD302FC16DAA553BEBAD85F /* ShareExtension */ = {
+			isa = PBXGroup;
+			children = (
+				F35E09898B10D73124AB2E00 /* Info.plist */,
+				D8F897B93183D77656891261 /* ShareExtension.entitlements */,
+				957FF7A77B1E882808E4AF2E /* ShareViewController.swift */,
+			);
+			path = ShareExtension;
+			sourceTree = "<group>";
+		};
+		35956F4EF9CFFCAC518A6EE1 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				26B83A81EEE5E6284D68136B /* ArticleReaderView.swift */,
+				62D109F4D1AE1F414463A04B /* ContentView.swift */,
+				09AFE615200F3B7D47BAB084 /* HelpView.swift */,
+				3E38A9936C55F6EAD9202E1D /* HomeView.swift */,
+				BDDE002C2E77C454906A9D6D /* PlaybackControlsView.swift */,
+				304707FD3B82E007F47B7751 /* ReaderWebViews.swift */,
+				FFA14D56499822AC9CBDF9B5 /* SelectableTextView.swift */,
+				4889E3311B7A665FA0E43E16 /* SettingsView.swift */,
+				918B3EE513F0A20DFCB8280E /* SherpaModelsView.swift */,
+				188A1DEB852AE33DDA1AA735 /* TableOfContentsView.swift */,
+				29DF09F4921AF1667B1A5D8C /* VoiceSettingsView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		95EF35ABF88428234B19001C /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				C051573CD1DDA5D6DEFC98FC /* SpeakTheWeb.app */,
+				8CCE8C8F33E80A6ECB23DCEC /* SpeakTheWebShare.appex */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		A4CDFB92E5BB21DD2379088D /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				B6E65A9BEAD380D850C9E085 /* ReaderViewModel.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		A7D59F84176E33C8602621D0 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				CE6084C9E598F69CA59857C8 /* AudioSessionCoordinator.swift */,
+				A49DC65753869F97766A19CB /* ContentExtractor.swift */,
+				E2F902F6CBDFDD3BA8317361 /* MediaPlaybackController.swift */,
+				331B18951CAAA22CC2B17DE8 /* NowPlayingManager.swift */,
+				FA6AA8C6CD5FF5EB8A1E12CE /* SherpaAudioCache.swift */,
+				5819817DB6921E96E1C8F0A4 /* SherpaOnnxModelStore.swift */,
+				6956CF3BCB8029C413AB4E84 /* SherpaOnnxRuntime.swift */,
+				CE566AF4966498534C7D3317 /* SherpaSpeechService.swift */,
+				6D1B71C12FF5D14644E61FAE /* SpeechService.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		AB82738BCA862B05C0CE2988 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				D40E3C367EBF8FF1AB3225B0 /* Article.swift */,
+				DE921CA5016B762D3D79337E /* ReaderMode.swift */,
+				79E047F56604836C5281FA07 /* RecentArticle.swift */,
+				F4061D16324775F7D7A169D2 /* SherpaModel.swift */,
+				F1AFE4DA6CC1BB66D5999D17 /* SpeechEngineType.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		CB63D803A9B7ABB96371068E /* SpeakTheWeb */ = {
+			isa = PBXGroup;
+			children = (
+				AB82738BCA862B05C0CE2988 /* Models */,
+				A7D59F84176E33C8602621D0 /* Services */,
+				A4CDFB92E5BB21DD2379088D /* ViewModels */,
+				35956F4EF9CFFCAC518A6EE1 /* Views */,
+				E7AEDBACA49560AECC5890E8 /* Assets.xcassets */,
+				F6E08C869E54E585A700461C /* Info.plist */,
+				6E5A4BF4CA1219B810168D0E /* SpeakTheWeb.entitlements */,
+				40F773F2492A77C42FD89863 /* SpeakTheWebApp.swift */,
+			);
+			path = SpeakTheWeb;
+			sourceTree = "<group>";
+		};
+		FB240ABD227FCB81D91BCD34 = {
+			isa = PBXGroup;
+			children = (
+				0A78F06449AA1EBA206F0A9C /* Packages */,
+				1CD302FC16DAA553BEBAD85F /* ShareExtension */,
+				CB63D803A9B7ABB96371068E /* SpeakTheWeb */,
+				4E82002644EC905BD3776B1C /* Website */,
+				95EF35ABF88428234B19001C /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		4AABEC964B57B885A4EF81BD /* SpeakTheWeb */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D1A50C164B3F97A134A15D11 /* Build configuration list for PBXNativeTarget "SpeakTheWeb" */;
+			buildPhases = (
+				AD6824D766759EED56AF1234 /* Sources */,
+				85EC8A74002F6E2B79DF17D3 /* Resources */,
+				B4A40D318C3B0A672077ACB4 /* Frameworks */,
+				C19B13F689608FDE94330355 /* Embed Foundation Extensions */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				703A11D86DE9B572273E3AE9 /* PBXTargetDependency */,
+			);
+			name = SpeakTheWeb;
+			packageProductDependencies = (
+				0A9BD8FFB5B83890A72B3206 /* SWCompression */,
+				D8B0A996DABF442416D8CF40 /* SherpaOnnx */,
+			);
+			productName = SpeakTheWeb;
+			productReference = C051573CD1DDA5D6DEFC98FC /* SpeakTheWeb.app */;
+			productType = "com.apple.product-type.application";
+		};
+		A72BDE17EDF5B6FEF2CF11EF /* SpeakTheWebShare */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = B6150E192EDA2A3A8F5C834B /* Build configuration list for PBXNativeTarget "SpeakTheWebShare" */;
+			buildPhases = (
+				AB265635E025BAB190634A91 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = SpeakTheWebShare;
+			packageProductDependencies = (
+			);
+			productName = SpeakTheWebShare;
+			productReference = 8CCE8C8F33E80A6ECB23DCEC /* SpeakTheWebShare.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		1E69165EB17F259988580A13 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1500;
+				TargetAttributes = {
+					4AABEC964B57B885A4EF81BD = {
+						DevelopmentTeam = 8C7EB23ZZP;
+						ProvisioningStyle = Automatic;
+					};
+					A72BDE17EDF5B6FEF2CF11EF = {
+						DevelopmentTeam = 8C7EB23ZZP;
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = ABCF3013F725E5F14AD5F0EC /* Build configuration list for PBXProject "SpeakTheWeb" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = FB240ABD227FCB81D91BCD34;
+			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				2DC5E1BF18E9B0F53B480C66 /* XCRemoteSwiftPackageReference "SWCompression" */,
+				0D6705086D21162BDB2D6768 /* XCLocalSwiftPackageReference "Vendor/SherpaOnnx" */,
+			);
+			preferredProjectObjectVersion = 77;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				4AABEC964B57B885A4EF81BD /* SpeakTheWeb */,
+				A72BDE17EDF5B6FEF2CF11EF /* SpeakTheWebShare */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		85EC8A74002F6E2B79DF17D3 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4C0419E6400C3E2AEA4909CC /* Assets.xcassets in Resources */,
+				2DDDDD4442852B944B93975B /* Website in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		AB265635E025BAB190634A91 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				579ADE9104539EB9822A8105 /* ShareViewController.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AD6824D766759EED56AF1234 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8915EB9DDEAD35D3C1E217E3 /* Article.swift in Sources */,
+				1D8A806DFA8C2F6338F5532A /* ArticleReaderView.swift in Sources */,
+				6117427F8AC43D33D638455B /* AudioSessionCoordinator.swift in Sources */,
+				FC51A254916016F722B989D5 /* ContentExtractor.swift in Sources */,
+				FD5BFA294134354A65B77EDF /* ContentView.swift in Sources */,
+				36C99EA4DF5756C0B84EAE98 /* HelpView.swift in Sources */,
+				15964553BCF2D9BAAE5AC926 /* HomeView.swift in Sources */,
+				0E035DC2E40758D0169101F9 /* MediaPlaybackController.swift in Sources */,
+				61A7AD2A74E4218EDFA79B1D /* NowPlayingManager.swift in Sources */,
+				C0B890D9854F05CEE98F9ED4 /* PlaybackControlsView.swift in Sources */,
+				9FCD506D4677779458683759 /* ReaderMode.swift in Sources */,
+				913375942E3903E3661B1AEE /* ReaderViewModel.swift in Sources */,
+				33275A7E535A5B7A336649A4 /* ReaderWebViews.swift in Sources */,
+				65C701EFC0DF7CA70CF2AD8E /* RecentArticle.swift in Sources */,
+				2F9CE33F85974F24D06E22FA /* SelectableTextView.swift in Sources */,
+				E6885D6C72D004D198F0D81B /* SettingsView.swift in Sources */,
+				295F3AB4F4B2EECF8B3151BF /* SherpaAudioCache.swift in Sources */,
+				84E94CA49565EECFF65848DB /* SherpaModel.swift in Sources */,
+				ABF7DC44368D8FB048EBD1DF /* SherpaModelsView.swift in Sources */,
+				638E3BC3CC184BA97A5DBF58 /* SherpaOnnxModelStore.swift in Sources */,
+				69844D2E7260DA0B5D95A3F6 /* SherpaOnnxRuntime.swift in Sources */,
+				A34F509F7B17A4B615E58819 /* SherpaSpeechService.swift in Sources */,
+				117E71E0543FCAD2B669407E /* SpeakTheWebApp.swift in Sources */,
+				EB8ACE06F55E3DBF14179166 /* SpeechEngineType.swift in Sources */,
+				C02EA803A7B4255113175CB8 /* SpeechService.swift in Sources */,
+				C703B16594C1F4A60D0A51D7 /* TableOfContentsView.swift in Sources */,
+				282E1A3E71C1D6988201679E /* VoiceSettingsView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		703A11D86DE9B572273E3AE9 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = A72BDE17EDF5B6FEF2CF11EF /* SpeakTheWebShare */;
+			targetProxy = FE87528F61E64C933AA9B824 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		0F61EDCA4F4088F0237C68DB /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = 8C7EB23ZZP;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 1.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		230D00AC99611DF4F69840B4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = ShareExtension/ShareExtension.entitlements;
+				INFOPLIST_FILE = ShareExtension/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Speak the Web";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.kareemf.SpeakTheWeb.ShareExtension;
+				PRODUCT_NAME = SpeakTheWebShare;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		407E1FBADFD5DCF9C1076334 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = SpeakTheWeb/SpeakTheWeb.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				INFOPLIST_FILE = SpeakTheWeb/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Speak the Web";
+				INFOPLIST_KEY_CFBundleExecutable = "$(EXECUTABLE_NAME)";
+				INFOPLIST_KEY_CFBundleIdentifier = "$(PRODUCT_BUNDLE_IDENTIFIER)";
+				INFOPLIST_KEY_CFBundleName = "$(PRODUCT_NAME)";
+				INFOPLIST_KEY_CFBundleShortVersionString = "$(MARKETING_VERSION)";
+				INFOPLIST_KEY_CFBundleVersion = "$(CURRENT_PROJECT_VERSION)";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UIRequiresFullScreen = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.kareemf.SpeakTheWeb;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		43129DFAB2C8D13D65BAF429 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = SpeakTheWeb/SpeakTheWeb.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				INFOPLIST_FILE = SpeakTheWeb/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Speak the Web";
+				INFOPLIST_KEY_CFBundleExecutable = "$(EXECUTABLE_NAME)";
+				INFOPLIST_KEY_CFBundleIdentifier = "$(PRODUCT_BUNDLE_IDENTIFIER)";
+				INFOPLIST_KEY_CFBundleName = "$(PRODUCT_NAME)";
+				INFOPLIST_KEY_CFBundleShortVersionString = "$(MARKETING_VERSION)";
+				INFOPLIST_KEY_CFBundleVersion = "$(CURRENT_PROJECT_VERSION)";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UIRequiresFullScreen = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.kareemf.SpeakTheWeb;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		834551FFA88AC604C3F0F881 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = 8C7EB23ZZP;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 1.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		9D87B7B8E8178BA3D31F7B1E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = ShareExtension/ShareExtension.entitlements;
+				INFOPLIST_FILE = ShareExtension/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Speak the Web";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.kareemf.SpeakTheWeb.ShareExtension;
+				PRODUCT_NAME = SpeakTheWebShare;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		ABCF3013F725E5F14AD5F0EC /* Build configuration list for PBXProject "SpeakTheWeb" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				834551FFA88AC604C3F0F881 /* Debug */,
+				0F61EDCA4F4088F0237C68DB /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		B6150E192EDA2A3A8F5C834B /* Build configuration list for PBXNativeTarget "SpeakTheWebShare" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				9D87B7B8E8178BA3D31F7B1E /* Debug */,
+				230D00AC99611DF4F69840B4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		D1A50C164B3F97A134A15D11 /* Build configuration list for PBXNativeTarget "SpeakTheWeb" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				407E1FBADFD5DCF9C1076334 /* Debug */,
+				43129DFAB2C8D13D65BAF429 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		0D6705086D21162BDB2D6768 /* XCLocalSwiftPackageReference "Vendor/SherpaOnnx" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = Vendor/SherpaOnnx;
+		};
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		2DC5E1BF18E9B0F53B480C66 /* XCRemoteSwiftPackageReference "SWCompression" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/tsolomko/SWCompression.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 4.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		0A9BD8FFB5B83890A72B3206 /* SWCompression */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2DC5E1BF18E9B0F53B480C66 /* XCRemoteSwiftPackageReference "SWCompression" */;
+			productName = SWCompression;
+		};
+		D8B0A996DABF442416D8CF40 /* SherpaOnnx */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = SherpaOnnx;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = 1E69165EB17F259988580A13 /* Project object */;
+}

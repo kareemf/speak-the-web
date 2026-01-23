@@ -26,7 +26,7 @@ struct HelpWebView: UIViewRepresentable {
     func makeUIView(context: Context) -> WKWebView {
         let configuration = WKWebViewConfiguration()
         configuration.allowsInlineMediaPlayback = true
-        configuration.applicationNameForUserAgent = "URLReader"
+        configuration.applicationNameForUserAgent = "SpeakTheWeb"
 
         let webView = WKWebView(frame: .zero, configuration: configuration)
         webView.isOpaque = false

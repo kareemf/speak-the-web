@@ -1,4 +1,4 @@
-# URL Reader
+# Speak the Web
 
 An iOS app that reads web pages aloud using text-to-speech. Share a URL from Safari and listen to the content with playback controls and content navigation.
 
@@ -6,7 +6,7 @@ An iOS app that reads web pages aloud using text-to-speech. Share a URL from Saf
 
 ### Core Features
 - **URL Input**: Paste or type any URL to fetch article content
-- **Safari Share Extension**: Share directly from Safari's share sheet ("Read Aloud")
+- **Safari Share Extension**: Share directly from Safari's share sheet ("Speak the Web")
 - **Text-to-Speech**: Choose iOS AVSpeechSynthesizer voices or sherpa-onnx with Piper voices
 - **Playback Controls**:
   - Play / Pause / Stop / Skip
@@ -63,25 +63,25 @@ rm -rf Vendor/SherpaOnnx/build/sherpa-onnx
 
 ```bash
 # Navigate to project directory
-cd URLReader
+cd SpeakTheWeb
 
 # Build for iOS Simulator (Debug)
-xcodebuild -project URLReader.xcodeproj \
-  -scheme URLReader \
+xcodebuild -project SpeakTheWeb.xcodeproj \
+  -scheme SpeakTheWeb \
   -destination 'platform=iOS Simulator,name=iPhone 15' \
   -configuration Debug \
   build
 
 # Build for iOS Simulator (Release)
-xcodebuild -project URLReader.xcodeproj \
-  -scheme URLReader \
+xcodebuild -project SpeakTheWeb.xcodeproj \
+  -scheme SpeakTheWeb \
   -destination 'platform=iOS Simulator,name=iPhone 15' \
   -configuration Release \
   build
 
 # Build for device (requires signing)
-xcodebuild -project URLReader.xcodeproj \
-  -scheme URLReader \
+xcodebuild -project SpeakTheWeb.xcodeproj \
+  -scheme SpeakTheWeb \
   -destination 'generic/platform=iOS' \
   -configuration Release \
   build
@@ -89,7 +89,7 @@ xcodebuild -project URLReader.xcodeproj \
 
 ### Building from Xcode
 
-1. Open `URLReader.xcodeproj` in Xcode
+1. Open `SpeakTheWeb.xcodeproj` in Xcode
 2. Select your target device or simulator
 3. Press `Cmd + B` to build, or `Cmd + R` to build and run
 
@@ -98,11 +98,11 @@ xcodebuild -project URLReader.xcodeproj \
 Before building for a physical device:
 
 1. Open the project in Xcode
-2. Select the **URLReader** target
+2. Select the **SpeakTheWeb** target
 3. Go to **Signing & Capabilities**
 4. Select your Development Team
-5. Repeat for the **URLReaderShare** extension target
-6. Enable **App Groups** capability with identifier: `group.com.kareemf.URLReader`
+5. Repeat for the **SpeakTheWebShare** extension target
+6. Enable **App Groups** capability with identifier: `group.com.kareemf.SpeakTheWeb`
 
 ### Install Dev Tooling
 
@@ -150,22 +150,22 @@ The pre-commit hook will fail (with actionable messaging) if any tool is missing
 ```bash
 # Run unit tests on simulator
 xcodebuild test \
-  -project URLReader.xcodeproj \
-  -scheme URLReader \
+  -project SpeakTheWeb.xcodeproj \
+  -scheme SpeakTheWeb \
   -destination 'platform=iOS Simulator,name=iPhone 15' \
   -resultBundlePath TestResults
 
 # Run tests with verbose output
 xcodebuild test \
-  -project URLReader.xcodeproj \
-  -scheme URLReader \
+  -project SpeakTheWeb.xcodeproj \
+  -scheme SpeakTheWeb \
   -destination 'platform=iOS Simulator,name=iPhone 15' \
   | xcpretty
 ```
 
 ### Running Tests from Xcode
 
-1. Open `URLReader.xcodeproj`
+1. Open `SpeakTheWeb.xcodeproj`
 2. Press `Cmd + U` to run all tests
 
 
@@ -189,24 +189,24 @@ xcodebuild test \
 
 ### Data Flow
 ```
-Safari → ShareExtension → App Groups → URLReaderApp → ReaderViewModel
+Safari → ShareExtension → App Groups → SpeakTheWebApp → ReaderViewModel
                                               ↓
 URL Input → ContentExtractor → Article → SpeechService/SherpaSpeechService → Audio Output
 ```
 
 ## Safari Share Extension
 
-The app includes a Share Extension that appears as "Read Aloud" in Safari's share sheet.
+The app includes a Share Extension that appears as "Speak the Web" in Safari's share sheet.
 
 ### How It Works
 1. User taps Share in Safari
-2. Selects "Read Aloud" from the share sheet
+2. Selects "Speak the Web" from the share sheet
 3. Extension saves URL to App Groups shared storage
-4. Extension launches main app via URL scheme (`urlreader://`)
+4. Extension launches main app via URL scheme (`speaktheweb://`)
 5. Main app reads URL from shared storage and starts loading
 
 ### App Groups Configuration
-Both the main app and extension use the App Group: `group.com.kareemf.URLReader`
+Both the main app and extension use the App Group: `group.com.kareemf.SpeakTheWeb`
 
 ### Adding New Voices
 The app automatically discovers all installed iOS voices. Users can download additional voices in:

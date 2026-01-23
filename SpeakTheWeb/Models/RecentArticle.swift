@@ -163,7 +163,7 @@ final class DiskArticleCache {
         self.fileManager = fileManager
         let baseURL = fileManager.urls(for: .applicationSupportDirectory, in: .userDomainMask).first
             ?? fileManager.temporaryDirectory
-        directoryURL = baseURL.appendingPathComponent("URLReader", isDirectory: true)
+        directoryURL = baseURL.appendingPathComponent("SpeakTheWeb", isDirectory: true)
             .appendingPathComponent("ArticleCache", isDirectory: true)
         createDirectoryIfNeeded()
     }

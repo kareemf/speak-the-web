@@ -37,7 +37,7 @@ final class SherpaAudioCache {
         self.maxBytes = maxBytes
         let baseURL = fileManager.urls(for: .cachesDirectory, in: .userDomainMask).first
             ?? fileManager.temporaryDirectory
-        directoryURL = baseURL.appendingPathComponent("URLReader", isDirectory: true)
+        directoryURL = baseURL.appendingPathComponent("SpeakTheWeb", isDirectory: true)
             .appendingPathComponent("SherpaAudioCache", isDirectory: true)
         indexURL = directoryURL.appendingPathComponent("cache-index.json")
         createDirectoryIfNeeded()
