@@ -1,6 +1,9 @@
 import Foundation
 import AVFoundation
 import SherpaOnnx
+#if canImport(UIKit)
+import UIKit
+#endif
 
 final class SherpaSpeechService: ObservableObject {
     @Published var isPlaying: Bool = false
@@ -34,8 +37,18 @@ final class SherpaSpeechService: ObservableObject {
     private let timePitch = AVAudioUnitTimePitch()
     private let instanceID = UUID()
     private let generationLock = NSLock()
+    private let ttsLock = NSLock()
     private var scheduleToken = UUID()
     private var generationInFlight = false
+    private var cachedTTS: SherpaOnnxOfflineTtsWrapper?
+    private var cachedModelID: String?
+
+    /// Use half of available cores, minimum 2, maximum 4
+    /// Leaves headroom for audio playback and UI
+    private var optimalThreadCount: Int {
+        let available = ProcessInfo.processInfo.activeProcessorCount
+        return max(2, min(available / 2, 4))
+    }
     private let audioCache = SherpaAudioCache(maxEntries: 10, maxBytes: 200 * 1024 * 1024)
     private var audioFile: AVAudioFile?
     private var audioFileURL: URL?
@@ -64,12 +77,25 @@ final class SherpaSpeechService: ObservableObject {
         engine.connect(playerNode, to: timePitch, format: nil)
         engine.connect(timePitch, to: engine.mainMixerNode, format: nil)
         timePitch.rate = speed
+
+        #if canImport(UIKit)
+        NotificationCenter.default.addObserver(
+            forName: UIApplication.didReceiveMemoryWarningNotification,
+            object: nil,
+            queue: .main
+        ) { [weak self] _ in
+            print("[Sherpa] Memory warning received, invalidating cached model")
+            self?.invalidateCachedModel()
+        }
+        #endif
     }
 
     func updateModel(record: SherpaModelRecord?) {
         if record?.id != modelRecord?.id {
             stop()
             clearAudio()
+            print("[Sherpa] Model changed, invalidating cached TTS")
+            invalidateCachedModel()
         }
         modelRecord = record
     }
@@ -302,22 +328,9 @@ final class SherpaSpeechService: ObservableObject {
 
                 print("[Sherpa] Resolving data dir")
                 let dataDir = self.dataDirPath(for: record)
-                let vitsConfig = sherpaOnnxOfflineTtsVitsModelConfig(
-                    model: record.modelPath,
-                    tokens: tokensPath,
-                    dataDir: dataDir
-                )
-                let modelConfig = sherpaOnnxOfflineTtsModelConfig(
-                    vits: vitsConfig,
-                    numThreads: 2,
-                    provider: "cpu"
-                )
-                var config = sherpaOnnxOfflineTtsConfig(model: modelConfig)
 
                 self.logPhase("Creating TTS instance", uiMessage: "Loading model…", generationID: generationID)
-                guard let tts = SherpaOnnxOfflineTtsWrapper(config: &config) else {
-                    throw SherpaSpeechError.invalidModelConfig
-                }
+                let tts = try self.getOrCreateTTS(for: record, tokensPath: tokensPath, dataDir: dataDir)
                 self.logPhase("Generating audio", uiMessage: "Generating audio…", generationID: generationID)
                 let generateStart = Date()
                 let audio = tts.generate(text: textSnapshot, speed: generationSpeed)
@@ -511,6 +524,9 @@ final class SherpaSpeechService: ObservableObject {
         generationPhase = nil
         isPreparing = false
         cancelGenerationWatchdog()
+        if cachedTTS != nil {
+            print("[Sherpa] Generation cancelled, cached TTS preserved")
+        }
     }
 
     private func logPhase(_ message: String, uiMessage: String, generationID: UUID) {
@@ -543,6 +559,56 @@ final class SherpaSpeechService: ObservableObject {
         generationInFlight = false
         generationLock.unlock()
         print("[Sherpa] Generation cleared (\(reason))")
+    }
+
+    private func getOrCreateTTS(for record: SherpaModelRecord, tokensPath: String, dataDir: String) throws -> SherpaOnnxOfflineTtsWrapper {
+        ttsLock.lock()
+        defer { ttsLock.unlock() }
+
+        // Invalidate if model changed
+        if cachedModelID != record.id {
+            cachedTTS = nil
+            cachedModelID = nil
+        }
+
+        // Return cached if available
+        if let existing = cachedTTS {
+            print("[Sherpa] Reusing cached TTS instance")
+            return existing
+        }
+
+        // Provider selection:
+        // - xnnpack: not available in current iOS build (session.cc logs show only CoreML + CPU)
+        // - coreml: causes EXC_BAD_ACCESS in SherpaOnnxOfflineTtsGenerate (may only support ASR, not TTS)
+        // - cpu: only reliable option for TTS currently
+        let vitsConfig = sherpaOnnxOfflineTtsVitsModelConfig(
+            model: record.modelPath,
+            tokens: tokensPath,
+            dataDir: dataDir
+        )
+
+        let provider = "cpu"
+        let modelConfig = sherpaOnnxOfflineTtsModelConfig(
+            vits: vitsConfig,
+            numThreads: optimalThreadCount,
+            provider: provider
+        )
+        var config = sherpaOnnxOfflineTtsConfig(model: modelConfig)
+        guard let tts = SherpaOnnxOfflineTtsWrapper(config: &config) else {
+            throw SherpaSpeechError.invalidModelConfig
+        }
+        print("[Sherpa] Using provider: \(provider), threads: \(optimalThreadCount)")
+        cachedTTS = tts
+        cachedModelID = record.id
+        return tts
+    }
+
+    private func invalidateCachedModel() {
+        ttsLock.lock()
+        defer { ttsLock.unlock() }
+        cachedTTS = nil
+        cachedModelID = nil
+        print("[Sherpa] Invalidated cached TTS model")
     }
 
     private func writeAudio(samples: [Float], sampleRate: Double, destinationURL: URL? = nil) throws -> (file: AVAudioFile, url: URL) {
