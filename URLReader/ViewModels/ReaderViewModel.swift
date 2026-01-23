@@ -331,6 +331,13 @@ class ReaderViewModel: ObservableObject {
         persistCurrentPosition()
     }
 
+    func startReading(from position: Int) {
+        guard canUseEngine(selectedSpeechEngine) else { return }
+        playbackController.seek(engine: selectedSpeechEngine, position: position)
+        playbackController.play(engine: selectedSpeechEngine)
+        persistCurrentPosition()
+    }
+
     func activateVoicePreviewSession() {
         _ = playbackController.activateSession(for: .avSpeech, reason: "voice-preview")
     }

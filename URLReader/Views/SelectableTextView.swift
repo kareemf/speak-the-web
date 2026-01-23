@@ -1,11 +1,28 @@
 import SwiftUI
 
 private final class WrappingTextView: UITextView {
+    var onStartReadingFromHere: ((Int) -> Void)?
+
     override func layoutSubviews() {
         super.layoutSubviews()
         if textContainer.size.width != bounds.width {
             textContainer.size = CGSize(width: bounds.width, height: .greatestFiniteMagnitude)
         }
+    }
+
+    override func canPerformAction(_ action: Selector, withSender sender: Any?) -> Bool {
+        if action == #selector(startReadingFromHere(_:)) {
+            return onStartReadingFromHere != nil && selectedRange.length > 0
+        }
+        return super.canPerformAction(action, withSender: sender)
+    }
+
+    @objc fileprivate func startReadingFromHere(_ sender: Any?) {
+        guard selectedRange.length > 0 else { return }
+        let currentText = text ?? ""
+        guard let range = Range(selectedRange, in: currentText) else { return }
+        let position = currentText.distance(from: currentText.startIndex, to: range.lowerBound)
+        onStartReadingFromHere?(position)
     }
 }
 
@@ -16,6 +33,7 @@ struct SelectableTextView: UIViewRepresentable {
     let font: UIFont
     let textColor: UIColor
     let lineSpacing: CGFloat
+    var onStartReadingFromSelection: ((Int) -> Void)?
 
     func makeUIView(context: Context) -> UITextView {
         let textView = WrappingTextView()
@@ -28,10 +46,18 @@ struct SelectableTextView: UIViewRepresentable {
         textView.textContainer.widthTracksTextView = true
         textView.textContainer.lineBreakMode = .byWordWrapping
         textView.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
+        let menuItem = UIMenuItem(
+            title: "Start Reading From Here",
+            action: #selector(WrappingTextView.startReadingFromHere(_:))
+        )
+        UIMenuController.shared.menuItems = [menuItem]
         return textView
     }
 
     func updateUIView(_ uiView: UITextView, context: Context) {
+        if let wrappingView = uiView as? WrappingTextView {
+            wrappingView.onStartReadingFromHere = onStartReadingFromSelection
+        }
         if uiView.attributedText?.string != text {
             let paragraph = NSMutableParagraphStyle()
             paragraph.lineSpacing = lineSpacing

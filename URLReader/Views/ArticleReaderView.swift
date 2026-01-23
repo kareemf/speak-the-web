@@ -71,7 +71,10 @@ struct ArticleReaderView: View {
                                     height: $textViewHeight,
                                     font: UIFont.preferredFont(forTextStyle: .body),
                                     textColor: UIColor.label,
-                                    lineSpacing: 6
+                                    lineSpacing: 6,
+                                    onStartReadingFromSelection: { position in
+                                        viewModel.startReading(from: position)
+                                    }
                                 )
                             }
                             .frame(height: textViewHeight)
