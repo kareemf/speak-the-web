@@ -63,7 +63,7 @@ rm -rf Vendor/SherpaOnnx/build/sherpa-onnx
 
 ```bash
 # Navigate to project directory
-cd SpeakTheWeb
+cd speak-the-web
 
 # Build for iOS Simulator (Debug)
 xcodebuild -project SpeakTheWeb.xcodeproj \
