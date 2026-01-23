@@ -127,26 +127,29 @@ Add structured logs that make ownership and state transitions explicit.
 - Consider removing `MPNowPlayingInfoCenter.playbackState` updates (private entitlement) to reduce noise in logs.
 
 ## Implementation Plan (Current PR)
-Phase 1: Audio session safety and diagnostics
-- Remove all AVAudioSession configuration from `SpeechService`, `SherpaSpeechService`, and voice preview.
-- Update `AudioSessionCoordinator` to use `.playback` + `.default` + `[.duckOthers]` and add pre-state logging plus separate setCategory/setActive error logs.
-- Test: confirm first-play AVSpeech works and `Code=-50` is gone.
-- Flip: once confirmed, switch `AudioSessionCoordinator` mode to `.spokenAudio` and retest in this PR.
+Status: completed.
 
-Phase 2: Controller wiring and selectedAtLaunch
-- Route playback through `MediaPlaybackController` and stop using services directly in `ReaderViewModel`.
-- Instantiate only the selected engine at launch; lazy-init the other engine on first use.
-- Keep AVAudioSession activation only on play intent.
-- Test: switching engines stops the previous engine and playback remains stable.
+Phase 1: Audio session safety and diagnostics (done)
+- Removed AVAudioSession configuration from `SpeechService`, `SherpaSpeechService`, and voice preview.
+- `AudioSessionCoordinator` uses `.playback` + `.spokenAudio` with options `[]` and logs setCategory/setActive errors separately.
+- Verified first-play AVSpeech works and `Code=-50` is gone.
 
-Phase 3: Now Playing integration
-- Drive `NowPlayingManager` from `MediaPlaybackController` state.
-- Remove `MPNowPlayingInfoCenter.playbackState` updates.
-- Test: Control Center play/pause/skip/seek works and Now Playing info updates without entitlement warnings.
+Phase 2: Controller wiring and selectedAtLaunch (done)
+- Playback routed through `MediaPlaybackController`; services are not used directly in `ReaderViewModel`.
+- Selected engine initializes first; the other engine is lazy-initialized.
+- AVAudioSession activation only occurs on play intent.
+- Verified switching engines stops the previous engine and remains stable.
 
-Phase 4: Post-verify cleanup
-- Confirm logging is sufficient and remove any temporary debug-only behavior if added.
-- Test: run through AVSpeech and Sherpa playback flows end-to-end.
+Phase 3: Now Playing integration (done)
+- `NowPlayingManager` driven by `MediaPlaybackController` state.
+- Removed `MPNowPlayingInfoCenter.playbackState` updates.
+- Remote commands mapped and command availability toggles by playback state.
+- Verified Control Center play/pause/skip/seek works and Now Playing info updates without entitlement warnings.
+
+Phase 4: Post-verify cleanup (in progress)
+- Logging remains verbose for remote commands; decide whether to gate behind a debug flag.
+- Confirm whether `UIApplication.shared.beginReceivingRemoteControlEvents()` is still necessary or can be removed.
+- Reconfirm AVSpeech and Sherpa playback flows end-to-end after cleanup.
 
 ## OS Playback Controls Plan
 Primary goal: ensure OS-level playback controls (headphones buttons, lock screen, Control Center) work reliably for both engines.
@@ -155,12 +158,14 @@ Primary goal: ensure OS-level playback controls (headphones buttons, lock screen
 - Verify Background Modes includes audio (`UIBackgroundModes` = `audio`) so playback and controls persist when locked or backgrounded.
 - Keep `AVAudioSession` category `.playback` + mode `.spokenAudio` active while playing or paused; only deactivate on explicit stop.
 - Ensure remote command handlers always activate the session before starting playback.
+Status: completed.
 
 ### Phase 2: Now Playing metadata correctness
 - Populate Now Playing immediately on play start (title, artist, duration, elapsed, playback rate).
 - On pause, set `MPNowPlayingInfoPropertyPlaybackRate` to `0` but keep metadata to preserve lock screen UI.
 - Update elapsed/duration on seek and via a periodic timer while playing.
 - Optional: add artwork if article metadata is available.
+Status: completed. Default playback rate stays aligned with the in-app speed setting to avoid UI drift.
 
 ### Phase 3: Remote command center reliability
 - Configure `MPRemoteCommandCenter` once and remove old targets on reconfigure to avoid duplicates.
@@ -169,6 +174,7 @@ Primary goal: ensure OS-level playback controls (headphones buttons, lock screen
 - Ensure command handlers return `.success` only after the action is scheduled.
 - Support lock screen scrubber via `changePlaybackPositionCommand`.
 - Optional: ignore or map `changePlaybackRateCommand` if we want OS-driven rate changes.
+Status: completed. `changePlaybackRateCommand` maps to `setRate`.
 
 ### Phase 4: Interruptions and route changes
 - On interruption begin: pause and record `wasPlayingBeforeInterruption`.
@@ -176,9 +182,16 @@ Primary goal: ensure OS-level playback controls (headphones buttons, lock screen
 - On route change `.oldDeviceUnavailable` (headphones unplug): pause and update Now Playing.
 - Keep logs for interruption/route-change reasons and resulting playback action.
 - Treat Bluetooth disconnect as `.oldDeviceUnavailable`; optionally inspect previous route to differentiate and log.
+Status: completed.
 
 ### Phase 5: Verification
 - Lock screen shows controls and metadata while playing; play/pause works.
 - Headphones play/pause toggles playback when app is in background.
 - Control Center skip/seek works and updates elapsed time.
 - Behavior verified for both AVSpeech and Sherpa engines.
+Status: completed.
+
+## Cleanup Checklist (Next)
+- Decide whether to keep or remove `UIApplication.shared.beginReceivingRemoteControlEvents()` now that remote commands work.
+- Consider gating `[RemoteCommand]` logs behind a debug flag similar to Now Playing.
+- Confirm audio session options remain `[]` (no ducking) and capture any user-facing regressions before reintroducing options.

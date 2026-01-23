@@ -13,7 +13,6 @@ struct URLReaderApp: App {
                     handleIncomingURL(url)
                 }
                 .onAppear {
-                    UIApplication.shared.beginReceivingRemoteControlEvents()
                     checkForSharedURL()
                 }
         }

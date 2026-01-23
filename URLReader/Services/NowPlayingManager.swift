@@ -103,7 +103,9 @@ final class NowPlayingManager {
 
     func updateNowPlaying(_ info: Info?) {
         guard let info else {
-            print("[NowPlaying][debug] cleared")
+            if logNowPlayingDebug {
+                print("[NowPlaying][debug] cleared")
+            }
             MPNowPlayingInfoCenter.default().nowPlayingInfo = nil
             return
         }
