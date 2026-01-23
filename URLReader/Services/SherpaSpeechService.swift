@@ -241,20 +241,22 @@ final class SherpaSpeechService: ObservableObject {
         generationPhase = "Starting"
         let startTime = Date()
         let generationSpeed: Float = 1.0
-        let cacheKey = audioCache.cacheKey(
-            text: text,
-            modelId: record.id,
-            generationSpeed: generationSpeed
-        )
         let articleURL = currentArticleURL
         let generationID = UUID()
+        let textSnapshot = text
+        let textCount = textLength
         currentGenerationID = generationID
         print("[Sherpa] Generation ID \(generationID.uuidString)")
-        startGenerationWatchdog(for: generationID, timeout: generationTimeout(for: text.count))
-        print("[Sherpa] Starting generation for \(text.count) chars")
+        startGenerationWatchdog(for: generationID, timeout: generationTimeout(for: textCount))
+        print("[Sherpa] Starting generation for \(textCount) chars")
 
         workQueue.async { [weak self] in
             guard let self else { return }
+            let cacheKey = self.audioCache.cacheKey(
+                text: textSnapshot,
+                modelId: record.id,
+                generationSpeed: generationSpeed
+            )
             do {
                 self.logPhase("Checking cache", uiMessage: "Checking cache…", generationID: generationID)
                 if let cachedURL = self.audioCache.cachedFileURL(for: cacheKey) {
@@ -318,7 +320,7 @@ final class SherpaSpeechService: ObservableObject {
                 }
                 self.logPhase("Generating audio", uiMessage: "Generating audio…", generationID: generationID)
                 let generateStart = Date()
-                let audio = tts.generate(text: self.text, speed: generationSpeed)
+                let audio = tts.generate(text: textSnapshot, speed: generationSpeed)
                 let generateDuration = Date().timeIntervalSince(generateStart)
                 print("[Sherpa] Generated audio in \(String(format: "%.2f", generateDuration))s")
                 let samples = audio.samples

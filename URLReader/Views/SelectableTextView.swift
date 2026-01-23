@@ -2,6 +2,7 @@ import SwiftUI
 
 private final class WrappingTextView: UITextView {
     var onStartReadingFromHere: ((Int) -> Void)?
+    var lastMeasuredWidth: CGFloat = 0
 
     override func layoutSubviews() {
         super.layoutSubviews()
@@ -58,7 +59,8 @@ struct SelectableTextView: UIViewRepresentable {
         if let wrappingView = uiView as? WrappingTextView {
             wrappingView.onStartReadingFromHere = onStartReadingFromSelection
         }
-        if uiView.attributedText?.string != text {
+        let needsTextUpdate = uiView.attributedText?.string != text
+        if needsTextUpdate {
             let paragraph = NSMutableParagraphStyle()
             paragraph.lineSpacing = lineSpacing
             let attributes: [NSAttributedString.Key: Any] = [
@@ -69,11 +71,16 @@ struct SelectableTextView: UIViewRepresentable {
             uiView.attributedText = NSAttributedString(string: text, attributes: attributes)
         }
 
-        let targetSize = CGSize(width: width, height: .greatestFiniteMagnitude)
-        let fittingSize = uiView.sizeThatFits(targetSize)
-        if height != fittingSize.height {
-            DispatchQueue.main.async {
-                height = fittingSize.height
+        if let wrappingView = uiView as? WrappingTextView {
+            if needsTextUpdate || wrappingView.lastMeasuredWidth != width {
+                wrappingView.lastMeasuredWidth = width
+                let targetSize = CGSize(width: width, height: .greatestFiniteMagnitude)
+                let fittingSize = uiView.sizeThatFits(targetSize)
+                if height != fittingSize.height {
+                    DispatchQueue.main.async {
+                        height = fittingSize.height
+                    }
+                }
             }
         }
     }
