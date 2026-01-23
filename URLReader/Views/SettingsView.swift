@@ -116,9 +116,9 @@ struct SettingsView: View {
     private func engineDescription(for engine: SpeechEngineType) -> String {
         switch engine {
         case .avSpeech:
-            return "Instant generation, less natural sounding voices."
+            return "Instant playback, less natural sounding voices."
         case .sherpaOnnx:
-            return "Slow generation, more natural sounding voices. Additional storage needed per voice."
+            return "Slow generation before playback, more natural sounding voices. Additional storage needed per voice."
         }
     }
 
