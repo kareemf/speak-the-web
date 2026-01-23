@@ -147,3 +147,38 @@ Phase 3: Now Playing integration
 Phase 4: Post-verify cleanup
 - Confirm logging is sufficient and remove any temporary debug-only behavior if added.
 - Test: run through AVSpeech and Sherpa playback flows end-to-end.
+
+## OS Playback Controls Plan
+Primary goal: ensure OS-level playback controls (headphones buttons, lock screen, Control Center) work reliably for both engines.
+
+### Phase 1: Prerequisites and session policy
+- Verify Background Modes includes audio (`UIBackgroundModes` = `audio`) so playback and controls persist when locked or backgrounded.
+- Keep `AVAudioSession` category `.playback` + mode `.spokenAudio` active while playing or paused; only deactivate on explicit stop.
+- Ensure remote command handlers always activate the session before starting playback.
+
+### Phase 2: Now Playing metadata correctness
+- Populate Now Playing immediately on play start (title, artist, duration, elapsed, playback rate).
+- On pause, set `MPNowPlayingInfoPropertyPlaybackRate` to `0` but keep metadata to preserve lock screen UI.
+- Update elapsed/duration on seek and via a periodic timer while playing.
+- Optional: add artwork if article metadata is available.
+
+### Phase 3: Remote command center reliability
+- Configure `MPRemoteCommandCenter` once and remove old targets on reconfigure to avoid duplicates.
+- Enable or disable commands based on capability (seek only if duration exists).
+- Map commands to controller actions: play, pause, toggle, skip forward/back (15s), and seek.
+- Ensure command handlers return `.success` only after the action is scheduled.
+- Support lock screen scrubber via `changePlaybackPositionCommand`.
+- Optional: ignore or map `changePlaybackRateCommand` if we want OS-driven rate changes.
+
+### Phase 4: Interruptions and route changes
+- On interruption begin: pause and record `wasPlayingBeforeInterruption`.
+- On interruption end: resume only if `shouldResume` and `wasPlayingBeforeInterruption` is true.
+- On route change `.oldDeviceUnavailable` (headphones unplug): pause and update Now Playing.
+- Keep logs for interruption/route-change reasons and resulting playback action.
+- Treat Bluetooth disconnect as `.oldDeviceUnavailable`; optionally inspect previous route to differentiate and log.
+
+### Phase 5: Verification
+- Lock screen shows controls and metadata while playing; play/pause works.
+- Headphones play/pause toggles playback when app is in background.
+- Control Center skip/seek works and updates elapsed time.
+- Behavior verified for both AVSpeech and Sherpa engines.

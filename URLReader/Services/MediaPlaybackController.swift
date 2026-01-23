@@ -22,11 +22,13 @@ final class MediaPlaybackController: ObservableObject {
     private var rateMultiplier: Float = 1.0
     private var selectedEngine: SpeechEngineType = .avSpeech
     private var pendingSherpaModel: SherpaModelRecord?
+    private var wasPlayingBeforeInterruption = false
 
     @Published var lastErrorMessage: String?
     var canUseEngine: ((SpeechEngineType) -> Bool)?
 
     init() {
+        configureAudioSessionCallbacks()
         configureNowPlayingCommands()
     }
 
@@ -193,6 +195,7 @@ final class MediaPlaybackController: ObservableObject {
         nowPlayingArtist = nil
         nowPlayingWordCount = 0
         nowPlaying.updateNowPlaying(nil)
+        nowPlaying.updateCommandAvailability(isPlaying: false, canSeek: false)
     }
 
     func avSpeechService() -> SpeechService {
@@ -255,22 +258,56 @@ final class MediaPlaybackController: ObservableObject {
     private func configureNowPlayingCommands() {
         nowPlaying.configureCommands(
             play: { [weak self] in
-                self?.playSelectedEngine()
+                guard let self else { return false }
+                guard self.hasPlayableContent else { return false }
+                if self.isPlayingIfLoaded(for: self.selectedEngine) {
+                    return false
+                }
+                self.playSelectedEngine()
+                return true
             },
             pause: { [weak self] in
-                self?.pauseSelectedEngine()
+                guard let self else { return false }
+                guard self.hasPlayableContent else { return false }
+                if self.isPlayingIfLoaded(for: self.selectedEngine) {
+                    self.pauseSelectedEngine()
+                    return true
+                }
+                if self.isPausedIfLoaded(for: self.selectedEngine) {
+                    self.playSelectedEngine()
+                    return true
+                }
+                return false
             },
             toggle: { [weak self] in
-                self?.togglePlayPauseSelectedEngine()
+                guard let self else { return false }
+                guard self.hasPlayableContent else { return false }
+                self.togglePlayPauseSelectedEngine()
+                return true
             },
             skipForward: { [weak self] in
-                self?.skipForwardSelectedEngine()
+                guard let self else { return false }
+                guard self.hasPlayableContent else { return false }
+                self.skipForwardSelectedEngine()
+                return true
             },
             skipBackward: { [weak self] in
-                self?.skipBackwardSelectedEngine()
+                guard let self else { return false }
+                guard self.hasPlayableContent else { return false }
+                self.skipBackwardSelectedEngine()
+                return true
             },
             seek: { [weak self] time in
-                self?.seekSelectedEngine(to: time)
+                guard let self else { return false }
+                guard self.hasSeekDuration else { return false }
+                self.seekSelectedEngine(to: time)
+                return true
+            },
+            changeRate: { [weak self] rate in
+                guard let self else { return false }
+                guard self.hasPlayableContent else { return false }
+                self.setRate(multiplier: rate)
+                return true
             }
         )
     }
@@ -278,21 +315,24 @@ final class MediaPlaybackController: ObservableObject {
     private func updateNowPlayingInfo() {
         guard let title = nowPlayingTitle else {
             nowPlaying.updateNowPlaying(nil)
+            nowPlaying.updateCommandAvailability(isPlaying: false, canSeek: false)
             return
         }
 
         let engine = selectedEngine
         let duration = playbackDuration(for: engine)
         let elapsed = playbackElapsed(for: engine, duration: duration)
+        let isPlaying = isPlaying(for: engine)
         let info = NowPlayingManager.Info(
             title: title,
             artist: nowPlayingArtist,
             duration: duration,
             elapsed: elapsed,
             rate: rateMultiplier,
-            isPlaying: isPlaying(for: engine)
+            isPlaying: isPlaying
         )
         nowPlaying.updateNowPlaying(info)
+        nowPlaying.updateCommandAvailability(isPlaying: isPlaying, canSeek: duration != nil)
     }
 
     private func playbackDuration(for engine: SpeechEngineType) -> TimeInterval? {
@@ -327,8 +367,57 @@ final class MediaPlaybackController: ObservableObject {
         nowPlayingTimer = nil
     }
 
+    private var hasPlayableContent: Bool {
+        !currentText.isEmpty && canUse(engine: selectedEngine)
+    }
+
+    private var hasSeekDuration: Bool {
+        playbackDuration(for: selectedEngine) != nil
+    }
+
     private func canUse(engine: SpeechEngineType) -> Bool {
         canUseEngine?(engine) ?? true
+    }
+
+    private func configureAudioSessionCallbacks() {
+        audioSession.onInterruptionBegan = { [weak self] _ in
+            Task { @MainActor [weak self] in
+                guard let self else { return }
+                self.wasPlayingBeforeInterruption = self.isPlayingIfLoaded(for: self.selectedEngine)
+                if self.wasPlayingBeforeInterruption {
+                    self.pauseSelectedEngine()
+                }
+            }
+        }
+
+        audioSession.onInterruptionEnded = { [weak self] shouldResume in
+            Task { @MainActor [weak self] in
+                guard let self else { return }
+                let shouldRestart = shouldResume && self.wasPlayingBeforeInterruption
+                self.wasPlayingBeforeInterruption = false
+                if shouldRestart {
+                    self.playSelectedEngine()
+                }
+            }
+        }
+
+        audioSession.onRouteChange = { [weak self] reason in
+            Task { @MainActor [weak self] in
+                guard let self else { return }
+                guard reason == .oldDeviceUnavailable else { return }
+                if self.isPlayingIfLoaded(for: self.selectedEngine) {
+                    self.pauseSelectedEngine()
+                }
+            }
+        }
+    }
+
+    private func isPlayingIfLoaded(for engine: SpeechEngineType) -> Bool {
+        service(for: engine, createIfNeeded: false)?.isPlaying ?? false
+    }
+
+    private func isPausedIfLoaded(for engine: SpeechEngineType) -> Bool {
+        service(for: engine, createIfNeeded: false)?.isPaused ?? false
     }
 
     private func ensureSpeechService() -> SpeechService {
@@ -443,6 +532,15 @@ private enum PlaybackService {
             return service.isFinished
         case .sherpa(let service):
             return service.isFinished
+        }
+    }
+
+    var isPaused: Bool {
+        switch self {
+        case .avSpeech(let service):
+            return service.isPaused
+        case .sherpa(let service):
+            return service.isPaused
         }
     }
 

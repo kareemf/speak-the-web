@@ -6,6 +6,9 @@ final class AudioSessionCoordinator {
     private var observers: [NSObjectProtocol] = []
     private var activeEngine: SpeechEngineType?
     private var isActive = false
+    var onInterruptionBegan: ((AVAudioSession.InterruptionReason?) -> Void)?
+    var onInterruptionEnded: ((Bool) -> Void)?
+    var onRouteChange: ((AVAudioSession.RouteChangeReason) -> Void)?
 
     init() {
         registerNotifications()
@@ -21,7 +24,7 @@ final class AudioSessionCoordinator {
     func activate(for engine: SpeechEngineType, reason: String = "play") -> Bool {
         let category: AVAudioSession.Category = .playback
         let mode: AVAudioSession.Mode = .spokenAudio
-        let options: AVAudioSession.CategoryOptions = [.duckOthers]
+        let options: AVAudioSession.CategoryOptions = []
 
         log(action: "activate-pre",
             engine: engine,
@@ -91,17 +94,25 @@ final class AudioSessionCoordinator {
             return
         }
 
-        let reasonText: String
-        if let reasonValue = info[AVAudioSessionInterruptionReasonKey] as? UInt,
-           let reason = AVAudioSession.InterruptionReason(rawValue: reasonValue) {
-            reasonText = String(describing: reason)
+        let reason: AVAudioSession.InterruptionReason?
+        if let reasonValue = info[AVAudioSessionInterruptionReasonKey] as? UInt {
+            reason = AVAudioSession.InterruptionReason(rawValue: reasonValue)
         } else {
-            reasonText = "unknown"
+            reason = nil
         }
 
+        var reasonText = reason.map { String(describing: $0) } ?? "unknown"
         if type == .began {
             isActive = false
+            onInterruptionBegan?(reason)
+        } else if type == .ended {
+            let optionValue = info[AVAudioSessionInterruptionOptionKey] as? UInt ?? 0
+            let options = AVAudioSession.InterruptionOptions(rawValue: optionValue)
+            let shouldResume = options.contains(.shouldResume)
+            reasonText += " shouldResume=\(shouldResume)"
+            onInterruptionEnded?(shouldResume)
         }
+
         log(action: "interruption-\(type)", engine: activeEngine, reason: reasonText, category: nil, mode: nil, options: nil, error: nil)
     }
 
@@ -112,6 +123,7 @@ final class AudioSessionCoordinator {
             return
         }
 
+        onRouteChange?(reason)
         log(action: "route-change", engine: activeEngine, reason: String(describing: reason), category: nil, mode: nil, options: nil, error: nil)
     }
 

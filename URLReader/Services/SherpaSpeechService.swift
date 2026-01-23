@@ -22,6 +22,10 @@ final class SherpaSpeechService: ObservableObject {
 
     var currentTime: TimeInterval? {
         guard audioSampleRate > 0, totalFrames > 0 else { return nil }
+        if isPaused || !isPlaying {
+            let frame = pausedFrame ?? startFrame
+            return Double(frame) / audioSampleRate
+        }
         return Double(currentFrame()) / audioSampleRate
     }
 
@@ -38,6 +42,7 @@ final class SherpaSpeechService: ObservableObject {
     private var totalFrames: AVAudioFramePosition = 0
     private var audioSampleRate: Double = 0
     private var startFrame: AVAudioFramePosition = 0
+    private var pausedFrame: AVAudioFramePosition?
     private var progressTimer: Timer?
     private let workQueue = DispatchQueue(label: "SherpaSpeechService")
     private let fileManager = FileManager.default
@@ -114,10 +119,14 @@ final class SherpaSpeechService: ObservableObject {
         print("[Sherpa] play (isPreparing=\(isPreparing), isPlaying=\(isPlaying), isPaused=\(isPaused), hasAudio=\(audioFile != nil))")
         ensureEngineRunning()
         guard !isPreparing else { return }
+        if isFinished {
+            setPosition(0)
+        }
         if isPaused {
             playerNode.play()
             isPaused = false
             isPlaying = true
+            pausedFrame = nil
             startProgressTimer()
             return
         }
@@ -135,12 +144,14 @@ final class SherpaSpeechService: ObservableObject {
 
     func pause() {
         guard isPlaying else { return }
-        startFrame = currentFrame()
+        pausedFrame = currentFrame()
         playerNode.pause()
         isPlaying = false
         isPaused = true
         stopProgressTimer()
-        updateProgress(for: startFrame)
+        if let pausedFrame {
+            updateProgress(for: pausedFrame)
+        }
     }
 
     func stop() {
@@ -149,6 +160,7 @@ final class SherpaSpeechService: ObservableObject {
         isPlaying = false
         isPaused = false
         startFrame = 0
+        pausedFrame = nil
         currentPosition = 0
         progress = 0.0
         resetGenerationState()
@@ -179,6 +191,9 @@ final class SherpaSpeechService: ObservableObject {
 
         if wasPlaying {
             playerNode.play()
+            pausedFrame = nil
+        } else {
+            pausedFrame = startFrame
         }
     }
 
@@ -190,6 +205,7 @@ final class SherpaSpeechService: ObservableObject {
         guard totalFrames > 0 else { return }
         let targetFrame = AVAudioFramePosition(Double(totalFrames) * progress)
         startFrame = max(0, min(targetFrame, totalFrames))
+        pausedFrame = startFrame
     }
 
     func setRate(multiplier: Float) {
@@ -377,17 +393,27 @@ final class SherpaSpeechService: ObservableObject {
         playerNode.play()
         isPlaying = true
         isPaused = false
+        pausedFrame = nil
         startProgressTimer()
     }
 
     private func scheduleFrom(_ frame: AVAudioFramePosition) {
         guard let audioFile else { return }
+        let clampedFrame = max(0, min(frame, audioFile.length))
+        if clampedFrame != frame {
+            startFrame = clampedFrame
+        }
         let token = invalidateScheduleToken()
         playerNode.stop()
-        let remainingFrames = max(0, audioFile.length - frame)
+        let remainingFrames = audioFile.length - clampedFrame
+        guard remainingFrames > 0 else {
+            print("[Sherpa] scheduleFrom ignored: no remaining frames")
+            finishPlayback()
+            return
+        }
         let frameCount = AVAudioFrameCount(remainingFrames)
-        print("[Sherpa] Scheduling playback from frame \(frame)")
-        playerNode.scheduleSegment(audioFile, startingFrame: frame, frameCount: frameCount, at: nil) { [weak self] in
+        print("[Sherpa] Scheduling playback from frame \(clampedFrame)")
+        playerNode.scheduleSegment(audioFile, startingFrame: clampedFrame, frameCount: frameCount, at: nil) { [weak self] in
             DispatchQueue.main.async {
                 guard let self, self.scheduleToken == token else { return }
                 self.finishPlayback()
@@ -399,6 +425,8 @@ final class SherpaSpeechService: ObservableObject {
         stopProgressTimer()
         isPlaying = false
         isPaused = false
+        startFrame = totalFrames
+        pausedFrame = nil
         currentPosition = textLength
         progress = 1.0
     }
@@ -444,6 +472,7 @@ final class SherpaSpeechService: ObservableObject {
         totalFrames = 0
         audioSampleRate = 0
         startFrame = 0
+        pausedFrame = nil
         audioIsCached = false
     }
 
