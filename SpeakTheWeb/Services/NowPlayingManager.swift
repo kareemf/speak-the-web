@@ -15,7 +15,7 @@ final class NowPlayingManager {
     private let logNowPlayingDebug = false
     private let logRemoteCommandDebug = false
     private let supportedRates: [NSNumber] = [
-        0.5, 0.75, 1.0, 1.25, 1.5, 1.75, 2.0
+        0.5, 0.75, 1.0, 1.25, 1.5, 1.75, 2.0,
     ]
 
     func configureCommands(play: @escaping () -> Bool,
@@ -24,7 +24,8 @@ final class NowPlayingManager {
                            skipForward: @escaping () -> Bool,
                            skipBackward: @escaping () -> Bool,
                            seek: @escaping (TimeInterval) -> Bool,
-                           changeRate: @escaping (Float) -> Bool) {
+                           changeRate: @escaping (Float) -> Bool)
+    {
         commandCenter.playCommand.removeTarget(nil)
         commandCenter.pauseCommand.removeTarget(nil)
         commandCenter.togglePlayPauseCommand.removeTarget(nil)
@@ -115,7 +116,7 @@ final class NowPlayingManager {
             MPMediaItemPropertyTitle: info.title,
             MPNowPlayingInfoPropertyPlaybackRate: info.isPlaying ? info.rate : 0,
             MPNowPlayingInfoPropertyDefaultPlaybackRate: info.rate,
-            MPNowPlayingInfoPropertyMediaType: MPNowPlayingInfoMediaType.audio.rawValue
+            MPNowPlayingInfoPropertyMediaType: MPNowPlayingInfoMediaType.audio.rawValue,
         ]
 
         if let elapsed = info.elapsed {

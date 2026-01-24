@@ -36,7 +36,7 @@ struct SettingsView: View {
 
                 Section("Playback Speed") {
                     Picker("Speed", selection: $viewModel.selectedRateIndex) {
-                        ForEach(0..<SpeechService.ratePresets.count, id: \.self) { index in
+                        ForEach(0 ..< SpeechService.ratePresets.count, id: \.self) { index in
                             Text(SpeechService.ratePresets[index].name)
                                 .tag(index)
                         }

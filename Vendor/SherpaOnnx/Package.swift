@@ -4,10 +4,10 @@ import PackageDescription
 let package = Package(
     name: "SherpaOnnx",
     platforms: [
-        .iOS(.v17)
+        .iOS(.v17),
     ],
     products: [
-        .library(name: "SherpaOnnx", targets: ["SherpaOnnx"])
+        .library(name: "SherpaOnnx", targets: ["SherpaOnnx"]),
     ],
     targets: [
         .binaryTarget(
@@ -30,6 +30,6 @@ let package = Package(
             name: "SherpaOnnx",
             dependencies: ["SherpaOnnxC"],
             path: "Sources/SherpaOnnx"
-        )
+        ),
     ]
 )

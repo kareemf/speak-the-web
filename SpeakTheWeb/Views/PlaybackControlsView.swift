@@ -119,7 +119,7 @@ struct PlaybackControlsView: View {
                     .foregroundColor(.secondary)
 
                 Picker("Speed", selection: $viewModel.selectedRateIndex) {
-                    ForEach(0..<SpeechService.ratePresets.count, id: \.self) { index in
+                    ForEach(0 ..< SpeechService.ratePresets.count, id: \.self) { index in
                         Text(SpeechService.ratePresets[index].name)
                             .tag(index)
                     }
@@ -128,7 +128,6 @@ struct PlaybackControlsView: View {
             }
             .padding(.horizontal)
             .disabled(viewModel.isGeneratingAudio)
-
         }
         .padding()
         .background(Color(UIColor.secondarySystemGroupedBackground))

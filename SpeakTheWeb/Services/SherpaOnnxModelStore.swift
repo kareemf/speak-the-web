@@ -16,6 +16,7 @@ final class SherpaOnnxModelStore: NSObject, ObservableObject {
             persistRegistry()
         }
     }
+
     @Published var downloadStates: [String: DownloadState] = [:]
     @Published var isLoading: Bool = false
     @Published var errorMessage: String?
@@ -81,7 +82,8 @@ final class SherpaOnnxModelStore: NSObject, ObservableObject {
             let release = try JSONDecoder().decode(GitHubRelease.self, from: data)
             let filtered = release.assets.compactMap { asset -> SherpaModel? in
                 guard asset.name.hasPrefix("vits-piper-"),
-                      asset.name.hasSuffix("-medium.tar.bz2") else {
+                      asset.name.hasSuffix("-medium.tar.bz2")
+                else {
                     return nil
                 }
 
@@ -168,7 +170,8 @@ final class SherpaOnnxModelStore: NSObject, ObservableObject {
 
     private func loadRegistry() {
         guard fileManager.fileExists(atPath: registryURL.path),
-              let data = try? Data(contentsOf: registryURL) else {
+              let data = try? Data(contentsOf: registryURL)
+        else {
             return
         }
 
@@ -177,7 +180,8 @@ final class SherpaOnnxModelStore: NSObject, ObservableObject {
             let validRecords = registry.downloaded.filter { validateRecordPaths($0) }
             downloadedRecords = Dictionary(uniqueKeysWithValues: validRecords.map { ($0.id, $0) })
             if let selectedId = registry.selectedModelId,
-               downloadedRecords[selectedId] != nil {
+               downloadedRecords[selectedId] != nil
+            {
                 selectedModelId = selectedId
             } else {
                 selectedModelId = nil
@@ -322,7 +326,8 @@ final class SherpaOnnxModelStore: NSObject, ObservableObject {
             return false
         }
         if let tokensPath = record.tokensPath,
-           !fileManager.fileExists(atPath: tokensPath) {
+           !fileManager.fileExists(atPath: tokensPath)
+        {
             return false
         }
         return true
@@ -375,7 +380,7 @@ final class SherpaOnnxModelStore: NSObject, ObservableObject {
 
         let start = asset.name.index(asset.name.startIndex, offsetBy: prefix.count)
         let end = asset.name.index(asset.name.endIndex, offsetBy: -suffix.count)
-        let trimmed = String(asset.name[start..<end])
+        let trimmed = String(asset.name[start ..< end])
         let parts = trimmed.split(separator: "-")
         guard let language = parts.first else { return nil }
         let nameParts = parts.dropFirst()
@@ -395,8 +400,9 @@ final class SherpaOnnxModelStore: NSObject, ObservableObject {
 }
 
 extension SherpaOnnxModelStore: URLSessionDownloadDelegate {
-    func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didWriteData bytesWritten: Int64,
-                    totalBytesWritten: Int64, totalBytesExpectedToWrite: Int64) {
+    func urlSession(_: URLSession, downloadTask: URLSessionDownloadTask, didWriteData _: Int64,
+                    totalBytesWritten: Int64, totalBytesExpectedToWrite: Int64)
+    {
         guard let modelId = downloadTask.taskDescription else { return }
         let progress = totalBytesExpectedToWrite > 0
             ? Double(totalBytesWritten) / Double(totalBytesExpectedToWrite)
@@ -406,7 +412,7 @@ extension SherpaOnnxModelStore: URLSessionDownloadDelegate {
         }
     }
 
-    func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didFinishDownloadingTo location: URL) {
+    func urlSession(_: URLSession, downloadTask: URLSessionDownloadTask, didFinishDownloadingTo location: URL) {
         guard let modelId = downloadTask.taskDescription else { return }
 
         guard let model = models.first(where: { $0.id == modelId }) else { return }

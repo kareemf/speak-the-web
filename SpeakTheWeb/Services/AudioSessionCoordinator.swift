@@ -1,5 +1,5 @@
-import Foundation
 import AVFoundation
+import Foundation
 
 final class AudioSessionCoordinator {
     private let session = AVAudioSession.sharedInstance()
@@ -90,7 +90,8 @@ final class AudioSessionCoordinator {
     private func handleInterruption(_ notification: Notification) {
         guard let info = notification.userInfo,
               let typeValue = info[AVAudioSessionInterruptionTypeKey] as? UInt,
-              let type = AVAudioSession.InterruptionType(rawValue: typeValue) else {
+              let type = AVAudioSession.InterruptionType(rawValue: typeValue)
+        else {
             return
         }
 
@@ -119,7 +120,8 @@ final class AudioSessionCoordinator {
     private func handleRouteChange(_ notification: Notification) {
         guard let info = notification.userInfo,
               let reasonValue = info[AVAudioSessionRouteChangeReasonKey] as? UInt,
-              let reason = AVAudioSession.RouteChangeReason(rawValue: reasonValue) else {
+              let reason = AVAudioSession.RouteChangeReason(rawValue: reasonValue)
+        else {
             return
         }
 
@@ -130,7 +132,8 @@ final class AudioSessionCoordinator {
     private func handleSilenceHint(_ notification: Notification) {
         guard let info = notification.userInfo,
               let typeValue = info[AVAudioSessionSilenceSecondaryAudioHintTypeKey] as? UInt,
-              let type = AVAudioSession.SilenceSecondaryAudioHintType(rawValue: typeValue) else {
+              let type = AVAudioSession.SilenceSecondaryAudioHintType(rawValue: typeValue)
+        else {
             return
         }
 
@@ -143,7 +146,8 @@ final class AudioSessionCoordinator {
                      category: AVAudioSession.Category?,
                      mode: AVAudioSession.Mode?,
                      options: AVAudioSession.CategoryOptions?,
-                     error: Error?) {
+                     error: Error?)
+    {
         var parts: [String] = ["[AudioSession]", "action=\(action)"]
 
         if let engine {
@@ -190,7 +194,7 @@ final class AudioSessionCoordinator {
             (.allowBluetoothHFP, "allowBluetoothHFP"),
             (.allowBluetoothA2DP, "allowBluetoothA2DP"),
             (.allowAirPlay, "allowAirPlay"),
-            (.defaultToSpeaker, "defaultToSpeaker")
+            (.defaultToSpeaker, "defaultToSpeaker"),
         ]
         let enabled = all.compactMap { options.contains($0.0) ? $0.1 : nil }
         return "[\(enabled.joined(separator: ","))]"

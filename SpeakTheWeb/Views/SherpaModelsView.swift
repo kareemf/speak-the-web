@@ -105,13 +105,13 @@ private struct SherpaModelRow: View {
                 .foregroundColor(.secondary)
 
             switch store.downloadState(for: model) {
-            case .downloading(let progress):
+            case let .downloading(progress):
                 ProgressView(value: progress)
                     .progressViewStyle(.linear)
             case .processing:
                 ProgressView("Processing…")
                     .font(.caption)
-            case .failed(let message):
+            case let .failed(message):
                 Text(message)
                     .font(.caption2)
                     .foregroundColor(.red)

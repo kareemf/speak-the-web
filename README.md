@@ -62,9 +62,6 @@ rm -rf Vendor/SherpaOnnx/build/sherpa-onnx
 ### Building from Command Line
 
 ```bash
-# Navigate to project directory
-cd speak-the-web
-
 # Build for iOS Simulator (Debug)
 xcodebuild -project SpeakTheWeb.xcodeproj \
   -scheme SpeakTheWeb \
@@ -124,6 +121,27 @@ xcodegen generate
 ```
 
 > **Note**: If you don't use XcodeGen, you can still use the pre-generated `.xcodeproj` file directly, but any project file changes should be made through `project.yml`.
+
+#### Optimize Website Images
+
+The `docs/` directory contains the GitHub Pages website. Original images are stored in `docs/images/originals/` and optimized versions are generated to `docs/images/`.
+
+```bash
+# Install pngquant (first time only)
+brew install pngquant
+
+# Run the optimization script
+./scripts/optimize-images.sh
+```
+
+The script will:
+- Read from `docs/images/originals/` (source of truth)
+- Output optimized images to `docs/images/`
+- Resize to max 600px width
+- Compress with pngquant (quality 75-90, ~97% size reduction)
+- Normalize filenames to lowercase `.png`
+
+To add new images, place them in `docs/images/originals/` and run the script.
 
 #### Configure Git Hooks
 

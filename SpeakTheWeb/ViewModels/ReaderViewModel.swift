@@ -1,11 +1,10 @@
+import Combine
 import Foundation
 import SwiftUI
-import Combine
 
 /// Main view model for the Speak the Web app
 @MainActor
 class ReaderViewModel: ObservableObject {
-
     // MARK: - Published Properties
 
     @Published var urlInput: String = ""
@@ -26,6 +25,7 @@ class ReaderViewModel: ObservableObject {
             applyCurrentRateToEngines()
         }
     }
+
     @Published var selectedRateIndex: Int = 2 { // Default to 1x
         didSet {
             UserDefaults.standard.set(selectedRateIndex, forKey: Self.rateIndexKey)
@@ -33,6 +33,7 @@ class ReaderViewModel: ObservableObject {
             playbackController.setRate(multiplier: currentRateMultiplier)
         }
     }
+
     @Published var recentArticles: [RecentArticle] = []
 
     private static let rateIndexKey = "selectedRateIndex"
@@ -123,13 +124,14 @@ class ReaderViewModel: ObservableObject {
 
         // Load persisted rate index
         let savedRateIndex = UserDefaults.standard.integer(forKey: Self.rateIndexKey)
-        if savedRateIndex > 0 && savedRateIndex < SpeechService.ratePresets.count {
+        if savedRateIndex > 0, savedRateIndex < SpeechService.ratePresets.count {
             selectedRateIndex = savedRateIndex
         }
 
         // Load persisted engine
         if let savedEngine = UserDefaults.standard.string(forKey: Self.engineKey),
-           let engine = SpeechEngineType(rawValue: savedEngine) {
+           let engine = SpeechEngineType(rawValue: savedEngine)
+        {
             selectedSpeechEngine = engine
         }
 
@@ -417,7 +419,7 @@ class ReaderViewModel: ObservableObject {
 
 extension Array {
     subscript(safe index: Int) -> Element? {
-        guard index >= 0 && index < count else { return nil }
+        guard index >= 0, index < count else { return nil }
         return self[index]
     }
 }

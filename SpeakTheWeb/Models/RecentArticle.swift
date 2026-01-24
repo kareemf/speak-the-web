@@ -1,5 +1,5 @@
-import Foundation
 import CryptoKit
+import Foundation
 
 /// Represents a recently read article for persistence
 struct RecentArticle: Identifiable, Codable {
@@ -68,7 +68,7 @@ class RecentArticlesManager {
 
     init(userDefaults: UserDefaults = .standard) {
         self.userDefaults = userDefaults
-        self.cacheStore = DiskArticleCache()
+        cacheStore = DiskArticleCache()
     }
 
     /// Loads recent articles from storage

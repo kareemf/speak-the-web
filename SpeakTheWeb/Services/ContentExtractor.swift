@@ -2,7 +2,6 @@ import Foundation
 
 /// Service for extracting readable content from URLs
 class ContentExtractor {
-
     enum ExtractionError: LocalizedError {
         case invalidURL
         case networkError(Error)
@@ -13,7 +12,7 @@ class ContentExtractor {
             switch self {
             case .invalidURL:
                 return "Invalid URL provided"
-            case .networkError(let error):
+            case let .networkError(error):
                 return "Network error: \(error.localizedDescription)"
             case .parsingError:
                 return "Failed to parse page content"
@@ -42,10 +41,11 @@ class ContentExtractor {
 
             // Check for valid response
             if let httpResponse = response as? HTTPURLResponse,
-               !(200...299).contains(httpResponse.statusCode) {
+               !(200 ... 299).contains(httpResponse.statusCode)
+            {
                 throw ExtractionError.networkError(
                     NSError(domain: "HTTP", code: httpResponse.statusCode,
-                           userInfo: [NSLocalizedDescriptionKey: "HTTP \(httpResponse.statusCode)"])
+                            userInfo: [NSLocalizedDescriptionKey: "HTTP \(httpResponse.statusCode)"])
                 )
             }
 
@@ -114,7 +114,7 @@ class ContentExtractor {
     private func extractMetaContent(from html: String, property: String) -> String? {
         let patterns = [
             "<meta[^>]*property=[\"']\(property)[\"'][^>]*content=[\"']([^\"']*)[\"']",
-            "<meta[^>]*content=[\"']([^\"']*)[\"'][^>]*property=[\"']\(property)[\"']"
+            "<meta[^>]*content=[\"']([^\"']*)[\"'][^>]*property=[\"']\(property)[\"']",
         ]
 
         for pattern in patterns {
@@ -137,8 +137,8 @@ class ContentExtractor {
 
         // Remove unwanted elements
         let unwantedTags = ["script", "style", "nav", "header", "footer", "aside",
-                           "noscript", "iframe", "form", "button", "input", "select",
-                           "textarea", "svg", "canvas", "video", "audio"]
+                            "noscript", "iframe", "form", "button", "input", "select",
+                            "textarea", "svg", "canvas", "video", "audio"]
         for tag in unwantedTags {
             // Use NSRegularExpression for dotMatchesLineSeparators support
             if let regex = try? NSRegularExpression(
@@ -164,7 +164,7 @@ class ContentExtractor {
             "<article[^>]*>(.*?)</article>",
             "<main[^>]*>(.*?)</main>",
             "<div[^>]*class=[\"'][^\"']*(?:content|article|post|entry)[^\"']*[\"'][^>]*>(.*?)</div>",
-            "<div[^>]*id=[\"'][^\"']*(?:content|article|post|entry)[^\"']*[\"'][^>]*>(.*?)</div>"
+            "<div[^>]*id=[\"'][^\"']*(?:content|article|post|entry)[^\"']*[\"'][^>]*>(.*?)</div>",
         ]
 
         var contentHTML = workingHTML
@@ -174,11 +174,12 @@ class ContentExtractor {
                 pattern: selector,
                 options: .caseInsensitive
             ),
-               let match = regex.firstMatch(
-                in: workingHTML,
-                range: NSRange(workingHTML.startIndex..., in: workingHTML)
-               ),
-               let range = Range(match.range, in: workingHTML) {
+                let match = regex.firstMatch(
+                    in: workingHTML,
+                    range: NSRange(workingHTML.startIndex..., in: workingHTML)
+                ),
+                let range = Range(match.range, in: workingHTML)
+            {
                 contentHTML = String(workingHTML[range])
                 break
             }
@@ -215,8 +216,8 @@ class ContentExtractor {
             for match in matches {
                 if let levelRange = Range(match.range(at: 1), in: workingHTML),
                    let textRange = Range(match.range(at: 2), in: workingHTML),
-                   let level = Int(workingHTML[levelRange]) {
-
+                   let level = Int(workingHTML[levelRange])
+                {
                     let headingText = stripHTMLTags(String(workingHTML[textRange]))
                         .trimmingCharacters(in: .whitespacesAndNewlines)
 
@@ -270,7 +271,7 @@ class ContentExtractor {
             "&reg;": "®",
             "&trade;": "™",
             "&bull;": "•",
-            "&middot;": "·"
+            "&middot;": "·",
         ]
 
         for (entity, replacement) in entities {
@@ -285,7 +286,8 @@ class ContentExtractor {
                 if let range = Range(match.range, in: result),
                    let numRange = Range(match.range(at: 1), in: result),
                    let codePoint = Int(result[numRange]),
-                   let scalar = Unicode.Scalar(codePoint) {
+                   let scalar = Unicode.Scalar(codePoint)
+                {
                     result.replaceSubrange(range, with: String(Character(scalar)))
                 }
             }
@@ -299,7 +301,8 @@ class ContentExtractor {
                 if let range = Range(match.range, in: result),
                    let hexRange = Range(match.range(at: 1), in: result),
                    let codePoint = Int(result[hexRange], radix: 16),
-                   let scalar = Unicode.Scalar(codePoint) {
+                   let scalar = Unicode.Scalar(codePoint)
+                {
                     result.replaceSubrange(range, with: String(Character(scalar)))
                 }
             }

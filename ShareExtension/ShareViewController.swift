@@ -1,10 +1,9 @@
-import UIKit
 import Social
+import UIKit
 import UniformTypeIdentifiers
 
 /// Share Extension view controller for receiving URLs from Safari
 class ShareViewController: UIViewController {
-
     // MARK: - UI Elements
 
     private let containerView: UIView = {
@@ -138,7 +137,8 @@ class ShareViewController: UIViewController {
 
     private func extractURL() {
         guard let extensionItem = extensionContext?.inputItems.first as? NSExtensionItem,
-              let attachments = extensionItem.attachments else {
+              let attachments = extensionItem.attachments
+        else {
             showError("No content to share")
             return
         }

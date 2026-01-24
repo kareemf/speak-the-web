@@ -25,7 +25,8 @@ struct SpeakTheWebApp: App {
               let components = URLComponents(url: url, resolvingAgainstBaseURL: true),
               let queryItems = components.queryItems,
               let urlParam = queryItems.first(where: { $0.name == "url" })?.value,
-              let decodedURL = urlParam.removingPercentEncoding else {
+              let decodedURL = urlParam.removingPercentEncoding
+        else {
             return
         }
 
@@ -38,7 +39,8 @@ struct SpeakTheWebApp: App {
     private func checkForSharedURL() {
         guard let sharedDefaults = UserDefaults(suiteName: "group.com.kareemf.SpeakTheWeb"),
               let sharedURLString = sharedDefaults.string(forKey: "SharedURL"),
-              let timestamp = sharedDefaults.object(forKey: "SharedURLTimestamp") as? Date else {
+              let timestamp = sharedDefaults.object(forKey: "SharedURLTimestamp") as? Date
+        else {
             return
         }
 

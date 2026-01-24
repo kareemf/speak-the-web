@@ -19,10 +19,10 @@ struct Article: Identifiable {
 
     init(cached: CachedArticle) {
         let resolvedURL = URL(string: cached.url) ?? URL(string: "about:blank")!
-        self.url = resolvedURL
-        self.title = cached.title
-        self.content = cached.content
-        self.extractedAt = cached.extractedAt
+        url = resolvedURL
+        title = cached.title
+        content = cached.content
+        extractedAt = cached.extractedAt
 
         let sortedSections = cached.sections.sorted { $0.startIndex < $1.startIndex }
         var mappedSections: [ArticleSection] = []
@@ -43,12 +43,12 @@ struct Article: Identifiable {
             mappedSections.append(ArticleSection(
                 title: section.title,
                 level: section.level,
-                range: startIndex..<endIndex,
+                range: startIndex ..< endIndex,
                 startIndex: section.startIndex
             ))
         }
 
-        self.sections = mappedSections
+        sections = mappedSections
     }
 
     /// Total word count of the article
@@ -85,12 +85,12 @@ struct CachedArticle: Codable {
     var lastPosition: Int
 
     init(from article: Article) {
-        self.url = article.url.absoluteString
-        self.title = article.title
-        self.content = article.content
-        self.sections = article.sections.map { CachedSection(from: $0) }
-        self.extractedAt = article.extractedAt
-        self.lastPosition = 0
+        url = article.url.absoluteString
+        title = article.title
+        content = article.content
+        sections = article.sections.map { CachedSection(from: $0) }
+        extractedAt = article.extractedAt
+        lastPosition = 0
     }
 
     init(from decoder: Decoder) throws {
@@ -110,8 +110,8 @@ struct CachedSection: Codable {
     let startIndex: Int
 
     init(from section: ArticleSection) {
-        self.title = section.title
-        self.level = section.level
-        self.startIndex = section.startIndex
+        title = section.title
+        level = section.level
+        startIndex = section.startIndex
     }
 }

@@ -1,5 +1,5 @@
-import Foundation
 import CryptoKit
+import Foundation
 
 final class SherpaAudioCache {
     struct Entry: Codable {
@@ -148,7 +148,8 @@ final class SherpaAudioCache {
 
     private func loadIndex() {
         guard fileManager.fileExists(atPath: indexURL.path),
-              let data = try? Data(contentsOf: indexURL) else {
+              let data = try? Data(contentsOf: indexURL)
+        else {
             return
         }
         do {
@@ -173,7 +174,8 @@ final class SherpaAudioCache {
         var totalBytes = entries.values.reduce(0) { $0 + $1.fileSizeBytes }
         if let key = allowOversizedKey,
            let oversizedEntry = entries[key],
-           oversizedEntry.fileSizeBytes > maxBytes {
+           oversizedEntry.fileSizeBytes > maxBytes
+        {
             let entriesToRemove = entries.values
                 .filter { $0.key != key }
                 .sorted { $0.lastUsed < $1.lastUsed }

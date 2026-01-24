@@ -1,5 +1,5 @@
-import SwiftUI
 import AVFoundation
+import SwiftUI
 
 /// View for selecting voice and adjusting speech settings
 struct AVSpeechSettingsView: View {

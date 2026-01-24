@@ -11,7 +11,7 @@ private final class WrappingTextView: UITextView {
         }
     }
 
-    @objc fileprivate func startReadingFromHere(_ sender: Any?) {
+    @objc fileprivate func startReadingFromHere(_: Any?) {
         guard selectedRange.length > 0 else { return }
         let currentText = text ?? ""
         guard let range = Range(selectedRange, in: currentText) else { return }
@@ -67,7 +67,7 @@ struct SelectableTextView: UIViewRepresentable {
         return textView
     }
 
-    func updateUIView(_ uiView: UITextView, context: Context) {
+    func updateUIView(_ uiView: UITextView, context _: Context) {
         if let wrappingView = uiView as? WrappingTextView {
             wrappingView.onStartReadingFromHere = onStartReadingFromSelection
         }
@@ -78,7 +78,7 @@ struct SelectableTextView: UIViewRepresentable {
             let attributes: [NSAttributedString.Key: Any] = [
                 .font: font,
                 .foregroundColor: textColor,
-                .paragraphStyle: paragraph
+                .paragraphStyle: paragraph,
             ]
             uiView.attributedText = NSAttributedString(string: text, attributes: attributes)
         }

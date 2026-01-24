@@ -23,7 +23,7 @@ struct HelpView: View {
 
 /// WKWebView wrapper for displaying bundled HTML
 struct HelpWebView: UIViewRepresentable {
-    func makeUIView(context: Context) -> WKWebView {
+    func makeUIView(context _: Context) -> WKWebView {
         let configuration = WKWebViewConfiguration()
         configuration.allowsInlineMediaPlayback = true
         configuration.applicationNameForUserAgent = "SpeakTheWeb"
@@ -45,7 +45,7 @@ struct HelpWebView: UIViewRepresentable {
         return webView
     }
 
-    func updateUIView(_ webView: WKWebView, context: Context) {
+    func updateUIView(_: WKWebView, context _: Context) {
         // No updates needed
     }
 

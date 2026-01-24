@@ -1,5 +1,5 @@
-import Foundation
 import Combine
+import Foundation
 
 @MainActor
 final class MediaPlaybackController: ObservableObject {
@@ -519,27 +519,27 @@ private enum PlaybackService {
 
     var isPlaying: Bool {
         switch self {
-        case .avSpeech(let service):
+        case let .avSpeech(service):
             return service.isPlaying
-        case .sherpa(let service):
+        case let .sherpa(service):
             return service.isPlaying
         }
     }
 
     var isFinished: Bool {
         switch self {
-        case .avSpeech(let service):
+        case let .avSpeech(service):
             return service.isFinished
-        case .sherpa(let service):
+        case let .sherpa(service):
             return service.isFinished
         }
     }
 
     var isPaused: Bool {
         switch self {
-        case .avSpeech(let service):
+        case let .avSpeech(service):
             return service.isPaused
-        case .sherpa(let service):
+        case let .sherpa(service):
             return service.isPaused
         }
     }
@@ -548,7 +548,7 @@ private enum PlaybackService {
         switch self {
         case .avSpeech:
             return false
-        case .sherpa(let service):
+        case let .sherpa(service):
             return service.isPreparing
         }
     }
@@ -557,32 +557,32 @@ private enum PlaybackService {
         switch self {
         case .avSpeech:
             return nil
-        case .sherpa(let service):
+        case let .sherpa(service):
             return service.generationPhase
         }
     }
 
     var progress: Double {
         switch self {
-        case .avSpeech(let service):
+        case let .avSpeech(service):
             return service.progress
-        case .sherpa(let service):
+        case let .sherpa(service):
             return service.progress
         }
     }
 
     var currentPosition: Int {
         switch self {
-        case .avSpeech(let service):
+        case let .avSpeech(service):
             return service.currentPosition
-        case .sherpa(let service):
+        case let .sherpa(service):
             return service.currentPosition
         }
     }
 
     var currentWord: String {
         switch self {
-        case .avSpeech(let service):
+        case let .avSpeech(service):
             return service.currentWord
         case .sherpa:
             return ""
@@ -591,54 +591,54 @@ private enum PlaybackService {
 
     func play() {
         switch self {
-        case .avSpeech(let service):
+        case let .avSpeech(service):
             service.play()
-        case .sherpa(let service):
+        case let .sherpa(service):
             service.play()
         }
     }
 
     func pause() {
         switch self {
-        case .avSpeech(let service):
+        case let .avSpeech(service):
             service.pause()
-        case .sherpa(let service):
+        case let .sherpa(service):
             service.pause()
         }
     }
 
     func stop() {
         switch self {
-        case .avSpeech(let service):
+        case let .avSpeech(service):
             service.stop()
-        case .sherpa(let service):
+        case let .sherpa(service):
             service.stop()
         }
     }
 
     func skipForward() {
         switch self {
-        case .avSpeech(let service):
+        case let .avSpeech(service):
             service.skipForward()
-        case .sherpa(let service):
+        case let .sherpa(service):
             service.skipForward()
         }
     }
 
     func skipBackward() {
         switch self {
-        case .avSpeech(let service):
+        case let .avSpeech(service):
             service.skipBackward()
-        case .sherpa(let service):
+        case let .sherpa(service):
             service.skipBackward()
         }
     }
 
     func seekTo(position: Int) {
         switch self {
-        case .avSpeech(let service):
+        case let .avSpeech(service):
             service.seekTo(position: position)
-        case .sherpa(let service):
+        case let .sherpa(service):
             service.seekTo(position: position)
         }
     }

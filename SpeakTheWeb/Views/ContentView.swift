@@ -20,7 +20,7 @@ struct ContentView: View {
                         Button(action: { showHelp = true }) {
                             Image(systemName: "questionmark.circle")
                         }
-                        
+
                         Button(action: { viewModel.showVoiceSettings = true }) {
                             Image(systemName: "gearshape")
                         }

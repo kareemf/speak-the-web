@@ -1,8 +1,8 @@
-import Foundation
 import AVFoundation
+import Foundation
 import SherpaOnnx
 #if canImport(UIKit)
-import UIKit
+    import UIKit
 #endif
 
 final class SherpaSpeechService: ObservableObject {
@@ -49,6 +49,7 @@ final class SherpaSpeechService: ObservableObject {
         let available = ProcessInfo.processInfo.activeProcessorCount
         return max(2, min(available / 2, 4))
     }
+
     private let audioCache = SherpaAudioCache(maxEntries: 10, maxBytes: 200 * 1024 * 1024)
     private var audioFile: AVAudioFile?
     private var audioFileURL: URL?
@@ -79,14 +80,14 @@ final class SherpaSpeechService: ObservableObject {
         timePitch.rate = speed
 
         #if canImport(UIKit)
-        NotificationCenter.default.addObserver(
-            forName: UIApplication.didReceiveMemoryWarningNotification,
-            object: nil,
-            queue: .main
-        ) { [weak self] _ in
-            print("[Sherpa] Memory warning received, invalidating cached model")
-            self?.invalidateCachedModel()
-        }
+            NotificationCenter.default.addObserver(
+                forName: UIApplication.didReceiveMemoryWarningNotification,
+                object: nil,
+                queue: .main
+            ) { [weak self] _ in
+                print("[Sherpa] Memory warning received, invalidating cached model")
+                self?.invalidateCachedModel()
+            }
         #endif
     }
 
@@ -103,7 +104,7 @@ final class SherpaSpeechService: ObservableObject {
     func loadContent(_ text: String) {
         stop()
         self.text = text
-        self.textLength = text.count
+        textLength = text.count
         currentPosition = 0
         progress = 0.0
         clearAudio()
@@ -448,7 +449,8 @@ final class SherpaSpeechService: ObservableObject {
 
     private func currentFrame() -> AVAudioFramePosition {
         guard let nodeTime = playerNode.lastRenderTime,
-              let playerTime = playerNode.playerTime(forNodeTime: nodeTime) else {
+              let playerTime = playerNode.playerTime(forNodeTime: nodeTime)
+        else {
             return startFrame
         }
         return startFrame + AVAudioFramePosition(playerTime.sampleTime)
@@ -672,7 +674,7 @@ private enum SherpaSpeechError: LocalizedError {
         switch self {
         case .emptyAudio:
             return "Sherpa-onnx returned empty audio."
-        case .missingModelFile(let name):
+        case let .missingModelFile(name):
             return "Sherpa-onnx model is missing \(name) file. Re-download the model in Settings."
         case .invalidModelConfig:
             return "Sherpa-onnx failed to initialize with the selected model."
