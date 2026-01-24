@@ -12,11 +12,13 @@ let package = Package(
     targets: [
         .binaryTarget(
             name: "SherpaOnnxBinary",
-            path: "Artifacts/sherpa-onnx.xcframework"
+            url: "https://github.com/kareemf/speak-the-web/releases/download/sherpa-v1.0.0/sherpa-onnx.xcframework.zip",
+            checksum: "bf7dadb28cf7361ddc0d297de120e098f9d8665d3ceb39b8f16e827601675d60"
         ),
         .binaryTarget(
             name: "OnnxRuntimeBinary",
-            path: "Artifacts/onnxruntime.xcframework"
+            url: "https://github.com/kareemf/speak-the-web/releases/download/sherpa-v1.0.0/onnxruntime.xcframework.zip",
+            checksum: "962d2acd2729504830806fdea36ebe1658869811f35842013745dfa7781ca75a"
         ),
         .target(
             name: "SherpaOnnxC",
