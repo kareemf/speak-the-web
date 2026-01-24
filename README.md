@@ -2,6 +2,13 @@
 
 An iOS app that reads web pages aloud using text-to-speech. Share a URL from Safari and listen to the content with playback controls and content navigation.
 
+## Screenshots
+
+<p align="center">
+  <img src="docs/images/home-screen-url-input-recent-articles.png" alt="Home screen with URL input and recent articles" width="320" />
+  <img src="docs/images/article-reader-view-render-text-start-reading-from-here.png" alt="Article reader with text rendering and start-from-here" width="320" />
+</p>
+
 ## Features
 
 ### Core Features
