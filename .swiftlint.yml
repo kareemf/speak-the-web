@@ -1,0 +1,46 @@
+included:
+  - SpeakTheWeb
+  - ShareExtension
+
+excluded:
+  - Vendor
+  - TestResults
+  - SpeakTheWeb.xcodeproj
+  - build
+  - DerivedData
+
+opt_in_rules:
+  - empty_count
+  - sorted_imports
+  - toggle_bool
+  - yoda_condition
+
+disabled_rules:
+  - todo
+  - trailing_whitespace
+  - type_body_length
+  - file_length
+  - function_body_length
+  - cyclomatic_complexity
+  - identifier_name
+  - weak_delegate
+  - redundant_type_annotation
+  - trailing_comma
+  - attributes
+  - opening_brace
+  - vertical_whitespace_between_cases
+  - implicit_optional_initialization
+  - force_unwrapping
+  - force_cast
+  - line_length
+  - nesting
+  - multiple_closures_with_trailing_closure
+  - large_tuple
+  - function_parameter_count
+  - for_where
+  - force_try
+
+analyzer_rules:
+  - unused_import
+
+reporter: "xcode"

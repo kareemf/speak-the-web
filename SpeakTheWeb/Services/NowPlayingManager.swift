@@ -18,14 +18,15 @@ final class NowPlayingManager {
         0.5, 0.75, 1.0, 1.25, 1.5, 1.75, 2.0,
     ]
 
-    func configureCommands(play: @escaping () -> Bool,
-                           pause: @escaping () -> Bool,
-                           toggle: @escaping () -> Bool,
-                           skipForward: @escaping () -> Bool,
-                           skipBackward: @escaping () -> Bool,
-                           seek: @escaping (TimeInterval) -> Bool,
-                           changeRate: @escaping (Float) -> Bool)
-    {
+    func configureCommands(
+        play: @escaping () -> Bool,
+        pause: @escaping () -> Bool,
+        toggle: @escaping () -> Bool,
+        skipForward: @escaping () -> Bool,
+        skipBackward: @escaping () -> Bool,
+        seek: @escaping (TimeInterval) -> Bool,
+        changeRate: @escaping (Float) -> Bool
+    ) {
         commandCenter.playCommand.removeTarget(nil)
         commandCenter.pauseCommand.removeTarget(nil)
         commandCenter.togglePlayPauseCommand.removeTarget(nil)
@@ -48,58 +49,58 @@ final class NowPlayingManager {
 
         commandCenter.playCommand.addTarget { [weak self] _ in
             guard let self else { return .commandFailed }
-            self.logCommand("play")
-            let scheduled = self.runOnMain { play() }
-            self.logCommand("play", result: scheduled)
-            return self.status(for: scheduled)
+            logCommand("play")
+            let scheduled = runOnMain { play() }
+            logCommand("play", result: scheduled)
+            return status(for: scheduled)
         }
         commandCenter.pauseCommand.addTarget { [weak self] _ in
             guard let self else { return .commandFailed }
-            self.logCommand("pause")
-            let scheduled = self.runOnMain { pause() }
-            self.logCommand("pause", result: scheduled)
-            return self.status(for: scheduled)
+            logCommand("pause")
+            let scheduled = runOnMain { pause() }
+            logCommand("pause", result: scheduled)
+            return status(for: scheduled)
         }
         commandCenter.togglePlayPauseCommand.addTarget { [weak self] _ in
             guard let self else { return .commandFailed }
-            self.logCommand("toggle")
-            let scheduled = self.runOnMain { toggle() }
-            self.logCommand("toggle", result: scheduled)
-            return self.status(for: scheduled)
+            logCommand("toggle")
+            let scheduled = runOnMain { toggle() }
+            logCommand("toggle", result: scheduled)
+            return status(for: scheduled)
         }
         commandCenter.skipForwardCommand.addTarget { [weak self] _ in
             guard let self else { return .commandFailed }
-            self.logCommand("skipForward")
-            let scheduled = self.runOnMain { skipForward() }
-            self.logCommand("skipForward", result: scheduled)
-            return self.status(for: scheduled)
+            logCommand("skipForward")
+            let scheduled = runOnMain { skipForward() }
+            logCommand("skipForward", result: scheduled)
+            return status(for: scheduled)
         }
         commandCenter.skipBackwardCommand.addTarget { [weak self] _ in
             guard let self else { return .commandFailed }
-            self.logCommand("skipBackward")
-            let scheduled = self.runOnMain { skipBackward() }
-            self.logCommand("skipBackward", result: scheduled)
-            return self.status(for: scheduled)
+            logCommand("skipBackward")
+            let scheduled = runOnMain { skipBackward() }
+            logCommand("skipBackward", result: scheduled)
+            return status(for: scheduled)
         }
         commandCenter.changePlaybackPositionCommand.addTarget { [weak self] event in
             guard let self else { return .commandFailed }
             guard let event = event as? MPChangePlaybackPositionCommandEvent else {
                 return .commandFailed
             }
-            self.logCommand("seek", detail: "position=\(event.positionTime)")
-            let scheduled = self.runOnMain { seek(event.positionTime) }
-            self.logCommand("seek", result: scheduled)
-            return self.status(for: scheduled)
+            logCommand("seek", detail: "position=\(event.positionTime)")
+            let scheduled = runOnMain { seek(event.positionTime) }
+            logCommand("seek", result: scheduled)
+            return status(for: scheduled)
         }
         commandCenter.changePlaybackRateCommand.addTarget { [weak self] event in
             guard let self else { return .commandFailed }
             guard let event = event as? MPChangePlaybackRateCommandEvent else {
                 return .commandFailed
             }
-            self.logCommand("rate", detail: "rate=\(event.playbackRate)")
-            let scheduled = self.runOnMain { changeRate(event.playbackRate) }
-            self.logCommand("rate", result: scheduled)
-            return self.status(for: scheduled)
+            logCommand("rate", detail: "rate=\(event.playbackRate)")
+            let scheduled = runOnMain { changeRate(event.playbackRate) }
+            logCommand("rate", result: scheduled)
+            return status(for: scheduled)
         }
     }
 
@@ -133,7 +134,9 @@ final class NowPlayingManager {
 
         MPNowPlayingInfoCenter.default().nowPlayingInfo = nowPlaying
         if logNowPlayingDebug {
-            print("[NowPlaying][debug] updated title=\(info.title) playing=\(info.isPlaying) rate=\(info.rate) elapsed=\(info.elapsed ?? -1) duration=\(info.duration ?? -1)")
+            print(
+                "[NowPlaying][debug] updated title=\(info.title) playing=\(info.isPlaying) rate=\(info.rate) elapsed=\(info.elapsed ?? -1) duration=\(info.duration ?? -1)"
+            )
         }
     }
 

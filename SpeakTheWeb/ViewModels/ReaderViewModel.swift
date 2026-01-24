@@ -62,7 +62,7 @@ class ReaderViewModel: ObservableObject {
 
     var currentRateMultiplier: Float {
         let rates: [Float] = [0.5, 0.75, 1.0, 1.25, 1.5, 1.75, 2.0]
-        guard selectedRateIndex >= 0 && selectedRateIndex < rates.count else { return 1.0 }
+        guard selectedRateIndex >= 0, selectedRateIndex < rates.count else { return 1.0 }
         return rates[selectedRateIndex]
     }
 
@@ -71,13 +71,13 @@ class ReaderViewModel: ObservableObject {
     }
 
     var progressText: String {
-        guard let article = article else { return "" }
+        guard let article else { return "" }
         let percentage = Int(playbackProgress * 100)
         return "\(percentage)% • \(article.wordCount) words"
     }
 
     var estimatedTimeRemaining: String {
-        guard let article = article else { return "" }
+        guard let article else { return "" }
         let remainingProgress = 1.0 - playbackProgress
         let totalSeconds = Double(article.wordCount) / (200.0 / 60.0) / Double(currentRateMultiplier)
         let remainingSeconds = Int(totalSeconds * remainingProgress)
@@ -137,7 +137,7 @@ class ReaderViewModel: ObservableObject {
 
         playbackController.canUseEngine = { [weak self] engine in
             guard let self else { return false }
-            return self.canUseEngine(engine)
+            return canUseEngine(engine)
         }
 
         playbackController.objectWillChange
@@ -147,7 +147,7 @@ class ReaderViewModel: ObservableObject {
             .store(in: &cancellables)
 
         playbackController.$lastErrorMessage
-            .compactMap { $0 }
+            .compactMap(\.self)
             .receive(on: RunLoop.main)
             .sink { [weak self] message in
                 self?.presentError(message)
@@ -163,7 +163,7 @@ class ReaderViewModel: ObservableObject {
             .receive(on: RunLoop.main)
             .sink { [weak self] _ in
                 guard let self else { return }
-                self.playbackController.updateSherpaModel(record: self.sherpaModelStore.selectedRecord)
+                playbackController.updateSherpaModel(record: sherpaModelStore.selectedRecord)
             }
             .store(in: &cancellables)
     }
@@ -392,8 +392,8 @@ class ReaderViewModel: ObservableObject {
             .removeDuplicates()
             .debounce(for: .seconds(1), scheduler: RunLoop.main)
             .sink { [weak self] position in
-                guard let self = self, let article = self.article else { return }
-                self.recentArticles = self.recentArticlesManager.updateProgress(
+                guard let self, let article else { return }
+                recentArticles = recentArticlesManager.updateProgress(
                     urlString: article.url.absoluteString,
                     position: position,
                     contentLength: article.content.count,

@@ -400,9 +400,13 @@ final class SherpaOnnxModelStore: NSObject, ObservableObject {
 }
 
 extension SherpaOnnxModelStore: URLSessionDownloadDelegate {
-    func urlSession(_: URLSession, downloadTask: URLSessionDownloadTask, didWriteData _: Int64,
-                    totalBytesWritten: Int64, totalBytesExpectedToWrite: Int64)
-    {
+    func urlSession(
+        _: URLSession,
+        downloadTask: URLSessionDownloadTask,
+        didWriteData _: Int64,
+        totalBytesWritten: Int64,
+        totalBytesExpectedToWrite: Int64
+    ) {
         guard let modelId = downloadTask.taskDescription else { return }
         let progress = totalBytesExpectedToWrite > 0
             ? Double(totalBytesWritten) / Double(totalBytesExpectedToWrite)
@@ -465,9 +469,9 @@ private enum ModelStoreError: LocalizedError {
     var errorDescription: String? {
         switch self {
         case .missingModelFiles:
-            return "Downloaded model is missing required files."
+            "Downloaded model is missing required files."
         case .invalidArchiveEntry:
-            return "Downloaded model archive contains an invalid entry."
+            "Downloaded model archive contains an invalid entry."
         }
     }
 }

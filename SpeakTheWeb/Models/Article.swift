@@ -32,11 +32,10 @@ struct Article: Identifiable {
             let startOffset = max(0, min(section.startIndex, cached.content.count))
             let startIndex = cached.content.index(cached.content.startIndex, offsetBy: startOffset)
 
-            let endOffset: Int
-            if index + 1 < sortedSections.count {
-                endOffset = max(startOffset, min(sortedSections[index + 1].startIndex, cached.content.count))
+            let endOffset: Int = if index + 1 < sortedSections.count {
+                max(startOffset, min(sortedSections[index + 1].startIndex, cached.content.count))
             } else {
-                endOffset = cached.content.count
+                cached.content.count
             }
             let endIndex = cached.content.index(cached.content.startIndex, offsetBy: endOffset)
 

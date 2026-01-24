@@ -249,9 +249,9 @@ final class MediaPlaybackController: ObservableObject {
     func positionPublisher(for engine: SpeechEngineType) -> AnyPublisher<Int, Never> {
         switch engine {
         case .avSpeech:
-            return ensureSpeechService().$currentPosition.eraseToAnyPublisher()
+            ensureSpeechService().$currentPosition.eraseToAnyPublisher()
         case .sherpaOnnx:
-            return ensureSherpaService().$currentPosition.eraseToAnyPublisher()
+            ensureSherpaService().$currentPosition.eraseToAnyPublisher()
         }
     }
 
@@ -259,54 +259,54 @@ final class MediaPlaybackController: ObservableObject {
         nowPlaying.configureCommands(
             play: { [weak self] in
                 guard let self else { return false }
-                guard self.hasPlayableContent else { return false }
-                if self.isPlayingIfLoaded(for: self.selectedEngine) {
+                guard hasPlayableContent else { return false }
+                if isPlayingIfLoaded(for: selectedEngine) {
                     return false
                 }
-                self.playSelectedEngine()
+                playSelectedEngine()
                 return true
             },
             pause: { [weak self] in
                 guard let self else { return false }
-                guard self.hasPlayableContent else { return false }
-                if self.isPlayingIfLoaded(for: self.selectedEngine) {
-                    self.pauseSelectedEngine()
+                guard hasPlayableContent else { return false }
+                if isPlayingIfLoaded(for: selectedEngine) {
+                    pauseSelectedEngine()
                     return true
                 }
-                if self.isPausedIfLoaded(for: self.selectedEngine) {
-                    self.playSelectedEngine()
+                if isPausedIfLoaded(for: selectedEngine) {
+                    playSelectedEngine()
                     return true
                 }
                 return false
             },
             toggle: { [weak self] in
                 guard let self else { return false }
-                guard self.hasPlayableContent else { return false }
-                self.togglePlayPauseSelectedEngine()
+                guard hasPlayableContent else { return false }
+                togglePlayPauseSelectedEngine()
                 return true
             },
             skipForward: { [weak self] in
                 guard let self else { return false }
-                guard self.hasPlayableContent else { return false }
-                self.skipForwardSelectedEngine()
+                guard hasPlayableContent else { return false }
+                skipForwardSelectedEngine()
                 return true
             },
             skipBackward: { [weak self] in
                 guard let self else { return false }
-                guard self.hasPlayableContent else { return false }
-                self.skipBackwardSelectedEngine()
+                guard hasPlayableContent else { return false }
+                skipBackwardSelectedEngine()
                 return true
             },
             seek: { [weak self] time in
                 guard let self else { return false }
-                guard self.hasSeekDuration else { return false }
-                self.seekSelectedEngine(to: time)
+                guard hasSeekDuration else { return false }
+                seekSelectedEngine(to: time)
                 return true
             },
             changeRate: { [weak self] rate in
                 guard let self else { return false }
-                guard self.hasPlayableContent else { return false }
-                self.setRate(multiplier: rate)
+                guard hasPlayableContent else { return false }
+                setRate(multiplier: rate)
                 return true
             }
         )
@@ -383,9 +383,9 @@ final class MediaPlaybackController: ObservableObject {
         audioSession.onInterruptionBegan = { [weak self] _ in
             Task { @MainActor [weak self] in
                 guard let self else { return }
-                self.wasPlayingBeforeInterruption = self.isPlayingIfLoaded(for: self.selectedEngine)
-                if self.wasPlayingBeforeInterruption {
-                    self.pauseSelectedEngine()
+                wasPlayingBeforeInterruption = isPlayingIfLoaded(for: selectedEngine)
+                if wasPlayingBeforeInterruption {
+                    pauseSelectedEngine()
                 }
             }
         }
@@ -393,10 +393,10 @@ final class MediaPlaybackController: ObservableObject {
         audioSession.onInterruptionEnded = { [weak self] shouldResume in
             Task { @MainActor [weak self] in
                 guard let self else { return }
-                let shouldRestart = shouldResume && self.wasPlayingBeforeInterruption
-                self.wasPlayingBeforeInterruption = false
+                let shouldRestart = shouldResume && wasPlayingBeforeInterruption
+                wasPlayingBeforeInterruption = false
                 if shouldRestart {
-                    self.playSelectedEngine()
+                    playSelectedEngine()
                 }
             }
         }
@@ -405,8 +405,8 @@ final class MediaPlaybackController: ObservableObject {
             Task { @MainActor [weak self] in
                 guard let self else { return }
                 guard reason == .oldDeviceUnavailable else { return }
-                if self.isPlayingIfLoaded(for: self.selectedEngine) {
-                    self.pauseSelectedEngine()
+                if isPlayingIfLoaded(for: selectedEngine) {
+                    pauseSelectedEngine()
                 }
             }
         }
@@ -483,8 +483,8 @@ final class MediaPlaybackController: ObservableObject {
         service.$currentPosition
             .sink { [weak self] position in
                 guard let self else { return }
-                if self.selectedEngine == .avSpeech {
-                    self.lastKnownPosition = position
+                if selectedEngine == .avSpeech {
+                    lastKnownPosition = position
                 }
             }
             .store(in: &cancellables)
@@ -498,8 +498,8 @@ final class MediaPlaybackController: ObservableObject {
         service.$currentPosition
             .sink { [weak self] position in
                 guard let self else { return }
-                if self.selectedEngine == .sherpaOnnx {
-                    self.lastKnownPosition = position
+                if selectedEngine == .sherpaOnnx {
+                    lastKnownPosition = position
                 }
             }
             .store(in: &cancellables)
@@ -520,72 +520,72 @@ private enum PlaybackService {
     var isPlaying: Bool {
         switch self {
         case let .avSpeech(service):
-            return service.isPlaying
+            service.isPlaying
         case let .sherpa(service):
-            return service.isPlaying
+            service.isPlaying
         }
     }
 
     var isFinished: Bool {
         switch self {
         case let .avSpeech(service):
-            return service.isFinished
+            service.isFinished
         case let .sherpa(service):
-            return service.isFinished
+            service.isFinished
         }
     }
 
     var isPaused: Bool {
         switch self {
         case let .avSpeech(service):
-            return service.isPaused
+            service.isPaused
         case let .sherpa(service):
-            return service.isPaused
+            service.isPaused
         }
     }
 
     var isPreparing: Bool {
         switch self {
         case .avSpeech:
-            return false
+            false
         case let .sherpa(service):
-            return service.isPreparing
+            service.isPreparing
         }
     }
 
     var generationPhase: String? {
         switch self {
         case .avSpeech:
-            return nil
+            nil
         case let .sherpa(service):
-            return service.generationPhase
+            service.generationPhase
         }
     }
 
     var progress: Double {
         switch self {
         case let .avSpeech(service):
-            return service.progress
+            service.progress
         case let .sherpa(service):
-            return service.progress
+            service.progress
         }
     }
 
     var currentPosition: Int {
         switch self {
         case let .avSpeech(service):
-            return service.currentPosition
+            service.currentPosition
         case let .sherpa(service):
-            return service.currentPosition
+            service.currentPosition
         }
     }
 
     var currentWord: String {
         switch self {
         case let .avSpeech(service):
-            return service.currentWord
+            service.currentWord
         case .sherpa:
-            return ""
+            ""
         }
     }
 

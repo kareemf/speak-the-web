@@ -9,11 +9,11 @@ struct PlaybackControlsView: View {
     /// Determines the appropriate icon for the play button
     private var playButtonIcon: String {
         if viewModel.playbackIsPlaying {
-            return "pause.circle.fill"
+            "pause.circle.fill"
         } else if viewModel.playbackIsFinished {
-            return "arrow.counterclockwise.circle.fill"
+            "arrow.counterclockwise.circle.fill"
         } else {
-            return "play.circle.fill"
+            "play.circle.fill"
         }
     }
 

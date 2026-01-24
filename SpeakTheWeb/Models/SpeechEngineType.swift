@@ -9,9 +9,9 @@ enum SpeechEngineType: String, CaseIterable, Identifiable, Codable {
     var displayName: String {
         switch self {
         case .avSpeech:
-            return "System (AVSpeech)"
+            "System (AVSpeech)"
         case .sherpaOnnx:
-            return "Sherpa-onnx (Piper)"
+            "Sherpa-onnx (Piper)"
         }
     }
 }

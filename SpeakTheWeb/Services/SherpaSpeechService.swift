@@ -143,7 +143,9 @@ final class SherpaSpeechService: ObservableObject {
     }
 
     func play() {
-        print("[Sherpa] play (isPreparing=\(isPreparing), isPlaying=\(isPlaying), isPaused=\(isPaused), hasAudio=\(audioFile != nil))")
+        print(
+            "[Sherpa] play (isPreparing=\(isPreparing), isPlaying=\(isPlaying), isPaused=\(isPaused), hasAudio=\(audioFile != nil))"
+        )
         ensureEngineRunning()
         guard !isPreparing else { return }
         if isFinished {
@@ -279,14 +281,14 @@ final class SherpaSpeechService: ObservableObject {
 
         workQueue.async { [weak self] in
             guard let self else { return }
-            let cacheKey = self.audioCache.cacheKey(
+            let cacheKey = audioCache.cacheKey(
                 text: textSnapshot,
                 modelId: record.id,
                 generationSpeed: generationSpeed
             )
             do {
-                self.logPhase("Checking cache", uiMessage: "Checking cache…", generationID: generationID)
-                if let cachedURL = self.audioCache.cachedFileURL(for: cacheKey) {
+                logPhase("Checking cache", uiMessage: "Checking cache…", generationID: generationID)
+                if let cachedURL = audioCache.cachedFileURL(for: cacheKey) {
                     do {
                         let cachedFile = try AVAudioFile(forReading: cachedURL)
                         DispatchQueue.main.async {
@@ -312,11 +314,11 @@ final class SherpaSpeechService: ObservableObject {
                         }
                         return
                     } catch {
-                        self.audioCache.removeEntry(forKey: cacheKey)
+                        audioCache.removeEntry(forKey: cacheKey)
                     }
                 }
 
-                self.logPhase("Initializing model config", uiMessage: "Initializing model…", generationID: generationID)
+                logPhase("Initializing model config", uiMessage: "Initializing model…", generationID: generationID)
                 print("[Sherpa] Checking model files")
                 guard fileManager.fileExists(atPath: record.modelPath) else {
                     print("[Sherpa] Missing model file at \(record.modelPath)")
@@ -328,11 +330,11 @@ final class SherpaSpeechService: ObservableObject {
                 }
 
                 print("[Sherpa] Resolving data dir")
-                let dataDir = self.dataDirPath(for: record)
+                let dataDir = dataDirPath(for: record)
 
-                self.logPhase("Creating TTS instance", uiMessage: "Loading model…", generationID: generationID)
-                let tts = try self.getOrCreateTTS(for: record, tokensPath: tokensPath, dataDir: dataDir)
-                self.logPhase("Generating audio", uiMessage: "Generating audio…", generationID: generationID)
+                logPhase("Creating TTS instance", uiMessage: "Loading model…", generationID: generationID)
+                let tts = try getOrCreateTTS(for: record, tokensPath: tokensPath, dataDir: dataDir)
+                logPhase("Generating audio", uiMessage: "Generating audio…", generationID: generationID)
                 let generateStart = Date()
                 let audio = tts.generate(text: textSnapshot, speed: generationSpeed)
                 let generateDuration = Date().timeIntervalSince(generateStart)
@@ -343,11 +345,11 @@ final class SherpaSpeechService: ObservableObject {
                     throw SherpaSpeechError.emptyAudio
                 }
 
-                self.logPhase("Writing audio", uiMessage: "Writing audio…", generationID: generationID)
+                logPhase("Writing audio", uiMessage: "Writing audio…", generationID: generationID)
                 let writeStart = Date()
                 let shouldCache = !(articleURL ?? "").isEmpty
-                let destinationURL = shouldCache ? self.audioCache.destinationURL(for: cacheKey) : nil
-                let prepared = try self.writeAudio(
+                let destinationURL = shouldCache ? audioCache.destinationURL(for: cacheKey) : nil
+                let prepared = try writeAudio(
                     samples: samples,
                     sampleRate: Double(audio.sampleRate),
                     destinationURL: destinationURL
@@ -355,7 +357,7 @@ final class SherpaSpeechService: ObservableObject {
                 let writeDuration = Date().timeIntervalSince(writeStart)
                 print("[Sherpa] Wrote audio in \(String(format: "%.2f", writeDuration))s")
                 if shouldCache {
-                    self.audioCache.store(
+                    audioCache.store(
                         fileURL: prepared.url,
                         key: cacheKey,
                         articleURL: articleURL ?? "",
@@ -471,7 +473,7 @@ final class SherpaSpeechService: ObservableObject {
         stopProgressTimer()
         progressTimer = Timer.scheduledTimer(withTimeInterval: 0.2, repeats: true) { [weak self] _ in
             guard let self else { return }
-            self.updateProgress(for: self.currentFrame())
+            updateProgress(for: currentFrame())
         }
     }
 
@@ -502,14 +504,14 @@ final class SherpaSpeechService: ObservableObject {
         generationTimeoutWorkItem?.cancel()
         let workItem = DispatchWorkItem { [weak self] in
             guard let self else { return }
-            guard self.currentGenerationID == generationID else { return }
+            guard currentGenerationID == generationID else { return }
             print("[Sherpa] Generation timed out")
-            self.isPreparing = false
-            self.generationPhase = nil
-            self.shouldAutoPlayAfterPrepare = false
-            self.currentGenerationID = nil
-            self.endGeneration(reason: "prepare-timeout")
-            self.lastErrorMessage = "Sherpa-onnx generation timed out. Try again with a shorter selection."
+            isPreparing = false
+            generationPhase = nil
+            shouldAutoPlayAfterPrepare = false
+            currentGenerationID = nil
+            endGeneration(reason: "prepare-timeout")
+            lastErrorMessage = "Sherpa-onnx generation timed out. Try again with a shorter selection."
         }
         generationTimeoutWorkItem = workItem
         DispatchQueue.main.asyncAfter(deadline: .now() + timeout, execute: workItem)
@@ -563,7 +565,11 @@ final class SherpaSpeechService: ObservableObject {
         print("[Sherpa] Generation cleared (\(reason))")
     }
 
-    private func getOrCreateTTS(for record: SherpaModelRecord, tokensPath: String, dataDir: String) throws -> SherpaOnnxOfflineTtsWrapper {
+    private func getOrCreateTTS(
+        for record: SherpaModelRecord,
+        tokensPath: String,
+        dataDir: String
+    ) throws -> SherpaOnnxOfflineTtsWrapper {
         ttsLock.lock()
         defer { ttsLock.unlock() }
 
@@ -613,7 +619,11 @@ final class SherpaSpeechService: ObservableObject {
         print("[Sherpa] Invalidated cached TTS model")
     }
 
-    private func writeAudio(samples: [Float], sampleRate: Double, destinationURL: URL? = nil) throws -> (file: AVAudioFile, url: URL) {
+    private func writeAudio(
+        samples: [Float],
+        sampleRate: Double,
+        destinationURL: URL? = nil
+    ) throws -> (file: AVAudioFile, url: URL) {
         let format = AVAudioFormat(standardFormatWithSampleRate: sampleRate, channels: 1)!
         let frameCount = AVAudioFrameCount(samples.count)
         let buffer = AVAudioPCMBuffer(pcmFormat: format, frameCapacity: frameCount)!
@@ -673,11 +683,11 @@ private enum SherpaSpeechError: LocalizedError {
     var errorDescription: String? {
         switch self {
         case .emptyAudio:
-            return "Sherpa-onnx returned empty audio."
+            "Sherpa-onnx returned empty audio."
         case let .missingModelFile(name):
-            return "Sherpa-onnx model is missing \(name) file. Re-download the model in Settings."
+            "Sherpa-onnx model is missing \(name) file. Re-download the model in Settings."
         case .invalidModelConfig:
-            return "Sherpa-onnx failed to initialize with the selected model."
+            "Sherpa-onnx failed to initialize with the selected model."
         }
     }
 }

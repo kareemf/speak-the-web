@@ -35,7 +35,7 @@ class SpeechService: NSObject, ObservableObject {
     var rate: Float = AVSpeechUtteranceDefaultSpeechRate {
         didSet {
             // If currently playing, restart with new rate
-            if isPlaying && !isPaused {
+            if isPlaying, !isPaused {
                 let currentPos = currentPosition
                 stop()
                 speak(from: currentPos)
@@ -307,7 +307,11 @@ extension SpeechService: AVSpeechSynthesizerDelegate {
         }
     }
 
-    func speechSynthesizer(_: AVSpeechSynthesizer, willSpeakRangeOfSpeechString characterRange: NSRange, utterance: AVSpeechUtterance) {
+    func speechSynthesizer(
+        _: AVSpeechSynthesizer,
+        willSpeakRangeOfSpeechString characterRange: NSRange,
+        utterance: AVSpeechUtterance
+    ) {
         guard utterance === self.utterance else { return }
         DispatchQueue.main.async {
             // Update current position based on the range being spoken

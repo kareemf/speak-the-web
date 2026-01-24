@@ -13,7 +13,17 @@ struct RecentArticle: Identifiable, Codable {
     let wordCount: Int
     let cachedBytes: Int
 
-    init(id: UUID = UUID(), url: String, title: String, host: String, readAt: Date = Date(), lastPosition: Int = 0, contentLength: Int = 0, wordCount: Int = 0, cachedBytes: Int = 0) {
+    init(
+        id: UUID = UUID(),
+        url: String,
+        title: String,
+        host: String,
+        readAt: Date = Date(),
+        lastPosition: Int = 0,
+        contentLength: Int = 0,
+        wordCount: Int = 0,
+        cachedBytes: Int = 0
+    ) {
         self.id = id
         self.url = url
         self.title = title
@@ -99,7 +109,7 @@ class RecentArticlesManager {
 
         // Persist
         persist(articles)
-        cacheStore.prune(keeping: Set(articles.map { $0.url }))
+        cacheStore.prune(keeping: Set(articles.map(\.url)))
     }
 
     /// Clears all recent articles

@@ -79,20 +79,20 @@ struct TableOfContentsView: View {
 
     private func fontForLevel(_ level: Int) -> Font {
         switch level {
-        case 1: return .headline
-        case 2: return .subheadline
-        default: return .body
+        case 1: .headline
+        case 2: .subheadline
+        default: .body
         }
     }
 
     private func levelColor(for level: Int) -> Color {
         switch level {
-        case 1: return .accentColor
-        case 2: return .blue
-        case 3: return .green
-        case 4: return .orange
-        case 5: return .purple
-        default: return .gray
+        case 1: .accentColor
+        case 2: .blue
+        case 3: .green
+        case 4: .orange
+        case 5: .purple
+        default: .gray
         }
     }
 }

@@ -154,7 +154,7 @@ class ShareViewController: UIViewController {
                     DispatchQueue.main.async {
                         self?.activityIndicator.stopAnimating()
 
-                        if let error = error {
+                        if let error {
                             self?.showError("Failed to load URL: \(error.localizedDescription)")
                             return
                         }
@@ -177,7 +177,7 @@ class ShareViewController: UIViewController {
                     DispatchQueue.main.async {
                         self?.activityIndicator.stopAnimating()
 
-                        if let error = error {
+                        if let error {
                             self?.showError("Failed to load content: \(error.localizedDescription)")
                             return
                         }

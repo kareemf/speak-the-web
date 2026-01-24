@@ -1,0 +1,10 @@
+--swiftversion 6.0
+--indent 4
+--linebreaks lf
+--maxwidth 130
+--stripunusedargs closure-only
+--trimwhitespace nonblank-lines
+--wraparguments before-first
+--wrapcollections before-first
+--disable blankLinesAtEndOfScope,redundantSelf
+--exclude build,DerivedData,"SpeakTheWeb/Preview Content","ShareExtension/Preview Content"

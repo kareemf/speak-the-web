@@ -11,13 +11,13 @@ class ContentExtractor {
         var errorDescription: String? {
             switch self {
             case .invalidURL:
-                return "Invalid URL provided"
+                "Invalid URL provided"
             case let .networkError(error):
-                return "Network error: \(error.localizedDescription)"
+                "Network error: \(error.localizedDescription)"
             case .parsingError:
-                return "Failed to parse page content"
+                "Failed to parse page content"
             case .noContent:
-                return "No readable content found on this page"
+                "No readable content found on this page"
             }
         }
     }
@@ -26,7 +26,7 @@ class ContentExtractor {
     func extract(from urlString: String) async throws -> Article {
         // Normalize URL
         var normalizedURL = urlString.trimmingCharacters(in: .whitespacesAndNewlines)
-        if !normalizedURL.hasPrefix("http://") && !normalizedURL.hasPrefix("https://") {
+        if !normalizedURL.hasPrefix("http://"), !normalizedURL.hasPrefix("https://") {
             normalizedURL = "https://" + normalizedURL
         }
 
@@ -44,8 +44,11 @@ class ContentExtractor {
                !(200 ... 299).contains(httpResponse.statusCode)
             {
                 throw ExtractionError.networkError(
-                    NSError(domain: "HTTP", code: httpResponse.statusCode,
-                            userInfo: [NSLocalizedDescriptionKey: "HTTP \(httpResponse.statusCode)"])
+                    NSError(
+                        domain: "HTTP",
+                        code: httpResponse.statusCode,
+                        userInfo: [NSLocalizedDescriptionKey: "HTTP \(httpResponse.statusCode)"]
+                    )
                 )
             }
 
@@ -136,9 +139,25 @@ class ContentExtractor {
         var workingHTML = html
 
         // Remove unwanted elements
-        let unwantedTags = ["script", "style", "nav", "header", "footer", "aside",
-                            "noscript", "iframe", "form", "button", "input", "select",
-                            "textarea", "svg", "canvas", "video", "audio"]
+        let unwantedTags = [
+            "script",
+            "style",
+            "nav",
+            "header",
+            "footer",
+            "aside",
+            "noscript",
+            "iframe",
+            "form",
+            "button",
+            "input",
+            "select",
+            "textarea",
+            "svg",
+            "canvas",
+            "video",
+            "audio",
+        ]
         for tag in unwantedTags {
             // Use NSRegularExpression for dotMatchesLineSeparators support
             if let regex = try? NSRegularExpression(
@@ -192,8 +211,16 @@ class ContentExtractor {
 
         // Convert paragraphs and line breaks
         contentHTML = contentHTML.replacingOccurrences(of: "</p>", with: "\n\n", options: .caseInsensitive)
-        contentHTML = contentHTML.replacingOccurrences(of: "<br[^>]*>", with: "\n", options: [.regularExpression, .caseInsensitive])
-        contentHTML = contentHTML.replacingOccurrences(of: "</h[1-6]>", with: "\n\n", options: [.regularExpression, .caseInsensitive])
+        contentHTML = contentHTML.replacingOccurrences(
+            of: "<br[^>]*>",
+            with: "\n",
+            options: [.regularExpression, .caseInsensitive]
+        )
+        contentHTML = contentHTML.replacingOccurrences(
+            of: "</h[1-6]>",
+            with: "\n\n",
+            options: [.regularExpression, .caseInsensitive]
+        )
         contentHTML = contentHTML.replacingOccurrences(of: "</li>", with: "\n", options: .caseInsensitive)
         contentHTML = contentHTML.replacingOccurrences(of: "</div>", with: "\n", options: .caseInsensitive)
         contentHTML = contentHTML.replacingOccurrences(of: "</tr>", with: "\n", options: .caseInsensitive)
@@ -210,7 +237,7 @@ class ContentExtractor {
         plainText = plainText.trimmingCharacters(in: .whitespacesAndNewlines)
 
         // Now extract sections from the plain text by finding heading text
-        if let regex = regex {
+        if let regex {
             let matches = regex.matches(in: workingHTML, options: [], range: NSRange(workingHTML.startIndex..., in: workingHTML))
 
             for match in matches {

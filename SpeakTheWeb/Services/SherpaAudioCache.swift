@@ -114,7 +114,7 @@ final class SherpaAudioCache {
         queue.sync {
             let keysToRemove = entries.values
                 .filter { $0.articleURL == urlString }
-                .map { $0.key }
+                .map(\.key)
             for key in keysToRemove {
                 if let entry = entries.removeValue(forKey: key) {
                     let url = directoryURL.appendingPathComponent(entry.fileName)

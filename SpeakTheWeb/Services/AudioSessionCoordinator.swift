@@ -26,20 +26,30 @@ final class AudioSessionCoordinator {
         let mode: AVAudioSession.Mode = .spokenAudio
         let options: AVAudioSession.CategoryOptions = []
 
-        log(action: "activate-pre",
+        log(
+            action: "activate-pre",
             engine: engine,
             reason: reason,
             category: session.category,
             mode: session.mode,
             options: session.categoryOptions,
-            error: nil)
+            error: nil
+        )
 
         do {
             if session.category != category || session.mode != mode || session.categoryOptions != options {
                 try session.setCategory(category, mode: mode, options: options)
             }
         } catch {
-            log(action: "set-category-failed", engine: engine, reason: reason, category: category, mode: mode, options: options, error: error)
+            log(
+                action: "set-category-failed",
+                engine: engine,
+                reason: reason,
+                category: category,
+                mode: mode,
+                options: options,
+                error: error
+            )
             return false
         }
 
@@ -50,7 +60,15 @@ final class AudioSessionCoordinator {
             log(action: "activate", engine: engine, reason: reason, category: category, mode: mode, options: options, error: nil)
             return true
         } catch {
-            log(action: "set-active-failed", engine: engine, reason: reason, category: category, mode: mode, options: options, error: error)
+            log(
+                action: "set-active-failed",
+                engine: engine,
+                reason: reason,
+                category: category,
+                mode: mode,
+                options: options,
+                error: error
+            )
             return false
         }
     }
@@ -74,15 +92,31 @@ final class AudioSessionCoordinator {
     private func registerNotifications() {
         let center = NotificationCenter.default
 
-        observers.append(center.addObserver(forName: AVAudioSession.interruptionNotification, object: session, queue: .main) { [weak self] notification in
-            self?.handleInterruption(notification)
-        })
+        observers
+            .append(center
+                .addObserver(
+                    forName: AVAudioSession.interruptionNotification,
+                    object: session,
+                    queue: .main
+                ) { [weak self] notification in
+                    self?.handleInterruption(notification)
+                })
 
-        observers.append(center.addObserver(forName: AVAudioSession.routeChangeNotification, object: session, queue: .main) { [weak self] notification in
-            self?.handleRouteChange(notification)
-        })
+        observers
+            .append(center
+                .addObserver(
+                    forName: AVAudioSession.routeChangeNotification,
+                    object: session,
+                    queue: .main
+                ) { [weak self] notification in
+                    self?.handleRouteChange(notification)
+                })
 
-        observers.append(center.addObserver(forName: AVAudioSession.silenceSecondaryAudioHintNotification, object: session, queue: .main) { [weak self] notification in
+        observers.append(center.addObserver(
+            forName: AVAudioSession.silenceSecondaryAudioHintNotification,
+            object: session,
+            queue: .main
+        ) { [weak self] notification in
             self?.handleSilenceHint(notification)
         })
     }
@@ -95,11 +129,10 @@ final class AudioSessionCoordinator {
             return
         }
 
-        let reason: AVAudioSession.InterruptionReason?
-        if let reasonValue = info[AVAudioSessionInterruptionReasonKey] as? UInt {
-            reason = AVAudioSession.InterruptionReason(rawValue: reasonValue)
+        let reason: AVAudioSession.InterruptionReason? = if let reasonValue = info[AVAudioSessionInterruptionReasonKey] as? UInt {
+            AVAudioSession.InterruptionReason(rawValue: reasonValue)
         } else {
-            reason = nil
+            nil
         }
 
         var reasonText = reason.map { String(describing: $0) } ?? "unknown"
@@ -114,7 +147,15 @@ final class AudioSessionCoordinator {
             onInterruptionEnded?(shouldResume)
         }
 
-        log(action: "interruption-\(type)", engine: activeEngine, reason: reasonText, category: nil, mode: nil, options: nil, error: nil)
+        log(
+            action: "interruption-\(type)",
+            engine: activeEngine,
+            reason: reasonText,
+            category: nil,
+            mode: nil,
+            options: nil,
+            error: nil
+        )
     }
 
     private func handleRouteChange(_ notification: Notification) {
@@ -126,7 +167,15 @@ final class AudioSessionCoordinator {
         }
 
         onRouteChange?(reason)
-        log(action: "route-change", engine: activeEngine, reason: String(describing: reason), category: nil, mode: nil, options: nil, error: nil)
+        log(
+            action: "route-change",
+            engine: activeEngine,
+            reason: String(describing: reason),
+            category: nil,
+            mode: nil,
+            options: nil,
+            error: nil
+        )
     }
 
     private func handleSilenceHint(_ notification: Notification) {
@@ -137,17 +186,26 @@ final class AudioSessionCoordinator {
             return
         }
 
-        log(action: "silence-hint", engine: activeEngine, reason: String(describing: type), category: nil, mode: nil, options: nil, error: nil)
+        log(
+            action: "silence-hint",
+            engine: activeEngine,
+            reason: String(describing: type),
+            category: nil,
+            mode: nil,
+            options: nil,
+            error: nil
+        )
     }
 
-    private func log(action: String,
-                     engine: SpeechEngineType?,
-                     reason: String?,
-                     category: AVAudioSession.Category?,
-                     mode: AVAudioSession.Mode?,
-                     options: AVAudioSession.CategoryOptions?,
-                     error: Error?)
-    {
+    private func log(
+        action: String,
+        engine: SpeechEngineType?,
+        reason: String?,
+        category: AVAudioSession.Category?,
+        mode: AVAudioSession.Mode?,
+        options: AVAudioSession.CategoryOptions?,
+        error: Error?
+    ) {
         var parts: [String] = ["[AudioSession]", "action=\(action)"]
 
         if let engine {
@@ -201,8 +259,8 @@ final class AudioSessionCoordinator {
     }
 
     private func describe(route: AVAudioSessionRouteDescription) -> String {
-        let outputs = route.outputs.map { $0.portType.rawValue }.joined(separator: ",")
-        let inputs = route.inputs.map { $0.portType.rawValue }.joined(separator: ",")
+        let outputs = route.outputs.map(\.portType.rawValue).joined(separator: ",")
+        let inputs = route.inputs.map(\.portType.rawValue).joined(separator: ",")
         return "out=[\(outputs)] in=[\(inputs)]"
     }
 }

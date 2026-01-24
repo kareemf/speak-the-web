@@ -80,9 +80,9 @@ private struct SherpaModelRow: View {
     private var isBusy: Bool {
         switch store.downloadState(for: model) {
         case .downloading, .processing:
-            return true
+            true
         case .idle, .failed:
-            return false
+            false
         }
     }
 
