@@ -11,13 +11,6 @@ private final class WrappingTextView: UITextView {
         }
     }
 
-    override func canPerformAction(_ action: Selector, withSender sender: Any?) -> Bool {
-        if action == #selector(startReadingFromHere(_:)) {
-            return onStartReadingFromHere != nil && selectedRange.length > 0
-        }
-        return super.canPerformAction(action, withSender: sender)
-    }
-
     @objc fileprivate func startReadingFromHere(_ sender: Any?) {
         guard selectedRange.length > 0 else { return }
         let currentText = text ?? ""
@@ -36,22 +29,41 @@ struct SelectableTextView: UIViewRepresentable {
     let lineSpacing: CGFloat
     var onStartReadingFromSelection: ((Int) -> Void)?
 
+    final class Coordinator: NSObject, UITextViewDelegate {
+        func textView(
+            _ textView: UITextView,
+            editMenuForTextIn range: NSRange,
+            suggestedActions: [UIMenuElement]
+        ) -> UIMenu? {
+            guard let wrappingView = textView as? WrappingTextView else {
+                return UIMenu(children: suggestedActions)
+            }
+            guard range.length > 0, wrappingView.onStartReadingFromHere != nil else {
+                return UIMenu(children: suggestedActions)
+            }
+            let action = UIAction(title: "Start Reading From Here") { _ in
+                wrappingView.startReadingFromHere(nil)
+            }
+            return UIMenu(children: [action] + suggestedActions)
+        }
+    }
+
+    func makeCoordinator() -> Coordinator {
+        Coordinator()
+    }
+
     func makeUIView(context: Context) -> UITextView {
         let textView = WrappingTextView()
         textView.isEditable = false
         textView.isSelectable = true
         textView.isScrollEnabled = false
+        textView.delegate = context.coordinator
         textView.backgroundColor = .clear
         textView.textContainerInset = .zero
         textView.textContainer.lineFragmentPadding = 0
         textView.textContainer.widthTracksTextView = true
         textView.textContainer.lineBreakMode = .byWordWrapping
         textView.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
-        let menuItem = UIMenuItem(
-            title: "Start Reading From Here",
-            action: #selector(WrappingTextView.startReadingFromHere(_:))
-        )
-        UIMenuController.shared.menuItems = [menuItem]
         return textView
     }
 
