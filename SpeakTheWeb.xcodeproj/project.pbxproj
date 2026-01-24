@@ -13,12 +13,12 @@
 		1D8A806DFA8C2F6338F5532A /* ArticleReaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26B83A81EEE5E6284D68136B /* ArticleReaderView.swift */; };
 		282E1A3E71C1D6988201679E /* VoiceSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29DF09F4921AF1667B1A5D8C /* VoiceSettingsView.swift */; };
 		295F3AB4F4B2EECF8B3151BF /* SherpaAudioCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA6AA8C6CD5FF5EB8A1E12CE /* SherpaAudioCache.swift */; };
-		2DDDDD4442852B944B93975B /* Website in Resources */ = {isa = PBXBuildFile; fileRef = 4E82002644EC905BD3776B1C /* Website */; };
 		2F9CE33F85974F24D06E22FA /* SelectableTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFA14D56499822AC9CBDF9B5 /* SelectableTextView.swift */; };
 		33275A7E535A5B7A336649A4 /* ReaderWebViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 304707FD3B82E007F47B7751 /* ReaderWebViews.swift */; };
 		36C99EA4DF5756C0B84EAE98 /* HelpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09AFE615200F3B7D47BAB084 /* HelpView.swift */; };
 		4C0419E6400C3E2AEA4909CC /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E7AEDBACA49560AECC5890E8 /* Assets.xcassets */; };
 		579ADE9104539EB9822A8105 /* ShareViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 957FF7A77B1E882808E4AF2E /* ShareViewController.swift */; };
+		57B0F286082933D6039421E7 /* docs in Resources */ = {isa = PBXBuildFile; fileRef = 5C64552FE4C811E8DBC7797D /* docs */; };
 		6117427F8AC43D33D638455B /* AudioSessionCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE6084C9E598F69CA59857C8 /* AudioSessionCoordinator.swift */; };
 		61A7AD2A74E4218EDFA79B1D /* NowPlayingManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 331B18951CAAA22CC2B17DE8 /* NowPlayingManager.swift */; };
 		638E3BC3CC184BA97A5DBF58 /* SherpaOnnxModelStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5819817DB6921E96E1C8F0A4 /* SherpaOnnxModelStore.swift */; };
@@ -77,8 +77,8 @@
 		3E38A9936C55F6EAD9202E1D /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		40F773F2492A77C42FD89863 /* SpeakTheWebApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeakTheWebApp.swift; sourceTree = "<group>"; };
 		4889E3311B7A665FA0E43E16 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
-		4E82002644EC905BD3776B1C /* Website */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Website; sourceTree = SOURCE_ROOT; };
 		5819817DB6921E96E1C8F0A4 /* SherpaOnnxModelStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SherpaOnnxModelStore.swift; sourceTree = "<group>"; };
+		5C64552FE4C811E8DBC7797D /* docs */ = {isa = PBXFileReference; lastKnownFileType = folder; path = docs; sourceTree = SOURCE_ROOT; };
 		62D109F4D1AE1F414463A04B /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		6956CF3BCB8029C413AB4E84 /* SherpaOnnxRuntime.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SherpaOnnxRuntime.swift; sourceTree = "<group>"; };
 		6D1B71C12FF5D14644E61FAE /* SpeechService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeechService.swift; sourceTree = "<group>"; };
@@ -221,7 +221,7 @@
 				0A78F06449AA1EBA206F0A9C /* Packages */,
 				1CD302FC16DAA553BEBAD85F /* ShareExtension */,
 				CB63D803A9B7ABB96371068E /* SpeakTheWeb */,
-				4E82002644EC905BD3776B1C /* Website */,
+				5C64552FE4C811E8DBC7797D /* docs */,
 				95EF35ABF88428234B19001C /* Products */,
 			);
 			sourceTree = "<group>";
@@ -318,7 +318,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4C0419E6400C3E2AEA4909CC /* Assets.xcassets in Resources */,
-				2DDDDD4442852B944B93975B /* Website in Resources */,
+				57B0F286082933D6039421E7 /* docs in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

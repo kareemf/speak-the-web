@@ -30,7 +30,7 @@ targets:
       - path: SpeakTheWeb
         excludes:
           - "**/.DS_Store"
-      - path: Website
+      - path: docs
         buildPhase: resources
         type: folder
     settings:

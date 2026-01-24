@@ -60,14 +60,14 @@ struct HelpWebView: UIViewRepresentable {
     }
 
     private func resolveHelpURL() -> URL? {
-        if let websiteURL = Bundle.main.url(forResource: "Website", withExtension: nil) {
-            let helpURL = websiteURL.appendingPathComponent("help.html")
+        if let docsURL = Bundle.main.url(forResource: "docs", withExtension: nil) {
+            let helpURL = docsURL.appendingPathComponent("help.html")
             if FileManager.default.fileExists(atPath: helpURL.path) {
                 return helpURL
             }
         }
 
-        if let helpURL = Bundle.main.url(forResource: "help", withExtension: "html", subdirectory: "Website") {
+        if let helpURL = Bundle.main.url(forResource: "help", withExtension: "html", subdirectory: "docs") {
             return helpURL
         }
 
