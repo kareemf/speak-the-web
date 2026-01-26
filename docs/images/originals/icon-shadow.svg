@@ -1,0 +1,34 @@
+<svg width="1024" height="1024" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="3" stdDeviation="4" flood-opacity="0.18"/>
+    </filter>
+    </defs>
+    <rect x="0" y="0" width="1024" height="1024" rx="220" fill="#E9EBEE"/>
+
+    <!-- Search Bar -->
+    <rect x="160" y="180" width="704" height="120" rx="60"
+          fill="#FFFFFF" stroke="#2C2C2C" stroke-width="12" filter="url(#shadow)"/>
+
+    <!-- Magnifying Glass -->
+    <circle cx="220" cy="240" r="26" fill="none" stroke="#2C2C2C" stroke-width="12"/>
+    <line x1="240" y1="260" x2="260" y2="280" stroke="#2C2C2C" stroke-width="12" stroke-linecap="round"/>
+
+    <!-- URL Dashes -->
+    <line x1="430" y1="240" x2="470" y2="240" stroke="#2C2C2C" stroke-width="12" stroke-linecap="round"/>
+    <line x1="500" y1="240" x2="540" y2="240" stroke="#2C2C2C" stroke-width="12" stroke-linecap="round"/>
+    <line x1="570" y1="240" x2="610" y2="240" stroke="#2C2C2C" stroke-width="12" stroke-linecap="round"/>
+
+    <!-- Bimodal Waveform -->
+    <g fill="#2C2C2C">
+      <rect x="192" y="564" width="32" height="32" rx="24"/>
+      <rect x="248" y="510" width="48" height="140" rx="24"/>
+      <rect x="328" y="460" width="48" height="240" rx="24"/>
+      <rect x="408" y="500" width="48" height="160" rx="24"/>
+      <rect x="488" y="540" width="48" height="80"  rx="24"/>
+      <rect x="568" y="500" width="48" height="160" rx="24"/>
+      <rect x="648" y="460" width="48" height="240" rx="24"/>
+      <rect x="728" y="510" width="48" height="140" rx="24"/>
+      <rect x="800" y="564" width="32" height="32" rx="24"/>
+    </g>
+    </svg>

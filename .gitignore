@@ -134,3 +134,4 @@ Vendor/SherpaOnnx/Artifacts/
 *.pem
 secrets/
 credentials/
+.worktrees/
