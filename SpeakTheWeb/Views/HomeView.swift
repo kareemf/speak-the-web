@@ -35,7 +35,7 @@ struct HomeView: View {
                     Image(systemName: "link")
                         .foregroundColor(.secondary)
 
-                    TextField("Enter URL (e.g., example.com/article)", text: $viewModel.urlInput)
+                    TextField("Enter URL", text: $viewModel.urlInput)
                         .textFieldStyle(.plain)
                         .keyboardType(.URL)
                         .textInputAutocapitalization(.never)
@@ -93,23 +93,6 @@ struct HomeView: View {
             .listRowBackground(Color.clear)
             .listRowSeparator(.hidden)
             .listRowInsets(EdgeInsets(top: 8, leading: 16, bottom: 0, trailing: 16))
-
-            Section {
-                Button(action: {
-                    viewModel.loadSampleURL()
-                    isURLFieldFocused = false
-                }) {
-                    Label("Try a sample article", systemImage: "lightbulb")
-                        .font(.footnote)
-                        .foregroundColor(.secondary)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .contentShape(Rectangle())
-                }
-                .buttonStyle(.plain)
-            }
-            .listRowBackground(Color.clear)
-            .listRowSeparator(.hidden)
-            .listRowInsets(EdgeInsets(top: 0, leading: 16, bottom: 4, trailing: 16))
 
             Section(header: recentHeader) {
                 if viewModel.recentArticles.isEmpty {
