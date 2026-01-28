@@ -14,8 +14,8 @@ Preparing the iOS app "Speak the Web" for TestFlight/App Store release and open 
 ## Part 1: Open Source Preparation
 
 ### 1.1 Add LICENSE file
-- [ ] Create `LICENSE` file in repo root with MIT license text
-- [ ] Include copyright line: `Copyright (c) 2026 Kareem Francis` (current year)
+- [x] Create `LICENSE` file in repo root with MIT license text
+- [x] Include copyright line: `Copyright (c) 2026 Kareem Francis` (current year)
 - README already states MIT, but standard practice is to have the file
 
 ### 1.2 Add THIRD_PARTY_NOTICES.md
