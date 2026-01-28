@@ -1,0 +1,57 @@
+App Store Review Notes - Speak the Web
+======================================
+
+DEMO INSTRUCTIONS
+-----------------
+- No account required
+- Sample article URL for testing: https://en.wikipedia.org/wiki/Text-to-speech
+- To test HTTP confirmation flow: http://example.com (will prompt for confirmation)
+
+
+ATS (APP TRANSPORT SECURITY) JUSTIFICATION
+------------------------------------------
+This app is a text-to-speech reader for web articles. Users provide URLs directly
+(via paste or Share Extension). The app must support HTTP because:
+
+1. Many older articles and archives are HTTP-only (legacy content, Internet Archive, etc.)
+2. The app does not curate or suggest URLs — users control all content
+3. No user data is transmitted; content flows one-way (fetch → local TTS)
+
+Security mitigations implemented:
+- HTTPS-first: All URLs upgraded to HTTPS; HTTP only allowed after explicit per-host user confirmation
+- Comprehensive URL validation blocks dangerous schemes, private IPs, and localhost
+- Redirect validation: Security checks re-applied after each redirect
+- Visual indicator displayed for insecure connections
+
+Content handling:
+- The app does NOT use WKWebView to render fetched content
+- HTML is parsed with a non-executing parser (no JavaScript evaluation)
+- The app does NOT load remote resources (images, stylesheets, iframes, etc.)
+- The app does NOT modify device network settings
+- Content is text-only extraction for TTS playback
+
+
+USER-GENERATED CONTENT NOTE
+---------------------------
+This app does NOT curate, index, recommend, or share content. The app has:
+- NO content discovery features
+- NO bookmarking with sync
+- NO history sharing
+- NO social features
+
+Users provide URLs manually via paste or Share Extension — the app simply fetches
+and reads aloud what the user explicitly requests.
+
+
+PRIVACY SUMMARY
+---------------
+- Data collected: None
+- Tracking: None
+- Third-party analytics: None
+- Network requests: User-initiated URL fetches only + optional voice model downloads from GitHub
+
+
+AGE RATING
+----------
+Selected: 17+ with "Unrestricted Web Access"
+Reason: App can access any user-provided URL
