@@ -1,5 +1,9 @@
 # Speak the Web
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![Platform: iOS](https://img.shields.io/badge/Platform-iOS%2017%2B-lightgrey.svg)](https://developer.apple.com/ios/)
+[![Swift: 5.9+](https://img.shields.io/badge/Swift-5.9%2B-orange.svg)](https://swift.org/)
+
 An iOS app that reads web pages aloud using text-to-speech. Share a URL from Safari and listen to the content with playback controls and content navigation.
 
 ## Screenshots
@@ -121,6 +125,8 @@ brew install git-secrets xcodegen swiftformat swiftlint
 - **xcodegen** regenerates the Xcode project from `project.yml`.
 - **swiftformat** (lint mode) enforces formatting; run `swiftformat .` to auto-fix.
 - **swiftlint** enforces Swift style rules.
+
+**Recommended versions:** swiftformat 0.55.3, swiftlint 0.57.1, xcodegen 2.42.0
 
 After updating `project.yml`, regenerate the project with:
 
@@ -257,6 +263,15 @@ The app automatically discovers all installed iOS voices. Users can download add
 **Audio doesn't play in background**
 - Verify `UIBackgroundModes` includes `audio` in Info.plist
 - Ensure audio session is configured for `.playback` category
+
+## Contributing
+
+We welcome contributions! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines on:
+
+- Setting up your development environment
+- Code style and linting (SwiftFormat, SwiftLint)
+- Pre-commit hooks
+- Pull request process
 
 ## License
 

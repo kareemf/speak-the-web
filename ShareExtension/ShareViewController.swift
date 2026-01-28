@@ -247,7 +247,7 @@ class ShareViewController: UIViewController {
         extensionContext?.cancelRequest(withError: NSError(domain: "SpeakTheWebShare", code: 0, userInfo: nil))
     }
 
-    // Helper to open URL from extension
+    /// Helper to open URL from extension
     @objc private func openURL(_ url: URL) {
         var responder: UIResponder? = self
         while responder != nil {
