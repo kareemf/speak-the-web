@@ -55,9 +55,9 @@ if ! xcodegen >/dev/null; then
 fi
 
 # Check if the project file was modified
-if git diff --name-only | grep -q "CareKeeper.xcodeproj/"; then
+if git diff --name-only | grep -q "SpeakTheWeb.xcodeproj/"; then
     echo "Xcode project was regenerated. Staging changes..."
-    git add CareKeeper.xcodeproj/
+    git add SpeakTheWeb.xcodeproj/
 fi
 
 echo "✓ xcodegen completed successfully"
