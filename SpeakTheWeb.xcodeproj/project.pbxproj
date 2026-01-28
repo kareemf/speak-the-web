@@ -29,6 +29,7 @@
 		8915EB9DDEAD35D3C1E217E3 /* Article.swift in Sources */ = {isa = PBXBuildFile; fileRef = D40E3C367EBF8FF1AB3225B0 /* Article.swift */; };
 		8C04E929A142746E70DE1B08 /* SherpaOnnx in Frameworks */ = {isa = PBXBuildFile; productRef = D8B0A996DABF442416D8CF40 /* SherpaOnnx */; };
 		913375942E3903E3661B1AEE /* ReaderViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6E65A9BEAD380D850C9E085 /* ReaderViewModel.swift */; };
+		92C1DE4734710EF2158BA601 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 39BFBCC4235E3AA84A8D76AA /* PrivacyInfo.xcprivacy */; };
 		9FCD506D4677779458683759 /* ReaderMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE921CA5016B762D3D79337E /* ReaderMode.swift */; };
 		A34F509F7B17A4B615E58819 /* SherpaSpeechService.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE566AF4966498534C7D3317 /* SherpaSpeechService.swift */; };
 		ABF7DC44368D8FB048EBD1DF /* SherpaModelsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 918B3EE513F0A20DFCB8280E /* SherpaModelsView.swift */; };
@@ -74,6 +75,7 @@
 		29DF09F4921AF1667B1A5D8C /* VoiceSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceSettingsView.swift; sourceTree = "<group>"; };
 		304707FD3B82E007F47B7751 /* ReaderWebViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReaderWebViews.swift; sourceTree = "<group>"; };
 		331B18951CAAA22CC2B17DE8 /* NowPlayingManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NowPlayingManager.swift; sourceTree = "<group>"; };
+		39BFBCC4235E3AA84A8D76AA /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		3E38A9936C55F6EAD9202E1D /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		40F773F2492A77C42FD89863 /* SpeakTheWebApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeakTheWebApp.swift; sourceTree = "<group>"; };
 		4889E3311B7A665FA0E43E16 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
@@ -209,6 +211,7 @@
 				35956F4EF9CFFCAC518A6EE1 /* Views */,
 				E7AEDBACA49560AECC5890E8 /* Assets.xcassets */,
 				F6E08C869E54E585A700461C /* Info.plist */,
+				39BFBCC4235E3AA84A8D76AA /* PrivacyInfo.xcprivacy */,
 				6E5A4BF4CA1219B810168D0E /* SpeakTheWeb.entitlements */,
 				40F773F2492A77C42FD89863 /* SpeakTheWebApp.swift */,
 			);
@@ -318,6 +321,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4C0419E6400C3E2AEA4909CC /* Assets.xcassets in Resources */,
+				92C1DE4734710EF2158BA601 /* PrivacyInfo.xcprivacy in Resources */,
 				57B0F286082933D6039421E7 /* docs in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
