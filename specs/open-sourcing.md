@@ -423,9 +423,9 @@ Apple's documentation acknowledges this is acceptable for apps that fetch arbitr
 - [ ] Add URL scheme/host validation (see 2.2.1 below)
 
 **URLSession configuration for arbitrary URLs:**
-- [ ] Use `URLSessionConfiguration.ephemeral` — no persistent cache/cookies
+- [x] Use `URLSessionConfiguration.ephemeral` — no persistent cache/cookies
   - branch: `impl/ephemeral-urlsession`
-  - status: `claimed`
+  - status: `complete`
 - [ ] Set `httpCookieStorage = nil` — prevents cookie leakage
 - [ ] Set `urlCredentialStorage = nil` — prevents credential storage
 - [ ] Set `urlCache = nil` — no caching at all (ephemeral still uses in-memory cache by default)
@@ -728,7 +728,7 @@ Save the justification text from section 2.2 in a separate file for easy copy-pa
 | **Add DNS rebinding protection (pre-fetch + post-connect)** | URL handling code | **High** | [ ] |
 | **Add redirect validation with scheme downgrade blocking** | URL handling code | **High** | [ ] |
 | **Handle IP literals (IPv4, IPv6, mapped, non-standard forms)** | URL handling code | **High** | [ ] |
-| **Configure ephemeral URLSession (no cookies/credentials)** | Networking code | **High** | [ ] |
+| **Configure ephemeral URLSession (no cookies/credentials)** | Networking code | **High** | [x] |
 | **Share URLValidator with Share Extension** | Extension code | **High** | [ ] |
 | **Add model integrity verification (checksum+version+size)** | Model download code | **High** | [ ] |
 | Add HTTP connection indicator | Article view UI | Medium | [ ] |
