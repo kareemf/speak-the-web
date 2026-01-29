@@ -598,7 +598,9 @@ Post-connect validation (iOS URLSession can re-resolve):
 - [ ] **Share Extension uses same URLValidator** — validation logic is shared, not duplicated
 
 **Implementation:**
-- [ ] Create `URLValidator` class with comprehensive validation
+- [x] Create `URLValidator` class with comprehensive validation
+  - branch: `impl/url-security`
+  - status: `complete`
 - [ ] Return clear, localized error messages for each rejection reason
 - [ ] Log validation failures for debugging (no PII)
 
@@ -717,7 +719,7 @@ Save the justification text from section 2.2 in a separate file for easy copy-pa
 | Audit required-reason APIs | App + dependencies | High | [ ] |
 | Update privacy policy | `docs/privacy.html` | High | [x] Done |
 | Add Terms of Service / disclaimer | `docs/terms.html` | High | [x] Done |
-| **Create URLValidator with comprehensive validation** | URL handling code | **High** | [ ] |
+| **Create URLValidator with comprehensive validation** | URL handling code | **High** | [x] |
 | **Implement HTTPS-first with per-host session-only confirmation** | URL handling code | **High** | [ ] |
 | **Add DNS rebinding protection (pre-fetch + post-connect)** | URL handling code | **High** | [ ] |
 | **Add redirect validation with scheme downgrade blocking** | URL handling code | **High** | [ ] |
