@@ -12,6 +12,7 @@ class ReaderViewModel: ObservableObject {
     @Published var isLoading: Bool = false
     @Published var errorMessage: String?
     @Published var showError: Bool = false
+    @Published var pendingHTTPConfirmation: HTTPConfirmation?
     @Published var showTableOfContents: Bool = false
     @Published var showVoiceSettings: Bool = false
     @Published var showArticle: Bool = false
@@ -36,6 +37,12 @@ class ReaderViewModel: ObservableObject {
 
     @Published var recentArticles: [RecentArticle] = []
 
+    struct HTTPConfirmation: Identifiable {
+        let id = UUID()
+        let url: URL
+        let host: String
+    }
+
     private static let rateIndexKey = "selectedRateIndex"
     private static let engineKey = "selectedSpeechEngine"
 
@@ -45,6 +52,7 @@ class ReaderViewModel: ObservableObject {
     private let contentExtractor = ContentExtractor()
     private let recentArticlesManager = RecentArticlesManager()
     let sherpaModelStore = SherpaOnnxModelStore()
+    private var confirmedHTTPHosts: Set<String> = []
 
     // MARK: - Computed Properties
 
@@ -178,32 +186,45 @@ class ReaderViewModel: ObservableObject {
     func fetchContent() async {
         guard canFetch else { return }
 
-        isLoading = true
-        errorMessage = nil
-        showError = false
+        prepareForFetch()
 
-        // Stop any current playback
-        playbackController.stopAll()
-        article = nil
+        switch URLValidator.validate(urlInput) {
+        case let .invalid(error):
+            isLoading = false
+            presentError(error.localizedDescription)
+        case let .valid(url):
+            await fetchArticle(from: url)
+        case let .requiresHTTPConfirmation(url, host):
+            if confirmedHTTPHosts.contains(host) {
+                await fetchArticle(from: url)
+                return
+            }
 
-        do {
-            let extractedArticle = try await contentExtractor.extract(from: urlInput)
-            article = extractedArticle
-            playbackController.loadContent(extractedArticle.content)
-            playbackController.setArticleURL(extractedArticle.url.absoluteString)
-            playbackController.updateSherpaModel(record: sherpaModelStore.selectedRecord)
-            updateNowPlayingMetadata(for: extractedArticle)
+            if let httpsURL = upgradedHTTPSURL(from: url),
+               let article = await tryFetchArticle(from: httpsURL)
+            {
+                applyExtractedArticle(article)
+                isLoading = false
+                return
+            }
 
-            // Save to recent articles
-            recentArticlesManager.save(extractedArticle)
-            recentArticles = recentArticlesManager.load()
-            showArticle = true
-        } catch {
-            errorMessage = error.localizedDescription
-            showError = true
+            isLoading = false
+            pendingHTTPConfirmation = HTTPConfirmation(url: url, host: host)
         }
+    }
 
-        isLoading = false
+    func confirmHTTPAccess() {
+        guard let confirmation = pendingHTTPConfirmation else { return }
+        pendingHTTPConfirmation = nil
+        confirmedHTTPHosts.insert(confirmation.host)
+        prepareForFetch()
+        Task {
+            await fetchArticle(from: confirmation.url)
+        }
+    }
+
+    func cancelHTTPAccess() {
+        pendingHTTPConfirmation = nil
     }
 
     /// Clears the current content and resets the state
@@ -217,6 +238,7 @@ class ReaderViewModel: ObservableObject {
         urlInput = ""
         errorMessage = nil
         showError = false
+        pendingHTTPConfirmation = nil
         showArticle = false
     }
 
@@ -360,6 +382,54 @@ class ReaderViewModel: ObservableObject {
 
         print("[ReaderViewModel] canUseEngine passed")
         return true
+    }
+
+    private func prepareForFetch() {
+        isLoading = true
+        errorMessage = nil
+        showError = false
+        pendingHTTPConfirmation = nil
+
+        playbackController.stopAll()
+        article = nil
+    }
+
+    private func upgradedHTTPSURL(from url: URL) -> URL? {
+        guard url.scheme?.lowercased() == "http" else { return nil }
+        guard var components = URLComponents(url: url, resolvingAgainstBaseURL: false) else { return nil }
+        components.scheme = "https"
+        return components.url
+    }
+
+    private func tryFetchArticle(from url: URL) async -> Article? {
+        do {
+            return try await contentExtractor.extract(from: url)
+        } catch {
+            return nil
+        }
+    }
+
+    private func fetchArticle(from url: URL) async {
+        defer { isLoading = false }
+        do {
+            let extractedArticle = try await contentExtractor.extract(from: url)
+            applyExtractedArticle(extractedArticle)
+        } catch {
+            presentError(error.localizedDescription)
+        }
+    }
+
+    private func applyExtractedArticle(_ extractedArticle: Article) {
+        article = extractedArticle
+        playbackController.loadContent(extractedArticle.content)
+        playbackController.setArticleURL(extractedArticle.url.absoluteString)
+        playbackController.updateSherpaModel(record: sherpaModelStore.selectedRecord)
+        updateNowPlayingMetadata(for: extractedArticle)
+
+        // Save to recent articles
+        recentArticlesManager.save(extractedArticle)
+        recentArticles = recentArticlesManager.load()
+        showArticle = true
     }
 
     private func presentError(_ message: String) {

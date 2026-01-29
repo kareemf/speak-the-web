@@ -34,6 +34,11 @@ class ContentExtractor {
             throw ExtractionError.invalidURL
         }
 
+        return try await extract(from: url)
+    }
+
+    /// Extracts article content from a URL
+    func extract(from url: URL) async throws -> Article {
         // Fetch HTML content
         let html: String
         do {
