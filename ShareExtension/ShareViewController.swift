@@ -80,6 +80,7 @@ class ShareViewController: UIViewController {
     // MARK: - Properties
 
     private var sharedURL: URL?
+    private let httpConfirmationNote = "HTTP links require confirmation in the app"
 
     // MARK: - Lifecycle
 
@@ -160,9 +161,9 @@ class ShareViewController: UIViewController {
                         }
 
                         if let url = item as? URL {
-                            self?.handleURL(url)
-                        } else if let urlString = item as? String, let url = URL(string: urlString) {
-                            self?.handleURL(url)
+                            self?.handleURLString(url.absoluteString)
+                        } else if let urlString = item as? String {
+                            self?.handleURLString(urlString)
                         } else {
                             self?.showError("Invalid URL format")
                         }
@@ -182,8 +183,8 @@ class ShareViewController: UIViewController {
                             return
                         }
 
-                        if let text = item as? String, let url = URL(string: text), url.scheme != nil {
-                            self?.handleURL(url)
+                        if let text = item as? String {
+                            self?.handleURLString(text)
                         } else {
                             self?.showError("No valid URL found")
                         }
@@ -197,10 +198,22 @@ class ShareViewController: UIViewController {
         showError("No URL found in shared content")
     }
 
-    private func handleURL(_ url: URL) {
+    private func handleURLString(_ urlString: String) {
+        switch URLValidator.validate(urlString) {
+        case let .valid(url):
+            applyValidatedURL(url, status: "Ready to read aloud")
+        case let .requiresHTTPConfirmation(url, _):
+            applyValidatedURL(url, status: httpConfirmationNote)
+        case let .invalid(error):
+            showError(error.localizedDescription)
+        }
+    }
+
+    private func applyValidatedURL(_ url: URL, status: String) {
         sharedURL = url
         urlLabel.text = url.host ?? url.absoluteString
-        statusLabel.text = "Ready to read aloud"
+        statusLabel.text = status
+        statusLabel.textColor = .label
         openButton.isEnabled = true
     }
 
@@ -208,6 +221,7 @@ class ShareViewController: UIViewController {
         statusLabel.text = message
         statusLabel.textColor = .systemRed
         openButton.isEnabled = false
+        sharedURL = nil
     }
 
     // MARK: - Actions
