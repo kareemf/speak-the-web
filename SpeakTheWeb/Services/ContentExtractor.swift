@@ -2,6 +2,15 @@ import Foundation
 
 /// Service for extracting readable content from URLs
 class ContentExtractor {
+    private let session: URLSession = {
+        let configuration = URLSessionConfiguration.ephemeral
+        configuration.httpCookieStorage = nil
+        configuration.urlCredentialStorage = nil
+        configuration.urlCache = nil
+        configuration.requestCachePolicy = .reloadIgnoringLocalCacheData
+        return URLSession(configuration: configuration, delegate: nil, delegateQueue: nil)
+    }()
+
     enum ExtractionError: LocalizedError {
         case invalidURL
         case networkError(Error)
@@ -42,7 +51,7 @@ class ContentExtractor {
         // Fetch HTML content
         let html: String
         do {
-            let (data, response) = try await URLSession.shared.data(from: url)
+            let (data, response) = try await session.data(from: url)
 
             // Check for valid response
             if let httpResponse = response as? HTTPURLResponse,
