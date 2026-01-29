@@ -599,8 +599,6 @@ Post-connect validation (iOS URLSession can re-resolve):
 
 **Implementation:**
 - [ ] Create `URLValidator` class with comprehensive validation
-  - branch: `impl/url-security`
-  - status: `claimed`
 - [ ] Return clear, localized error messages for each rejection reason
 - [ ] Log validation failures for debugging (no PII)
 
