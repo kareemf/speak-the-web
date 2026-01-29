@@ -1,14 +1,25 @@
 import Foundation
 
 /// Service for extracting readable content from URLs
-class ContentExtractor {
-    private let session: URLSession = {
+final class ContentExtractor: NSObject {
+    private struct RedirectContext {
+        var allowedHTTPHosts: Set<String>
+        var redirectCount: Int
+        var initialScheme: String
+    }
+
+    private let redirectQueue = DispatchQueue(label: "ContentExtractor.Redirect")
+    private var redirectContexts: [Int: RedirectContext] = [:]
+    private var redirectErrors: [Int: ExtractionError] = [:]
+    private let maxRedirects = 10
+
+    private lazy var session: URLSession = {
         let configuration = URLSessionConfiguration.ephemeral
         configuration.httpCookieStorage = nil
         configuration.urlCredentialStorage = nil
         configuration.urlCache = nil
         configuration.requestCachePolicy = .reloadIgnoringLocalCacheData
-        return URLSession(configuration: configuration, delegate: nil, delegateQueue: nil)
+        return URLSession(configuration: configuration, delegate: self, delegateQueue: nil)
     }()
 
     enum ExtractionError: LocalizedError {
@@ -16,6 +27,9 @@ class ContentExtractor {
         case networkError(Error)
         case parsingError
         case noContent
+        case requiresHTTPConfirmation(URL, host: String)
+        case redirectBlocked(String)
+        case redirectLoop
 
         var errorDescription: String? {
             switch self {
@@ -27,12 +41,18 @@ class ContentExtractor {
                 "Failed to parse page content"
             case .noContent:
                 "No readable content found on this page"
+            case let .requiresHTTPConfirmation(_, host):
+                "HTTP access requires confirmation for \(host)"
+            case let .redirectBlocked(reason):
+                "Redirect blocked: \(reason)"
+            case .redirectLoop:
+                "Too many redirects"
             }
         }
     }
 
     /// Extracts article content from a URL
-    func extract(from urlString: String) async throws -> Article {
+    func extract(from urlString: String, allowedHTTPHosts: Set<String> = []) async throws -> Article {
         // Normalize URL
         var normalizedURL = urlString.trimmingCharacters(in: .whitespacesAndNewlines)
         if !normalizedURL.hasPrefix("http://"), !normalizedURL.hasPrefix("https://") {
@@ -43,15 +63,22 @@ class ContentExtractor {
             throw ExtractionError.invalidURL
         }
 
-        return try await extract(from: url)
+        return try await extract(from: url, allowedHTTPHosts: allowedHTTPHosts)
     }
 
     /// Extracts article content from a URL
-    func extract(from url: URL) async throws -> Article {
+    func extract(from url: URL, allowedHTTPHosts: Set<String> = []) async throws -> Article {
+        let initialScheme = url.scheme?.lowercased() ?? "https"
+        let request = URLRequest(url: url)
+
         // Fetch HTML content
         let html: String
         do {
-            let (data, response) = try await session.data(from: url)
+            let (data, response) = try await data(
+                for: request,
+                allowedHTTPHosts: allowedHTTPHosts,
+                initialScheme: initialScheme
+            )
 
             // Check for valid response
             if let httpResponse = response as? HTTPURLResponse,
@@ -95,6 +122,53 @@ class ContentExtractor {
             sections: sections,
             extractedAt: Date()
         )
+    }
+
+    private func data(
+        for request: URLRequest,
+        allowedHTTPHosts: Set<String>,
+        initialScheme: String
+    ) async throws -> (Data, URLResponse) {
+        try await withCheckedThrowingContinuation { continuation in
+            let task = session.dataTask(with: request) { [weak self] data, response, error in
+                guard let self else { return }
+                let taskId = task.taskIdentifier
+
+                let redirectError = redirectQueue.sync { redirectErrors[taskId] }
+                redirectQueue.sync {
+                    redirectContexts[taskId] = nil
+                    redirectErrors[taskId] = nil
+                }
+
+                if let redirectError {
+                    continuation.resume(throwing: redirectError)
+                    return
+                }
+
+                if let error {
+                    continuation.resume(throwing: error)
+                    return
+                }
+
+                guard let data, let response else {
+                    continuation.resume(throwing: ExtractionError.networkError(NSError(domain: "HTTP", code: -1)))
+                    return
+                }
+
+                continuation.resume(returning: (data, response))
+            }
+
+            let taskId = task.taskIdentifier
+            redirectQueue.sync {
+                redirectContexts[taskId] = RedirectContext(
+                    allowedHTTPHosts: allowedHTTPHosts,
+                    redirectCount: 0,
+                    initialScheme: initialScheme
+                )
+            }
+
+            task.resume()
+        }
     }
 
     /// Extracts the page title from HTML
@@ -350,5 +424,75 @@ class ContentExtractor {
         }
 
         return result
+    }
+}
+
+extension ContentExtractor: URLSessionTaskDelegate {
+    func urlSession(
+        _: URLSession,
+        task: URLSessionTask,
+        willPerformHTTPRedirection _: HTTPURLResponse,
+        newRequest request: URLRequest,
+        completionHandler: @escaping (URLRequest?) -> Void
+    ) {
+        guard let redirectURL = request.url else {
+            completionHandler(nil)
+            return
+        }
+
+        var context = redirectQueue.sync { redirectContexts[task.taskIdentifier] }
+        guard let existingContext = context else {
+            completionHandler(request)
+            return
+        }
+
+        if existingContext.redirectCount >= maxRedirects {
+            redirectQueue.sync {
+                redirectErrors[task.taskIdentifier] = .redirectLoop
+            }
+            completionHandler(nil)
+            return
+        }
+
+        context?.redirectCount += 1
+        if let context {
+            redirectQueue.sync { redirectContexts[task.taskIdentifier] = context }
+        }
+
+        switch URLValidator.validate(redirectURL.absoluteString) {
+        case let .valid(validURL):
+            if let scheme = validURL.scheme?.lowercased(),
+               scheme == "http",
+               let host = validURL.host?.lowercased(),
+               !existingContext.allowedHTTPHosts.contains(host),
+               existingContext.initialScheme == "https"
+            {
+                redirectQueue.sync {
+                    redirectErrors[task.taskIdentifier] = .requiresHTTPConfirmation(validURL, host: host)
+                }
+                completionHandler(nil)
+                return
+            }
+
+            var updatedRequest = request
+            updatedRequest.url = validURL
+            completionHandler(updatedRequest)
+        case let .requiresHTTPConfirmation(url, host):
+            if existingContext.allowedHTTPHosts.contains(host) {
+                var updatedRequest = request
+                updatedRequest.url = url
+                completionHandler(updatedRequest)
+            } else {
+                redirectQueue.sync {
+                    redirectErrors[task.taskIdentifier] = .requiresHTTPConfirmation(url, host: host)
+                }
+                completionHandler(nil)
+            }
+        case let .invalid(error):
+            redirectQueue.sync {
+                redirectErrors[task.taskIdentifier] = .redirectBlocked(error.localizedDescription)
+            }
+            completionHandler(nil)
+        }
     }
 }
