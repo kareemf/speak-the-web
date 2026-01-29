@@ -657,6 +657,9 @@ This distinction is important: App Review's UGC moderation requirements (reporti
 **HTTP indicator and disclaimer placement (required for ATS justification):**
 
 **HTTP connection indicator:**
+- [ ] Add HTTP connection indicator
+  - branch: `impl/http-indicator`
+  - status: `claimed`
 - [ ] Location: In the article header/title area (visible during playback)
 - [ ] Design: Red/orange "Insecure" badge or unlocked padlock icon
 - [ ] Behavior: Tap reveals explanation: "This article was loaded over an insecure HTTP connection"
