@@ -574,6 +574,9 @@ Post-connect validation (iOS URLSession can re-resolve):
 - [ ] Log failures for debugging (no PII)
 
 **Redirect validation (CRITICAL):**
+- [ ] Add redirect validation with scheme downgrade blocking
+  - branch: `impl/redirect-validation`
+  - status: `claimed`
 - [ ] Re-validate URL after EACH HTTP redirect (30x responses)
 - [ ] Apply full scheme/host/IP validation to redirect target
 - [ ] **Handle relative and scheme-relative `Location` headers:** Resolve against current request URL before validation
