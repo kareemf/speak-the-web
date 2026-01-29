@@ -599,9 +599,9 @@ Post-connect validation (iOS URLSession can re-resolve):
   - Accept only strict dotted-decimal (four octets, decimal digits only)
   - For IPv6 literals, use `inet_pton(AF_INET6, host, &addr6)`
 - [ ] Handle Share Extension URLs (may include fragments, non-HTTP schemes)
-- [ ] **Share Extension uses same URLValidator** — validation logic is shared, not duplicated
+- [x] **Share Extension uses same URLValidator** — validation logic is shared, not duplicated
   - branch: `impl/share-urlvalidator`
-  - status: `claimed`
+  - status: `complete`
 
 **Implementation:**
 - [x] Create `URLValidator` class with comprehensive validation
@@ -731,7 +731,7 @@ Save the justification text from section 2.2 in a separate file for easy copy-pa
 | **Add redirect validation with scheme downgrade blocking** | URL handling code | **High** | [ ] |
 | **Handle IP literals (IPv4, IPv6, mapped, non-standard forms)** | URL handling code | **High** | [ ] |
 | **Configure ephemeral URLSession (no cookies/credentials)** | Networking code | **High** | [x] |
-| **Share URLValidator with Share Extension** | Extension code | **High** | [ ] |
+| **Share URLValidator with Share Extension** | Extension code | **High** | [x] |
 | **Add model integrity verification (checksum+version+size)** | Model download code | **High** | [ ] |
 | Add HTTP connection indicator | Article view UI | Medium | [ ] |
 | Add first-launch disclaimer | Onboarding UI | Medium | [ ] |
