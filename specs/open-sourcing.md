@@ -404,9 +404,9 @@ Apple's documentation acknowledges this is acceptable for apps that fetch arbitr
 - Require HTTPS only — Breaks legitimate HTTP sites, poor UX ❌
 
 **Required implementation before submission:**
-- [ ] Implement HTTPS-first: Upgrade `http://` to `https://` automatically
+- [x] Implement HTTPS-first: Upgrade `http://` to `https://` automatically
   - branch: `impl/https-first-confirmation`
-  - status: `claimed`
+  - status: `complete`
 - [ ] **HTTPS-first policy (DECISION MADE):** ALWAYS attempt HTTPS first, even when user explicitly enters `http://`. This maximizes security without requiring user to know which sites support HTTPS.
   - User enters `http://example.com` → app tries `https://example.com` first
   - If HTTPS succeeds → use secure connection (no prompt needed)
@@ -722,7 +722,7 @@ Save the justification text from section 2.2 in a separate file for easy copy-pa
 | Update privacy policy | `docs/privacy.html` | High | [x] Done |
 | Add Terms of Service / disclaimer | `docs/terms.html` | High | [x] Done |
 | **Create URLValidator with comprehensive validation** | URL handling code | **High** | [x] |
-| **Implement HTTPS-first with per-host session-only confirmation** | URL handling code | **High** | [ ] |
+| **Implement HTTPS-first with per-host session-only confirmation** | URL handling code | **High** | [x] |
 | **Add DNS rebinding protection (pre-fetch + post-connect)** | URL handling code | **High** | [ ] |
 | **Add redirect validation with scheme downgrade blocking** | URL handling code | **High** | [ ] |
 | **Handle IP literals (IPv4, IPv6, mapped, non-standard forms)** | URL handling code | **High** | [ ] |
