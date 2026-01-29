@@ -424,6 +424,8 @@ Apple's documentation acknowledges this is acceptable for apps that fetch arbitr
 
 **URLSession configuration for arbitrary URLs:**
 - [ ] Use `URLSessionConfiguration.ephemeral` — no persistent cache/cookies
+  - branch: `impl/ephemeral-urlsession`
+  - status: `claimed`
 - [ ] Set `httpCookieStorage = nil` — prevents cookie leakage
 - [ ] Set `urlCredentialStorage = nil` — prevents credential storage
 - [ ] Set `urlCache = nil` — no caching at all (ephemeral still uses in-memory cache by default)
