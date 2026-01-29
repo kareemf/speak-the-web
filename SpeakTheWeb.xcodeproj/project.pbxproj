@@ -23,6 +23,7 @@
 		61A7AD2A74E4218EDFA79B1D /* NowPlayingManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 331B18951CAAA22CC2B17DE8 /* NowPlayingManager.swift */; };
 		638E3BC3CC184BA97A5DBF58 /* SherpaOnnxModelStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5819817DB6921E96E1C8F0A4 /* SherpaOnnxModelStore.swift */; };
 		65C701EFC0DF7CA70CF2AD8E /* RecentArticle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79E047F56604836C5281FA07 /* RecentArticle.swift */; };
+		65FA469DFEE54A7D1E544CBF /* URLValidator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80CB44C22D61D54A0773AA8D /* URLValidator.swift */; };
 		66762E9AE5463530B4AACDC5 /* SpeakTheWebShare.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 8CCE8C8F33E80A6ECB23DCEC /* SpeakTheWebShare.appex */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		69844D2E7260DA0B5D95A3F6 /* SherpaOnnxRuntime.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6956CF3BCB8029C413AB4E84 /* SherpaOnnxRuntime.swift */; };
 		84E94CA49565EECFF65848DB /* SherpaModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4061D16324775F7D7A169D2 /* SherpaModel.swift */; };
@@ -86,6 +87,7 @@
 		6D1B71C12FF5D14644E61FAE /* SpeechService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeechService.swift; sourceTree = "<group>"; };
 		6E5A4BF4CA1219B810168D0E /* SpeakTheWeb.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SpeakTheWeb.entitlements; sourceTree = "<group>"; };
 		79E047F56604836C5281FA07 /* RecentArticle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentArticle.swift; sourceTree = "<group>"; };
+		80CB44C22D61D54A0773AA8D /* URLValidator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLValidator.swift; sourceTree = "<group>"; };
 		8CCE8C8F33E80A6ECB23DCEC /* SpeakTheWebShare.appex */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = "wrapper.app-extension"; path = SpeakTheWebShare.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		918B3EE513F0A20DFCB8280E /* SherpaModelsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SherpaModelsView.swift; sourceTree = "<group>"; };
 		957FF7A77B1E882808E4AF2E /* ShareViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareViewController.swift; sourceTree = "<group>"; };
@@ -186,6 +188,7 @@
 				6956CF3BCB8029C413AB4E84 /* SherpaOnnxRuntime.swift */,
 				CE566AF4966498534C7D3317 /* SherpaSpeechService.swift */,
 				6D1B71C12FF5D14644E61FAE /* SpeechService.swift */,
+				80CB44C22D61D54A0773AA8D /* URLValidator.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -365,6 +368,7 @@
 				EB8ACE06F55E3DBF14179166 /* SpeechEngineType.swift in Sources */,
 				C02EA803A7B4255113175CB8 /* SpeechService.swift in Sources */,
 				C703B16594C1F4A60D0A51D7 /* TableOfContentsView.swift in Sources */,
+				65FA469DFEE54A7D1E544CBF /* URLValidator.swift in Sources */,
 				282E1A3E71C1D6988201679E /* VoiceSettingsView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

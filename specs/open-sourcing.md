@@ -598,9 +598,7 @@ Post-connect validation (iOS URLSession can re-resolve):
 - [ ] **Share Extension uses same URLValidator** — validation logic is shared, not duplicated
 
 **Implementation:**
-- [x] Create `URLValidator` class with comprehensive validation
-  - branch: `impl/url-security`
-  - status: `complete`
+- [ ] Create `URLValidator` class with comprehensive validation
 - [ ] Return clear, localized error messages for each rejection reason
 - [ ] Log validation failures for debugging (no PII)
 
