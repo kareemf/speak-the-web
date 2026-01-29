@@ -153,6 +153,16 @@ struct HomeView: View {
         } message: {
             Text("This also removes all cached article data.")
         }
+        .alert("Allow HTTP for this site?", item: $viewModel.pendingHTTPConfirmation) { _ in
+            Button("Allow HTTP") {
+                viewModel.confirmHTTPAccess()
+            }
+            Button("Cancel", role: .cancel) {
+                viewModel.cancelHTTPAccess()
+            }
+        } message: { confirmation in
+            Text("We couldn't load the HTTPS version of \(confirmation.host). Allow a one-time HTTP connection?")
+        }
         .alert("Error", isPresented: Binding(
             get: { viewModel.showError && !viewModel.showArticle },
             set: { if !$0 { viewModel.showError = false } }
