@@ -4,10 +4,12 @@ import SwiftUI
 struct ArticleReaderView: View {
     @ObservedObject var viewModel: ReaderViewModel
     @State private var textViewHeight: CGFloat = 0
+    @State private var showHTTPExplanation = false
 
     var body: some View {
         VStack(spacing: 0) {
             if let article = viewModel.article {
+                let isInsecureConnection = article.url.scheme?.lowercased() == "http"
                 Picker("Reader Mode", selection: $viewModel.readerMode) {
                     ForEach(ReaderMode.allCases) { mode in
                         Text(mode.rawValue).tag(mode)
@@ -33,10 +35,29 @@ struct ArticleReaderView: View {
                                 .font(.caption)
                                 .foregroundColor(.secondary)
 
-                                if let host = article.url.host {
-                                    Link(destination: article.url) {
-                                        Label(host, systemImage: "link")
-                                            .font(.caption)
+                                HStack {
+                                    if let host = article.url.host {
+                                        Link(destination: article.url) {
+                                            Label(host, systemImage: "link")
+                                                .font(.caption)
+                                        }
+                                    }
+
+                                    Spacer()
+
+                                    if isInsecureConnection {
+                                        Button(action: { showHTTPExplanation = true }) {
+                                            Label("Insecure", systemImage: "lock.open")
+                                                .font(.caption2)
+                                                .fontWeight(.semibold)
+                                                .padding(.vertical, 4)
+                                                .padding(.horizontal, 8)
+                                                .background(Color.orange.opacity(0.2))
+                                                .foregroundColor(.orange)
+                                                .clipShape(Capsule())
+                                        }
+                                        .buttonStyle(.plain)
+                                        .accessibilityLabel("Insecure connection")
                                     }
                                 }
                             }
@@ -88,6 +109,26 @@ struct ArticleReaderView: View {
                     }
                     .textSelection(.enabled)
                 } else if viewModel.readerMode == .safari {
+                    if isInsecureConnection {
+                        HStack {
+                            Button(action: { showHTTPExplanation = true }) {
+                                Label("Insecure", systemImage: "lock.open")
+                                    .font(.caption2)
+                                    .fontWeight(.semibold)
+                                    .padding(.vertical, 4)
+                                    .padding(.horizontal, 8)
+                                    .background(Color.orange.opacity(0.2))
+                                    .foregroundColor(.orange)
+                                    .clipShape(Capsule())
+                            }
+                            .buttonStyle(.plain)
+                            .accessibilityLabel("Insecure connection")
+
+                            Spacer()
+                        }
+                        .padding(.horizontal, 12)
+                        .padding(.bottom, 8)
+                    }
                     SafariReaderView(url: article.url)
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                 }
@@ -103,6 +144,11 @@ struct ArticleReaderView: View {
             Button("OK", role: .cancel) {}
         } message: {
             Text(viewModel.errorMessage ?? "An unknown error occurred")
+        }
+        .alert("Insecure Connection", isPresented: $showHTTPExplanation) {
+            Button("OK", role: .cancel) {}
+        } message: {
+            Text("This article was loaded over an insecure HTTP connection.")
         }
     }
 }
