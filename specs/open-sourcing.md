@@ -652,6 +652,8 @@ This distinction is important: App Review's UGC moderation requirements (reporti
    - No UGC moderation required per App Store guidelines (no indexing/curation)
 3. **In-app disclaimer:** First-launch notice that user is responsible for content they access
 - [ ] Add first-launch disclaimer/onboarding screen (optional but recommended)
+  - branch: `impl/first-launch-disclaimer`
+  - status: `claimed`
 
 ### 2.3.3 UX Placement Specifications
 **HTTP indicator and disclaimer placement (required for ATS justification):**
