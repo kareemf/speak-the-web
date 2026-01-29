@@ -609,6 +609,8 @@ Post-connect validation (iOS URLSession can re-resolve):
   - status: `complete`
 - [ ] Return clear, localized error messages for each rejection reason
 - [ ] Log validation failures for debugging (no PII)
+  - branch: `impl/urlvalidation-logging`
+  - status: `claimed`
 
 **Local network toggle (REMOVED):**
 Reviewer concern: LAN access toggle increases App Review risk. Decision: Do NOT implement LAN toggle. Block all private/local addresses unconditionally.
