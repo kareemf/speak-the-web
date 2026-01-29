@@ -181,9 +181,9 @@ While open-sourcing the code itself has fewer distribution constraints (MIT is G
 ---
 
 ### 1.3 Add CONTRIBUTING.md
-- [ ] Contribution guidelines
-- [ ] Development setup instructions
-- [ ] Code style requirements with **exact pinned versions** for reproducibility:
+- [x] Contribution guidelines
+- [x] Development setup instructions (links to README)
+- [x] Code style requirements with **exact pinned versions** for reproducibility:
   - `swiftformat 0.55.3` — install via `brew install swiftformat` or pin version
   - `swiftlint 0.57.1` — install via `brew install swiftlint` or pin version
   - Config files: `.swiftformat`, `.swiftlint.yml`
@@ -194,34 +194,34 @@ While open-sourcing the code itself has fewer distribution constraints (MIT is G
     # Or with version pinning:
     brew install swiftformat@0.55.3
     ```
-- [ ] Instructions for local signing configuration (see 1.7)
-- [ ] Git hooks setup: `git config core.hooksPath .githooks`
-- [ ] PR process
+- [x] Instructions for local signing configuration (see 1.7)
+- [x] Git hooks setup: `git config core.hooksPath .githooks`
+- [x] PR process
 - [ ] Model checksum verification process (see 2.1.1)
 
 ### 1.4 Fix pre-commit hook bug
-- [ ] File: `.githooks/pre-commit`
-- Search for `CareKeeper.xcodeproj` and replace with `SpeakTheWeb.xcodeproj` (2 occurrences)
+- [x] File: `.githooks/pre-commit`
+- [x] Already uses `SpeakTheWeb.xcodeproj` (no CareKeeper references found)
 
 ### 1.5 Improve README for contributors
-- [ ] Add badges (license, platform, Swift version)
-- [ ] Clarify sherpa-onnx build process
-- [ ] Add section for contributors pointing to CONTRIBUTING.md
-- [ ] Document recommended tool versions
+- [x] Add badges (license, platform, Swift version)
+- [x] Clarify sherpa-onnx build process (already documented)
+- [x] Add section for contributors pointing to CONTRIBUTING.md
+- [x] Document recommended tool versions
 
 ### 1.6 Add CHANGELOG.md
-- [ ] Document version history starting with 1.0
+- [x] Document version history starting with 1.0
 
 ### 1.6.1 Add SECURITY.md (Best Practice)
-- [ ] Create `SECURITY.md` with:
+- [x] Create `SECURITY.md` with:
   - Supported versions table
   - Security vulnerability reporting process (email or GitHub private vulnerability reporting)
   - Expected response timeline
   - Disclosure policy
 
 ### 1.6.2 Add CODE_OF_CONDUCT.md (Best Practice)
-- [ ] Adopt Contributor Covenant or similar
-- [ ] Required if expecting community contributions
+- [x] Adopt Contributor Covenant or similar
+- [x] Required if expecting community contributions
 
 ### 1.6.3 Add Machine-Readable SBOM (Best Practice)
 - [ ] Generate SPDX or CycloneDX format SBOM
@@ -230,9 +230,9 @@ While open-sourcing the code itself has fewer distribution constraints (MIT is G
 - **Rationale:** Compliance audits and supply chain security require machine-readable dependency lists
 
 ### 1.7 Make DEVELOPMENT_TEAM configurable
-- [ ] Remove `DEVELOPMENT_TEAM: 8C7EB23ZZP` from `project.yml` (line 12)
-- [ ] Run `xcodegen generate` to regenerate project without hardcoded team
-- [ ] Document in CONTRIBUTING.md: "Select your development team in Xcode > Signing & Capabilities"
+- [x] Remove `DEVELOPMENT_TEAM: 8C7EB23ZZP` from `project.yml` (already not present)
+- [x] Run `xcodegen generate` to regenerate project without hardcoded team
+- [x] Document in CONTRIBUTING.md: "Select your development team in Xcode > Signing & Capabilities"
 
 **Rationale:** Removing DEVELOPMENT_TEAM lets Xcode's "Automatically manage signing" work correctly. Contributors select their team in Xcode UI, which stores it in their local xcuserdata (already gitignored).
 
@@ -256,7 +256,7 @@ While open-sourcing the code itself has fewer distribution constraints (MIT is G
 ## Part 2: App Store Release Preparation
 
 ### 2.1 Add Privacy Manifest (Required for iOS 17+)
-- [ ] Create `SpeakTheWeb/PrivacyInfo.xcprivacy` file
+- [x] Create `SpeakTheWeb/PrivacyInfo.xcprivacy` file
 - [ ] **Audit app and dependencies for required-reason APIs** (see verification task below)
 
 **Privacy manifest inventory:**
@@ -606,14 +606,14 @@ Post-connect validation (iOS URLSession can re-resolve):
 Reviewer concern: LAN access toggle increases App Review risk. Decision: Do NOT implement LAN toggle. Block all private/local addresses unconditionally.
 
 ### 2.3 Update Privacy Policy
-- [ ] Update `docs/privacy.html` to specify voice model source:
+- [x] Update `docs/privacy.html` to specify voice model source:
   - Models fetched from [k2-fsa/sherpa-onnx](https://github.com/k2-fsa/sherpa-onnx) on GitHub
-- [ ] Add disclosure: GitHub's standard logs may record basic request metadata
-- [ ] Add disclosure for user-provided URLs:
+- [x] Add disclosure: GitHub's standard logs may record basic request metadata
+- [x] Add disclosure for user-provided URLs:
   > When you enter a URL, the app fetches content directly from that website. The website may log your IP address and device information according to its own privacy practices.
 
 ### 2.3.1 Terms of Service / Content Disclaimer
-- [ ] Add Terms of Service (`docs/terms.html`) or disclaimer section in privacy policy
+- [x] Add Terms of Service (`docs/terms.html`) or disclaimer section in privacy policy
 
 **Required disclosures for user-provided URL fetching:**
 > **Content Responsibility:** You are responsible for ensuring you have the right to access content from URLs you provide. The app fetches content directly from websites you specify — we do not curate, filter, or review this content.
@@ -683,14 +683,14 @@ This distinction is important: App Review's UGC moderation requirements (reporti
 
 **App Review Notes (copy to App Store Connect):**
 Save the justification text from section 2.2 in a separate file for easy copy-paste during submission.
-- [ ] Create `docs/app-review-notes.txt` with ATS justification
-- [ ] Include clear statement: "User-provided URLs only, no content curation"
-- [ ] Reference specific security mitigations implemented
+- [x] Create `docs/app-review-notes.txt` with ATS justification
+- [x] Include clear statement: "User-provided URLs only, no content curation"
+- [x] Reference specific security mitigations implemented
 
 **Demo account / test instructions:**
-- [ ] No account needed (state this explicitly in review notes)
-- [ ] Provide sample HTTP URL for testing HTTP confirmation flow
-- [ ] Provide sample article URL that works well for TTS demo
+- [x] No account needed (state this explicitly in review notes)
+- [x] Provide sample HTTP URL for testing HTTP confirmation flow
+- [x] Provide sample article URL that works well for TTS demo
 
 **Privacy Questionnaire (App Privacy "Nutrition Label"):**
 - [ ] Data Types Collected: **None** (select "No" for all categories)
@@ -708,15 +708,15 @@ Save the justification text from section 2.2 in a separate file for easy copy-pa
 
 | Task | File(s) | Priority | Status |
 |------|---------|----------|--------|
-| Create LICENSE file | `/LICENSE` | High | [ ] |
+| Create LICENSE file | `/LICENSE` | High | [x] Done |
 | Create THIRD_PARTY_NOTICES | `/THIRD_PARTY_NOTICES.md` | High | **BLOCKED** (see Release Blockers) |
-| Create CONTRIBUTING.md | `/CONTRIBUTING.md` | High | [ ] |
-| Fix pre-commit hook | `.githooks/pre-commit` | High | [ ] |
-| Remove DEVELOPMENT_TEAM from project.yml | `project.yml` | High | [ ] |
-| Add Privacy Manifest | `SpeakTheWeb/PrivacyInfo.xcprivacy` | High | [ ] |
+| Create CONTRIBUTING.md | `/CONTRIBUTING.md` | High | [x] Done |
+| Fix pre-commit hook | `.githooks/pre-commit` | High | [x] Already correct |
+| Remove DEVELOPMENT_TEAM from project.yml | `project.yml` | High | [x] Already not present |
+| Add Privacy Manifest | `SpeakTheWeb/PrivacyInfo.xcprivacy` | High | [x] Done |
 | Audit required-reason APIs | App + dependencies | High | [ ] |
-| Update privacy policy | `docs/privacy.html` | High | [ ] |
-| Add Terms of Service / disclaimer | `docs/terms.html` | High | [ ] |
+| Update privacy policy | `docs/privacy.html` | High | [x] Done |
+| Add Terms of Service / disclaimer | `docs/terms.html` | High | [x] Done |
 | **Create URLValidator with comprehensive validation** | URL handling code | **High** | [ ] |
 | **Implement HTTPS-first with per-host session-only confirmation** | URL handling code | **High** | [ ] |
 | **Add DNS rebinding protection (pre-fetch + post-connect)** | URL handling code | **High** | [ ] |
@@ -727,12 +727,12 @@ Save the justification text from section 2.2 in a separate file for easy copy-pa
 | **Add model integrity verification (checksum+version+size)** | Model download code | **High** | [ ] |
 | Add HTTP connection indicator | Article view UI | Medium | [ ] |
 | Add first-launch disclaimer | Onboarding UI | Medium | [ ] |
-| Add CHANGELOG | `/CHANGELOG.md` | Medium | [ ] |
-| Update README | `/README.md` | Medium | [ ] |
-| Add SECURITY.md | `/SECURITY.md` | Medium | [ ] |
-| Add CODE_OF_CONDUCT.md | `/CODE_OF_CONDUCT.md` | Low | [ ] |
+| Add CHANGELOG | `/CHANGELOG.md` | Medium | [x] Done |
+| Update README | `/README.md` | Medium | [x] Done |
+| Add SECURITY.md | `/SECURITY.md` | Medium | [x] Done |
+| Add CODE_OF_CONDUCT.md | `/CODE_OF_CONDUCT.md` | Low | [x] Done |
 | Generate SBOM | `sbom/bom.json` | Medium | [ ] |
-| Create app-review-notes.txt | `docs/app-review-notes.txt` | High | [ ] |
+| Create app-review-notes.txt | `docs/app-review-notes.txt` | High | [x] Done |
 | Capture App Review screenshots | Screenshots folder | High | [ ] |
 
 ---
