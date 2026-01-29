@@ -405,6 +405,8 @@ Apple's documentation acknowledges this is acceptable for apps that fetch arbitr
 
 **Required implementation before submission:**
 - [ ] Implement HTTPS-first: Upgrade `http://` to `https://` automatically
+  - branch: `impl/https-first-confirmation`
+  - status: `claimed`
 - [ ] **HTTPS-first policy (DECISION MADE):** ALWAYS attempt HTTPS first, even when user explicitly enters `http://`. This maximizes security without requiring user to know which sites support HTTPS.
   - User enters `http://example.com` → app tries `https://example.com` first
   - If HTTPS succeeds → use secure connection (no prompt needed)
