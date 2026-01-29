@@ -600,6 +600,8 @@ Post-connect validation (iOS URLSession can re-resolve):
   - For IPv6 literals, use `inet_pton(AF_INET6, host, &addr6)`
 - [ ] Handle Share Extension URLs (may include fragments, non-HTTP schemes)
 - [ ] **Share Extension uses same URLValidator** — validation logic is shared, not duplicated
+  - branch: `impl/share-urlvalidator`
+  - status: `claimed`
 
 **Implementation:**
 - [x] Create `URLValidator` class with comprehensive validation
