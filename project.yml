@@ -79,6 +79,7 @@ targets:
       - path: ShareExtension
         excludes:
           - "**/.DS_Store"
+      - path: SpeakTheWeb/Services/URLValidator.swift
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.kareemf.SpeakTheWeb.ShareExtension

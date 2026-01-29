@@ -26,6 +26,7 @@
 		65FA469DFEE54A7D1E544CBF /* URLValidator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80CB44C22D61D54A0773AA8D /* URLValidator.swift */; };
 		66762E9AE5463530B4AACDC5 /* SpeakTheWebShare.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 8CCE8C8F33E80A6ECB23DCEC /* SpeakTheWebShare.appex */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		69844D2E7260DA0B5D95A3F6 /* SherpaOnnxRuntime.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6956CF3BCB8029C413AB4E84 /* SherpaOnnxRuntime.swift */; };
+		73220F0FC0170EB87B254FFB /* URLValidator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80CB44C22D61D54A0773AA8D /* URLValidator.swift */; };
 		84E94CA49565EECFF65848DB /* SherpaModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4061D16324775F7D7A169D2 /* SherpaModel.swift */; };
 		8915EB9DDEAD35D3C1E217E3 /* Article.swift in Sources */ = {isa = PBXBuildFile; fileRef = D40E3C367EBF8FF1AB3225B0 /* Article.swift */; };
 		8C04E929A142746E70DE1B08 /* SherpaOnnx in Frameworks */ = {isa = PBXBuildFile; productRef = D8B0A996DABF442416D8CF40 /* SherpaOnnx */; };
@@ -335,6 +336,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				579ADE9104539EB9822A8105 /* ShareViewController.swift in Sources */,
+				73220F0FC0170EB87B254FFB /* URLValidator.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
