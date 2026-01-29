@@ -657,9 +657,9 @@ This distinction is important: App Review's UGC moderation requirements (reporti
 **HTTP indicator and disclaimer placement (required for ATS justification):**
 
 **HTTP connection indicator:**
-- [ ] Add HTTP connection indicator
+- [x] Add HTTP connection indicator
   - branch: `impl/http-indicator`
-  - status: `claimed`
+  - status: `complete`
 - [ ] Location: In the article header/title area (visible during playback)
 - [ ] Design: Red/orange "Insecure" badge or unlocked padlock icon
 - [ ] Behavior: Tap reveals explanation: "This article was loaded over an insecure HTTP connection"
@@ -741,7 +741,7 @@ Save the justification text from section 2.2 in a separate file for easy copy-pa
 | **Configure ephemeral URLSession (no cookies/credentials)** | Networking code | **High** | [x] |
 | **Share URLValidator with Share Extension** | Extension code | **High** | [x] |
 | **Add model integrity verification (checksum+version+size)** | Model download code | **High** | [ ] |
-| Add HTTP connection indicator | Article view UI | Medium | [ ] |
+| Add HTTP connection indicator | Article view UI | Medium | [x] |
 | Add first-launch disclaimer | Onboarding UI | Medium | [ ] |
 | Add CHANGELOG | `/CHANGELOG.md` | Medium | [x] Done |
 | Update README | `/README.md` | Medium | [x] Done |
