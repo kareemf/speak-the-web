@@ -77,7 +77,7 @@ enum URLValidator {
         let trimmed = urlString.trimmingCharacters(in: .whitespacesAndNewlines)
 
         guard !trimmed.isEmpty else {
-            return .invalid(.emptyURL)
+            return invalid(.emptyURL)
         }
 
         // Check for existing scheme BEFORE adding default
@@ -86,15 +86,15 @@ enum URLValidator {
         if let schemeRange = trimmed.range(of: "://") {
             let existingScheme = String(trimmed[..<schemeRange.lowerBound]).lowercased()
             if !allowedSchemes.contains(existingScheme) {
-                return .invalid(.unsupportedScheme(existingScheme))
+                return invalid(.unsupportedScheme(existingScheme))
             }
         } else if let colonIndex = trimmed.firstIndex(of: ":") {
             let possibleScheme = String(trimmed[..<colonIndex]).lowercased()
             if blockedSchemes.contains(possibleScheme) {
-                return .invalid(.unsupportedScheme(possibleScheme))
+                return invalid(.unsupportedScheme(possibleScheme))
             }
             if allowedSchemes.contains(possibleScheme) {
-                return .invalid(.malformedURL)
+                return invalid(.malformedURL)
             }
             normalizedString = "https://" + normalizedString
         } else {
@@ -105,21 +105,21 @@ enum URLValidator {
         guard let url = URL(string: normalizedString),
               let scheme = url.scheme?.lowercased()
         else {
-            return .invalid(.malformedURL)
+            return invalid(.malformedURL)
         }
 
         // Validate scheme before requiring a host
         if let schemeError = validateScheme(scheme) {
-            return .invalid(schemeError)
+            return invalid(schemeError)
         }
 
         guard let host = url.host else {
-            return .invalid(.malformedURL)
+            return invalid(.malformedURL)
         }
 
         // Check for embedded credentials (user:pass@host)
         if url.user != nil || url.password != nil {
-            return .invalid(.embeddedCredentials)
+            return invalid(.embeddedCredentials)
         }
 
         // Normalize host (lowercase, strip trailing dots)
@@ -127,18 +127,18 @@ enum URLValidator {
 
         // Check for non-ASCII characters (require punycode)
         if !normalizedHost.allSatisfy(\.isASCII) {
-            return .invalid(.nonASCIIHostname)
+            return invalid(.nonASCIIHostname)
         }
 
         // Validate hostname patterns
         if let hostError = validateHostname(normalizedHost) {
-            return .invalid(hostError)
+            return invalid(hostError)
         }
 
         // Check if host is an IP literal
         if isIPAddress(normalizedHost) {
             if let ipError = validateIPAddress(normalizedHost) {
-                return .invalid(ipError)
+                return invalid(ipError)
             }
         }
 
@@ -148,7 +148,7 @@ enum URLValidator {
         components?.host = normalizedHost
 
         guard let finalURL = components?.url else {
-            return .invalid(.malformedURL)
+            return invalid(.malformedURL)
         }
 
         // HTTP requires user confirmation
@@ -157,6 +157,35 @@ enum URLValidator {
         }
 
         return .valid(finalURL)
+    }
+
+    private static func invalid(_ error: ValidationError) -> ValidationResult {
+        logFailure(error)
+        return .invalid(error)
+    }
+
+    private static func logFailure(_ error: ValidationError) {
+        #if DEBUG
+            let reason = switch error {
+            case .emptyURL:
+                "emptyURL"
+            case .malformedURL:
+                "malformedURL"
+            case .unsupportedScheme:
+                "unsupportedScheme"
+            case .blockedHost:
+                "blockedHost"
+            case .blockedIPAddress:
+                "blockedIPAddress"
+            case .embeddedCredentials:
+                "embeddedCredentials"
+            case .nonASCIIHostname:
+                "nonASCIIHostname"
+            case .invalidIPFormat:
+                "invalidIPFormat"
+            }
+            print("[URLValidator] Validation failed: \(reason)")
+        #endif
     }
 
     // MARK: - Scheme Validation
