@@ -208,6 +208,11 @@ class ReaderViewModel: ObservableObject {
                 return
             }
 
+            if pendingHTTPConfirmation != nil {
+                isLoading = false
+                return
+            }
+
             isLoading = false
             pendingHTTPConfirmation = HTTPConfirmation(url: url, host: host)
         }
@@ -403,7 +408,18 @@ class ReaderViewModel: ObservableObject {
 
     private func tryFetchArticle(from url: URL) async -> Article? {
         do {
-            return try await contentExtractor.extract(from: url)
+            return try await contentExtractor.extract(
+                from: url,
+                allowedHTTPHosts: confirmedHTTPHosts
+            )
+        } catch let error as ContentExtractor.ExtractionError {
+            switch error {
+            case let .requiresHTTPConfirmation(redirectURL, host):
+                pendingHTTPConfirmation = HTTPConfirmation(url: redirectURL, host: host)
+            default:
+                break
+            }
+            return nil
         } catch {
             return nil
         }
@@ -412,8 +428,18 @@ class ReaderViewModel: ObservableObject {
     private func fetchArticle(from url: URL) async {
         defer { isLoading = false }
         do {
-            let extractedArticle = try await contentExtractor.extract(from: url)
+            let extractedArticle = try await contentExtractor.extract(
+                from: url,
+                allowedHTTPHosts: confirmedHTTPHosts
+            )
             applyExtractedArticle(extractedArticle)
+        } catch let error as ContentExtractor.ExtractionError {
+            switch error {
+            case let .requiresHTTPConfirmation(url, host):
+                pendingHTTPConfirmation = HTTPConfirmation(url: url, host: host)
+            default:
+                presentError(error.localizedDescription)
+            }
         } catch {
             presentError(error.localizedDescription)
         }
