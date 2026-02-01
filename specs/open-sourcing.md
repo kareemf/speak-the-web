@@ -744,9 +744,9 @@ Save the justification text from section 2.2 in a separate file for easy copy-pa
 | **Handle IP literals (IPv4, IPv6, mapped, non-standard forms)** | URL handling code | **High** | [ ] |
 | **Configure ephemeral URLSession (no cookies/credentials)** | Networking code | **High** | [x] |
 | **Share URLValidator with Share Extension** | Extension code | **High** | [x] |
-| **Add model integrity verification (checksum+version+size)** | Model download code | **High** | [ ] |
+| **Add model integrity verification (checksum+version+size)** | Model download code | **High** | [x] |
   - branch: `impl/model-integrity-verification`
-  - status: `claimed`
+  - status: `complete`
 | Add HTTP connection indicator | Article view UI | Medium | [x] |
 | Add first-launch disclaimer | Onboarding UI | Medium | [x] |
 | Add CHANGELOG | `/CHANGELOG.md` | Medium | [x] Done |
