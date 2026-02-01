@@ -79,7 +79,7 @@ private struct SherpaModelRow: View {
 
     private var isBusy: Bool {
         switch store.downloadState(for: model) {
-        case .downloading, .processing:
+        case .downloading, .verifying, .processing:
             true
         case .idle, .failed:
             false
@@ -108,6 +108,9 @@ private struct SherpaModelRow: View {
             case let .downloading(progress):
                 ProgressView(value: progress)
                     .progressViewStyle(.linear)
+            case .verifying:
+                ProgressView("Verifying integrity…")
+                    .font(.caption)
             case .processing:
                 ProgressView("Processing…")
                     .font(.caption)

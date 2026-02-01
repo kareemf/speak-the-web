@@ -5,6 +5,7 @@ final class SherpaOnnxModelStore: NSObject, ObservableObject {
     enum DownloadState: Equatable {
         case idle
         case downloading(progress: Double)
+        case verifying
         case processing
         case failed(message: String)
     }
@@ -208,6 +209,35 @@ final class SherpaOnnxModelStore: NSObject, ObservableObject {
     private func completeDownload(for model: SherpaModel, archiveURL: URL) {
         Task.detached(priority: .userInitiated) {
             do {
+                // Verify model integrity before extraction
+                await MainActor.run {
+                    self.downloadStates[model.id] = .verifying
+                }
+
+                let verificationResult = ModelManifest.verify(archiveAt: archiveURL, modelId: model.id)
+
+                switch verificationResult {
+                case .verified:
+                    break // Continue with extraction
+                case .unknownModel:
+                    // Allow unknown models in development, warn but proceed
+                    #if DEBUG
+                        print(
+                            "[SherpaOnnxModelStore] WARNING: Model '\(model.id)' not in manifest, proceeding anyway (DEBUG mode)"
+                        )
+                    #else
+                        throw ModelStoreError.verificationFailed(verificationResult.errorDescription ?? "Unknown model")
+                    #endif
+                case .checksumMismatch, .sizeMismatch, .fileReadError:
+                    // Delete the corrupted/tampered archive immediately
+                    try? self.fileManager.removeItem(at: archiveURL)
+                    throw ModelStoreError.verificationFailed(verificationResult.errorDescription ?? "Verification failed")
+                }
+
+                await MainActor.run {
+                    self.downloadStates[model.id] = .processing
+                }
+
                 let record = try self.extractArchive(for: model, archiveURL: archiveURL)
                 try? self.fileManager.removeItem(at: archiveURL)
 
@@ -217,6 +247,9 @@ final class SherpaOnnxModelStore: NSObject, ObservableObject {
                     self.persistRegistry()
                 }
             } catch {
+                // Clean up on any failure
+                try? self.fileManager.removeItem(at: archiveURL)
+
                 await MainActor.run {
                     self.downloadStates[model.id] = .failed(message: error.localizedDescription)
                     self.errorMessage = error.localizedDescription
@@ -465,6 +498,7 @@ private struct ModelRegistry: Codable {
 private enum ModelStoreError: LocalizedError {
     case missingModelFiles
     case invalidArchiveEntry
+    case verificationFailed(String)
 
     var errorDescription: String? {
         switch self {
@@ -472,6 +506,8 @@ private enum ModelStoreError: LocalizedError {
             "Downloaded model is missing required files."
         case .invalidArchiveEntry:
             "Downloaded model archive contains an invalid entry."
+        case let .verificationFailed(reason):
+            reason
         }
     }
 }
