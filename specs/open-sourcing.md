@@ -472,12 +472,12 @@ Mitigations demonstrated in code and UI:
 > - Content is text-only extraction for TTS playback
 
 ### 2.2.2 HTML Parsing Security
-- [ ] **Use non-executing HTML parser** (e.g., SwiftSoup, libxml2) — NOT WKWebView
+- [x] **Use non-executing HTML parser** (e.g., SwiftSoup, libxml2) — NOT WKWebView
   - branch: `impl/html-parsing-security`
-  - status: `claimed`
-- [ ] Extract text content only; do not evaluate scripts or load remote resources
-- [ ] Sanitize extracted text: strip any remaining HTML entities, null bytes, or control characters
-- [ ] Document parser choice in code comments for security audit
+  - status: `complete`
+- [x] Extract text content only; do not evaluate scripts or load remote resources
+- [x] Sanitize extracted text: strip any remaining HTML entities, null bytes, or control characters
+- [x] Document parser choice in code comments for security audit
 
 **⚠️ No subresource fetching (explicit policy):**
 - [ ] **Do NOT fetch any URLs found in HTML** — no images, stylesheets, scripts, iframes, fonts, etc.
