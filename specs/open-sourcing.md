@@ -651,9 +651,9 @@ This distinction is important: App Review's UGC moderation requirements (reporti
    - App is a "reader" not a "browser" — renders text only, no scripts/images
    - No UGC moderation required per App Store guidelines (no indexing/curation)
 3. **In-app disclaimer:** First-launch notice that user is responsible for content they access
-- [ ] Add first-launch disclaimer/onboarding screen (optional but recommended)
+- [x] Add first-launch disclaimer/onboarding screen (optional but recommended)
   - branch: `impl/first-launch-disclaimer`
-  - status: `claimed`
+  - status: `complete`
 
 ### 2.3.3 UX Placement Specifications
 **HTTP indicator and disclaimer placement (required for ATS justification):**
@@ -744,7 +744,7 @@ Save the justification text from section 2.2 in a separate file for easy copy-pa
 | **Share URLValidator with Share Extension** | Extension code | **High** | [x] |
 | **Add model integrity verification (checksum+version+size)** | Model download code | **High** | [ ] |
 | Add HTTP connection indicator | Article view UI | Medium | [x] |
-| Add first-launch disclaimer | Onboarding UI | Medium | [ ] |
+| Add first-launch disclaimer | Onboarding UI | Medium | [x] |
 | Add CHANGELOG | `/CHANGELOG.md` | Medium | [x] Done |
 | Update README | `/README.md` | Medium | [x] Done |
 | Add SECURITY.md | `/SECURITY.md` | Medium | [x] Done |
