@@ -9,200 +9,244 @@ struct HomeView: View {
     @AppStorage("hasAcceptedDisclaimer") private var hasAcceptedDisclaimer = false
 
     var body: some View {
-        let canFetchWithDisclaimer = viewModel.canFetch && hasAcceptedDisclaimer
+        mainList
+            .scrollDismissesKeyboard(.interactively)
+            .listStyle(.plain)
+            .alert("Delete this recent article?", isPresented: deleteAlertBinding) {
+                Button("Delete", role: .destructive) {
+                    if let recent = pendingDelete {
+                        viewModel.removeRecentArticle(recent)
+                    }
+                    pendingDelete = nil
+                }
+                Button("Cancel", role: .cancel) {
+                    pendingDelete = nil
+                }
+            } message: {
+                Text("This also removes the cached article data.")
+            }
+            .alert("Clear all recent articles?", isPresented: $showClearConfirmation) {
+                Button("Clear", role: .destructive) {
+                    viewModel.clearRecentArticles()
+                }
+                Button("Cancel", role: .cancel) {}
+            } message: {
+                Text("This also removes all cached article data.")
+            }
+            .alert(
+                "Allow HTTP for this site?",
+                isPresented: httpConfirmationBinding,
+                presenting: viewModel.pendingHTTPConfirmation
+            ) { _ in
+                Button("Allow HTTP") {
+                    viewModel.confirmHTTPAccess()
+                }
+                Button("Cancel", role: .cancel) {
+                    viewModel.cancelHTTPAccess()
+                }
+            } message: { confirmation in
+                Text("We couldn't load the HTTPS version of \(confirmation.host). Allow a one-time HTTP connection?")
+            }
+            .alert("Error", isPresented: errorAlertBinding) {
+                Button("OK", role: .cancel) {}
+            } message: {
+                Text(viewModel.errorMessage ?? "An unknown error occurred")
+            }
+    }
 
+    // MARK: - Computed Properties
+
+    private var canFetchWithDisclaimer: Bool {
+        viewModel.canFetch && hasAcceptedDisclaimer
+    }
+
+    private var deleteAlertBinding: Binding<Bool> {
+        Binding(
+            get: { pendingDelete != nil },
+            set: { if !$0 { pendingDelete = nil } }
+        )
+    }
+
+    private var errorAlertBinding: Binding<Bool> {
+        Binding(
+            get: { viewModel.showError && !viewModel.showArticle },
+            set: { if !$0 { viewModel.showError = false } }
+        )
+    }
+
+    private var httpConfirmationBinding: Binding<Bool> {
+        Binding(
+            get: { viewModel.pendingHTTPConfirmation != nil },
+            set: { if !$0 { viewModel.cancelHTTPAccess() } }
+        )
+    }
+
+    // MARK: - Main List
+
+    private var mainList: some View {
         List {
-            Section {
-                // Compact header
-                HStack(spacing: 12) {
-                    Image(systemName: "doc.text.magnifyingglass")
-                        .font(.system(size: 28))
-                        .foregroundColor(.accentColor)
+            headerSection
+            disclaimerSection
+            urlInputSection
+            fetchButtonSection
+            recentArticlesSection
+        }
+    }
 
-                    VStack(alignment: .leading, spacing: 2) {
-                        Text("Read Article Aloud")
-                            .font(.title3)
-                            .fontWeight(.bold)
-                    }
+    // MARK: - Sections
 
-                    Spacer()
+    private var headerSection: some View {
+        Section {
+            HStack(spacing: 12) {
+                Image(systemName: "doc.text.magnifyingglass")
+                    .font(.system(size: 28))
+                    .foregroundColor(.accentColor)
+
+                VStack(alignment: .leading, spacing: 2) {
+                    Text("Read Article Aloud")
+                        .font(.title3)
+                        .fontWeight(.bold)
                 }
+
+                Spacer()
             }
-            .listRowBackground(Color.clear)
-            .listRowSeparator(.hidden)
-            .listRowInsets(EdgeInsets(top: 8, leading: 16, bottom: 8, trailing: 16))
+        }
+        .listRowBackground(Color.clear)
+        .listRowSeparator(.hidden)
+        .listRowInsets(EdgeInsets(top: 8, leading: 16, bottom: 8, trailing: 16))
+    }
 
-            Section {
-                if !hasAcceptedDisclaimer {
-                    VStack(alignment: .leading, spacing: 12) {
-                        Text("One-time notice")
-                            .font(.caption)
-                            .foregroundColor(.secondary)
-                            .textCase(.uppercase)
-
-                        Text("You control what content this app reads. You are responsible for the URLs you provide.")
-                            .font(.subheadline)
-                            .foregroundColor(.primary)
-
-                        Button(action: { hasAcceptedDisclaimer = true }) {
-                            Text("I understand")
-                                .fontWeight(.semibold)
-                                .frame(maxWidth: .infinity)
-                                .padding(.vertical, 10)
-                                .background(Color.accentColor)
-                                .foregroundColor(.white)
-                                .cornerRadius(10)
-                        }
-                        .buttonStyle(.plain)
-                    }
-                    .padding()
-                    .background(Color(UIColor.secondarySystemGroupedBackground))
-                    .cornerRadius(12)
-                }
-            }
-            .listRowBackground(Color.clear)
-            .listRowSeparator(.hidden)
-            .listRowInsets(EdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 16))
-
-            Section {
-                // URL Input
-                HStack {
-                    Image(systemName: "link")
+    private var disclaimerSection: some View {
+        Section {
+            if !hasAcceptedDisclaimer {
+                VStack(alignment: .leading, spacing: 12) {
+                    Text("One-time notice")
+                        .font(.caption)
                         .foregroundColor(.secondary)
+                        .textCase(.uppercase)
 
-                    TextField("Enter URL", text: $viewModel.urlInput)
-                        .textFieldStyle(.plain)
-                        .keyboardType(.URL)
-                        .textInputAutocapitalization(.never)
-                        .autocorrectionDisabled()
-                        .focused($isURLFieldFocused)
-                        .submitLabel(.go)
-                        .onSubmit {
-                            guard hasAcceptedDisclaimer else { return }
-                            Task { await viewModel.fetchContent() }
-                        }
+                    Text("You control what content this app reads. You are responsible for the URLs you provide.")
+                        .font(.subheadline)
+                        .foregroundColor(.primary)
 
-                    if !viewModel.urlInput.isEmpty {
-                        Button(action: { viewModel.urlInput = "" }) {
-                            Image(systemName: "xmark.circle.fill")
-                                .foregroundColor(.secondary)
-                        }
+                    Button(action: { hasAcceptedDisclaimer = true }) {
+                        Text("I understand")
+                            .fontWeight(.semibold)
+                            .frame(maxWidth: .infinity)
+                            .padding(.vertical, 10)
+                            .background(Color.accentColor)
+                            .foregroundColor(.white)
+                            .cornerRadius(10)
                     }
+                    .buttonStyle(.plain)
                 }
                 .padding()
                 .background(Color(UIColor.secondarySystemGroupedBackground))
                 .cornerRadius(12)
-                .contentShape(Rectangle())
             }
-            .listRowBackground(Color.clear)
-            .listRowSeparator(.hidden)
-            .listRowInsets(EdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 16))
+        }
+        .listRowBackground(Color.clear)
+        .listRowSeparator(.hidden)
+        .listRowInsets(EdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 16))
+    }
 
-            Section {
-                // Fetch button
-                Button(action: {
-                    isURLFieldFocused = false
-                    guard hasAcceptedDisclaimer else { return }
-                    Task { await viewModel.fetchContent() }
-                }) {
-                    HStack {
-                        if viewModel.isLoading {
-                            ProgressView()
-                                .progressViewStyle(CircularProgressViewStyle(tint: .white))
-                        } else {
-                            Image(systemName: "arrow.down.doc")
-                        }
-                        Text(viewModel.isLoading ? "Loading..." : "Fetch Article")
+    private var urlInputSection: some View {
+        Section {
+            HStack {
+                Image(systemName: "link")
+                    .foregroundColor(.secondary)
+
+                TextField("Enter URL", text: $viewModel.urlInput)
+                    .textFieldStyle(.plain)
+                    .keyboardType(.URL)
+                    .textInputAutocapitalization(.never)
+                    .autocorrectionDisabled()
+                    .focused($isURLFieldFocused)
+                    .submitLabel(.go)
+                    .onSubmit {
+                        guard hasAcceptedDisclaimer else { return }
+                        Task { await viewModel.fetchContent() }
                     }
-                    .frame(maxWidth: .infinity)
-                    .padding()
-                    .background(canFetchWithDisclaimer ? Color.accentColor : Color.gray)
-                    .foregroundColor(.white)
-                    .cornerRadius(12)
-                }
-                .buttonStyle(.plain)
-                .disabled(!canFetchWithDisclaimer)
-            }
-            .listRowBackground(Color.clear)
-            .listRowSeparator(.hidden)
-            .listRowInsets(EdgeInsets(top: 8, leading: 16, bottom: 0, trailing: 16))
 
-            Section(header: recentHeader) {
-                if viewModel.recentArticles.isEmpty {
-                    Text("Recent articles will appear here as you listen.")
-                        .font(.footnote)
-                        .foregroundColor(.secondary)
-                        .padding(.vertical, 8)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .listRowBackground(Color.clear)
-                        .listRowSeparator(.hidden)
-                } else {
-                    ForEach(viewModel.recentArticles) { recent in
-                        RecentArticleRow(
-                            article: recent,
-                            progress: viewModel.recentProgress(for: recent),
-                            remainingText: viewModel.recentRemainingText(for: recent),
-                            cachedLabel: viewModel.recentCachedAudioLabel(for: recent)
-                        ) {
-                            viewModel.loadRecentArticle(recent)
-                        }
-                        .swipeActions(edge: .trailing) {
-                            Button(role: .destructive) {
-                                pendingDelete = recent
-                            } label: {
-                                Label("Delete", systemImage: "trash")
-                            }
-                        }
-                        .listRowBackground(Color.clear)
-                        .listRowSeparator(.hidden)
-                        .listRowInsets(EdgeInsets(top: 4, leading: 16, bottom: 4, trailing: 16))
+                if !viewModel.urlInput.isEmpty {
+                    Button(action: { viewModel.urlInput = "" }) {
+                        Image(systemName: "xmark.circle.fill")
+                            .foregroundColor(.secondary)
                     }
                 }
             }
+            .padding()
+            .background(Color(UIColor.secondarySystemGroupedBackground))
+            .cornerRadius(12)
+            .contentShape(Rectangle())
         }
-        .scrollDismissesKeyboard(.interactively)
-        .listStyle(.plain)
-        .alert("Delete this recent article?", isPresented: Binding(
-            get: { pendingDelete != nil },
-            set: { if !$0 { pendingDelete = nil } }
-        )) {
-            Button("Delete", role: .destructive) {
-                if let recent = pendingDelete {
-                    viewModel.removeRecentArticle(recent)
+        .listRowBackground(Color.clear)
+        .listRowSeparator(.hidden)
+        .listRowInsets(EdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 16))
+    }
+
+    private var fetchButtonSection: some View {
+        Section {
+            Button(action: {
+                isURLFieldFocused = false
+                guard hasAcceptedDisclaimer else { return }
+                Task { await viewModel.fetchContent() }
+            }) {
+                HStack {
+                    if viewModel.isLoading {
+                        ProgressView()
+                            .progressViewStyle(CircularProgressViewStyle(tint: .white))
+                    } else {
+                        Image(systemName: "arrow.down.doc")
+                    }
+                    Text(viewModel.isLoading ? "Loading..." : "Fetch Article")
                 }
-                pendingDelete = nil
+                .frame(maxWidth: .infinity)
+                .padding()
+                .background(canFetchWithDisclaimer ? Color.accentColor : Color.gray)
+                .foregroundColor(.white)
+                .cornerRadius(12)
             }
-            Button("Cancel", role: .cancel) {
-                pendingDelete = nil
-            }
-        } message: {
-            Text("This also removes the cached article data.")
+            .buttonStyle(.plain)
+            .disabled(!canFetchWithDisclaimer)
         }
-        .alert("Clear all recent articles?", isPresented: $showClearConfirmation) {
-            Button("Clear", role: .destructive) {
-                viewModel.clearRecentArticles()
+        .listRowBackground(Color.clear)
+        .listRowSeparator(.hidden)
+        .listRowInsets(EdgeInsets(top: 8, leading: 16, bottom: 0, trailing: 16))
+    }
+
+    private var recentArticlesSection: some View {
+        Section(header: recentHeader) {
+            if viewModel.recentArticles.isEmpty {
+                Text("Recent articles will appear here as you listen.")
+                    .font(.footnote)
+                    .foregroundColor(.secondary)
+                    .padding(.vertical, 8)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .listRowBackground(Color.clear)
+                    .listRowSeparator(.hidden)
+            } else {
+                ForEach(viewModel.recentArticles) { recent in
+                    RecentArticleRow(
+                        article: recent,
+                        progress: viewModel.recentProgress(for: recent),
+                        remainingText: viewModel.recentRemainingText(for: recent),
+                        cachedLabel: viewModel.recentCachedAudioLabel(for: recent)
+                    ) {
+                        viewModel.loadRecentArticle(recent)
+                    }
+                    .swipeActions(edge: .trailing) {
+                        Button(role: .destructive) {
+                            pendingDelete = recent
+                        } label: {
+                            Label("Delete", systemImage: "trash")
+                        }
+                    }
+                    .listRowBackground(Color.clear)
+                    .listRowSeparator(.hidden)
+                    .listRowInsets(EdgeInsets(top: 4, leading: 16, bottom: 4, trailing: 16))
+                }
             }
-            Button("Cancel", role: .cancel) {}
-        } message: {
-            Text("This also removes all cached article data.")
-        }
-        .alert("Allow HTTP for this site?", item: $viewModel.pendingHTTPConfirmation) { _ in
-            Button("Allow HTTP") {
-                viewModel.confirmHTTPAccess()
-            }
-            Button("Cancel", role: .cancel) {
-                viewModel.cancelHTTPAccess()
-            }
-        } message: { confirmation in
-            Text("We couldn't load the HTTPS version of \(confirmation.host). Allow a one-time HTTP connection?")
-        }
-        .alert("Error", isPresented: Binding(
-            get: { viewModel.showError && !viewModel.showArticle },
-            set: { if !$0 { viewModel.showError = false } }
-        )) {
-            Button("OK", role: .cancel) {}
-        } message: {
-            Text(viewModel.errorMessage ?? "An unknown error occurred")
         }
     }
 

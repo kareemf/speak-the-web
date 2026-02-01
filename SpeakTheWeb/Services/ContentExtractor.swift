@@ -130,14 +130,15 @@ final class ContentExtractor: NSObject {
         initialScheme: String
     ) async throws -> (Data, URLResponse) {
         try await withCheckedThrowingContinuation { continuation in
-            let task = session.dataTask(with: request) { [weak self] data, response, error in
-                guard let self else { return }
-                let taskId = task.taskIdentifier
+            var taskId: Int?
 
-                let redirectError = redirectQueue.sync { redirectErrors[taskId] }
-                redirectQueue.sync {
-                    redirectContexts[taskId] = nil
-                    redirectErrors[taskId] = nil
+            let task = session.dataTask(with: request) { [weak self] data, response, error in
+                guard let self, let taskId else { return }
+
+                let redirectError = self.redirectQueue.sync { self.redirectErrors[taskId] }
+                self.redirectQueue.sync {
+                    self.redirectContexts[taskId] = nil
+                    self.redirectErrors[taskId] = nil
                 }
 
                 if let redirectError {
@@ -158,9 +159,9 @@ final class ContentExtractor: NSObject {
                 continuation.resume(returning: (data, response))
             }
 
-            let taskId = task.taskIdentifier
+            taskId = task.taskIdentifier
             redirectQueue.sync {
-                redirectContexts[taskId] = RedirectContext(
+                self.redirectContexts[task.taskIdentifier] = RedirectContext(
                     allowedHTTPHosts: allowedHTTPHosts,
                     redirectCount: 0,
                     initialScheme: initialScheme
