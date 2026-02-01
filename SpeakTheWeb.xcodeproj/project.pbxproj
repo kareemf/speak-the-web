@@ -37,6 +37,7 @@
 		ABF7DC44368D8FB048EBD1DF /* SherpaModelsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 918B3EE513F0A20DFCB8280E /* SherpaModelsView.swift */; };
 		C02EA803A7B4255113175CB8 /* SpeechService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D1B71C12FF5D14644E61FAE /* SpeechService.swift */; };
 		C0B890D9854F05CEE98F9ED4 /* PlaybackControlsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDDE002C2E77C454906A9D6D /* PlaybackControlsView.swift */; };
+		C0C1B5D4A3E787417C45B00F /* DNSResolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = D315FDFC8296A469F7D8C6D5 /* DNSResolver.swift */; };
 		C703B16594C1F4A60D0A51D7 /* TableOfContentsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 188A1DEB852AE33DDA1AA735 /* TableOfContentsView.swift */; };
 		E6885D6C72D004D198F0D81B /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4889E3311B7A665FA0E43E16 /* SettingsView.swift */; };
 		EB8ACE06F55E3DBF14179166 /* SpeechEngineType.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1AFE4DA6CC1BB66D5999D17 /* SpeechEngineType.swift */; };
@@ -98,6 +99,7 @@
 		C051573CD1DDA5D6DEFC98FC /* SpeakTheWeb.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = SpeakTheWeb.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CE566AF4966498534C7D3317 /* SherpaSpeechService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SherpaSpeechService.swift; sourceTree = "<group>"; };
 		CE6084C9E598F69CA59857C8 /* AudioSessionCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioSessionCoordinator.swift; sourceTree = "<group>"; };
+		D315FDFC8296A469F7D8C6D5 /* DNSResolver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DNSResolver.swift; sourceTree = "<group>"; };
 		D40E3C367EBF8FF1AB3225B0 /* Article.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Article.swift; sourceTree = "<group>"; };
 		D8F897B93183D77656891261 /* ShareExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ShareExtension.entitlements; sourceTree = "<group>"; };
 		DE921CA5016B762D3D79337E /* ReaderMode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReaderMode.swift; sourceTree = "<group>"; };
@@ -182,6 +184,7 @@
 			children = (
 				CE6084C9E598F69CA59857C8 /* AudioSessionCoordinator.swift */,
 				A49DC65753869F97766A19CB /* ContentExtractor.swift */,
+				D315FDFC8296A469F7D8C6D5 /* DNSResolver.swift */,
 				E2F902F6CBDFDD3BA8317361 /* MediaPlaybackController.swift */,
 				331B18951CAAA22CC2B17DE8 /* NowPlayingManager.swift */,
 				FA6AA8C6CD5FF5EB8A1E12CE /* SherpaAudioCache.swift */,
@@ -349,6 +352,7 @@
 				6117427F8AC43D33D638455B /* AudioSessionCoordinator.swift in Sources */,
 				FC51A254916016F722B989D5 /* ContentExtractor.swift in Sources */,
 				FD5BFA294134354A65B77EDF /* ContentView.swift in Sources */,
+				C0C1B5D4A3E787417C45B00F /* DNSResolver.swift in Sources */,
 				36C99EA4DF5756C0B84EAE98 /* HelpView.swift in Sources */,
 				15964553BCF2D9BAAE5AC926 /* HomeView.swift in Sources */,
 				0E035DC2E40758D0169101F9 /* MediaPlaybackController.swift in Sources */,

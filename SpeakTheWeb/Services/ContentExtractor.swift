@@ -1,6 +1,14 @@
 import Foundation
 
-/// Service for extracting readable content from URLs
+/// Service for extracting readable content from URLs.
+///
+/// Security design:
+/// - Uses non-executing regex-based HTML parser (NOT WKWebView)
+/// - Extracts text content only; does not evaluate scripts or load remote resources
+/// - Does NOT fetch any URLs found in HTML (images, stylesheets, scripts, iframes, etc.)
+/// - Does NOT resolve relative URLs in parsed content
+/// - Does NOT follow canonical/refresh meta tags
+/// - All src, href, srcset attributes are ignored during parsing
 final class ContentExtractor: NSObject {
     private struct RedirectContext {
         var allowedHTTPHosts: Set<String>
@@ -30,6 +38,10 @@ final class ContentExtractor: NSObject {
         case requiresHTTPConfirmation(URL, host: String)
         case redirectBlocked(String)
         case redirectLoop
+        case dnsResolutionFailed(String)
+        case allIPsBlocked(String)
+        case postConnectIPBlocked(String)
+        case connectionVerificationFailed
 
         var errorDescription: String? {
             switch self {
@@ -47,6 +59,14 @@ final class ContentExtractor: NSObject {
                 "Redirect blocked: \(reason)"
             case .redirectLoop:
                 "Too many redirects"
+            case let .dnsResolutionFailed(message):
+                message
+            case let .allIPsBlocked(host):
+                "Cannot access '\(host)'. All resolved addresses are in blocked ranges."
+            case let .postConnectIPBlocked(ip):
+                "Connection blocked: '\(ip)' is a private or reserved address."
+            case .connectionVerificationFailed:
+                "Unable to verify connection security. If you're using a VPN or proxy, try disabling it temporarily to load this article."
             }
         }
     }
@@ -69,6 +89,21 @@ final class ContentExtractor: NSObject {
     /// Extracts article content from a URL
     func extract(from url: URL, allowedHTTPHosts: Set<String> = []) async throws -> Article {
         let initialScheme = url.scheme?.lowercased() ?? "https"
+
+        // Pre-fetch DNS validation (DNS rebinding protection)
+        if let host = url.host {
+            let dnsResult = await DNSResolver.resolve(host)
+            switch dnsResult {
+            case .resolved:
+                // At least one public IP found - proceed with fetch
+                break
+            case .allBlocked:
+                throw ExtractionError.allIPsBlocked(host)
+            case let .failed(error):
+                throw ExtractionError.dnsResolutionFailed(error.localizedDescription)
+            }
+        }
+
         let request = URLRequest(url: url)
 
         // Fetch HTML content
@@ -135,8 +170,8 @@ final class ContentExtractor: NSObject {
             let task = session.dataTask(with: request) { [weak self] data, response, error in
                 guard let self, let taskId else { return }
 
-                let redirectError = self.redirectQueue.sync { self.redirectErrors[taskId] }
-                self.redirectQueue.sync {
+                let redirectError = redirectQueue.sync { self.redirectErrors[taskId] }
+                redirectQueue.sync {
                     self.redirectContexts[taskId] = nil
                     self.redirectErrors[taskId] = nil
                 }
@@ -460,6 +495,50 @@ extension ContentExtractor: URLSessionTaskDelegate {
             redirectQueue.sync { redirectContexts[task.taskIdentifier] = context }
         }
 
+        // Perform DNS validation for redirect target
+        if let host = redirectURL.host {
+            Task {
+                let dnsResult = await DNSResolver.resolve(host)
+                switch dnsResult {
+                case .resolved:
+                    // Continue with URL validation
+                    self.validateAndCompleteRedirect(
+                        request: request,
+                        redirectURL: redirectURL,
+                        existingContext: existingContext,
+                        taskIdentifier: task.taskIdentifier,
+                        completionHandler: completionHandler
+                    )
+                case .allBlocked:
+                    self.redirectQueue.sync {
+                        self.redirectErrors[task.taskIdentifier] = .allIPsBlocked(host)
+                    }
+                    completionHandler(nil)
+                case let .failed(error):
+                    self.redirectQueue.sync {
+                        self.redirectErrors[task.taskIdentifier] = .dnsResolutionFailed(error.localizedDescription)
+                    }
+                    completionHandler(nil)
+                }
+            }
+        } else {
+            validateAndCompleteRedirect(
+                request: request,
+                redirectURL: redirectURL,
+                existingContext: existingContext,
+                taskIdentifier: task.taskIdentifier,
+                completionHandler: completionHandler
+            )
+        }
+    }
+
+    private func validateAndCompleteRedirect(
+        request: URLRequest,
+        redirectURL: URL,
+        existingContext: RedirectContext,
+        taskIdentifier: Int,
+        completionHandler: @escaping (URLRequest?) -> Void
+    ) {
         switch URLValidator.validate(redirectURL.absoluteString) {
         case let .valid(validURL):
             if let scheme = validURL.scheme?.lowercased(),
@@ -469,7 +548,7 @@ extension ContentExtractor: URLSessionTaskDelegate {
                existingContext.initialScheme == "https"
             {
                 redirectQueue.sync {
-                    redirectErrors[task.taskIdentifier] = .requiresHTTPConfirmation(validURL, host: host)
+                    redirectErrors[taskIdentifier] = .requiresHTTPConfirmation(validURL, host: host)
                 }
                 completionHandler(nil)
                 return
@@ -485,15 +564,80 @@ extension ContentExtractor: URLSessionTaskDelegate {
                 completionHandler(updatedRequest)
             } else {
                 redirectQueue.sync {
-                    redirectErrors[task.taskIdentifier] = .requiresHTTPConfirmation(url, host: host)
+                    redirectErrors[taskIdentifier] = .requiresHTTPConfirmation(url, host: host)
                 }
                 completionHandler(nil)
             }
         case let .invalid(error):
             redirectQueue.sync {
-                redirectErrors[task.taskIdentifier] = .redirectBlocked(error.localizedDescription)
+                redirectErrors[taskIdentifier] = .redirectBlocked(error.localizedDescription)
             }
             completionHandler(nil)
         }
+    }
+
+    func urlSession(
+        _: URLSession,
+        task: URLSessionTask,
+        didFinishCollecting metrics: URLSessionTaskMetrics
+    ) {
+        // Post-connect IP validation using transaction metrics
+        // This catches DNS rebinding attacks where the actual connected IP differs from resolved IP
+        for transaction in metrics.transactionMetrics {
+            guard let remoteAddress = transaction.remoteAddress else {
+                // Fail-closed: If we can't verify the IP, record an error
+                // This may indicate VPN/proxy usage
+                #if DEBUG
+                    print("[ContentExtractor] Post-connect validation: remoteAddress is nil (possible VPN/proxy)")
+                #endif
+                redirectQueue.sync {
+                    self.redirectErrors[task.taskIdentifier] = .connectionVerificationFailed
+                }
+                return
+            }
+
+            // Extract IP string from sockaddr
+            if let ipString = extractIPFromSockAddr(remoteAddress) {
+                if !DNSResolver.isAllowedIP(ipString) {
+                    #if DEBUG
+                        print("[ContentExtractor] Post-connect validation BLOCKED: \(ipString)")
+                    #endif
+                    redirectQueue.sync {
+                        self.redirectErrors[task.taskIdentifier] = .postConnectIPBlocked(ipString)
+                    }
+                    // Cancel the task since we detected a blocked IP
+                    task.cancel()
+                    return
+                }
+                #if DEBUG
+                    print("[ContentExtractor] Post-connect validation PASSED: \(ipString)")
+                #endif
+            }
+        }
+    }
+
+    private func extractIPFromSockAddr(_ endpoint: String) -> String? {
+        // URLSessionTaskTransactionMetrics.remoteAddress format:
+        // IPv4: "192.168.1.1:443" or just "192.168.1.1"
+        // IPv6: "[::1]:443" or "[2001:db8::1]:443"
+        var ip = endpoint
+
+        // Handle IPv6 with brackets and port: "[::1]:443"
+        if ip.hasPrefix("[") {
+            if let closeBracket = ip.firstIndex(of: "]") {
+                ip = String(ip[ip.index(after: ip.startIndex) ..< closeBracket])
+                return ip
+            }
+        }
+
+        // Handle IPv4 with port: "192.168.1.1:443"
+        // IPv4 has exactly one colon if port is present
+        if ip.contains("."), ip.count(where: { $0 == ":" }) == 1 {
+            if let colonIndex = ip.lastIndex(of: ":") {
+                ip = String(ip[..<colonIndex])
+            }
+        }
+
+        return ip.isEmpty ? nil : ip
     }
 }
