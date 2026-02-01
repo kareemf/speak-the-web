@@ -423,22 +423,22 @@ Apple's documentation acknowledges this is acceptable for apps that fetch arbitr
   - Also required for HTTPS→HTTP redirect downgrades
   - **Host identity definition:** Use the full hostname (not eTLD+1) for matching. For IP literals, use the canonical IP string. Confirmation for `www.example.com` does NOT apply to `example.com` or `api.example.com`.
   - Consistent matching across redirects: if redirect changes host, re-confirm for new host
-- [ ] Add visual indicator for HTTP connections after user confirms
-- [ ] Add URL scheme/host validation (see 2.2.1 below)
+- [x] Add visual indicator for HTTP connections after user confirms
+- [x] Add URL scheme/host validation (see 2.2.1 below)
 
 **URLSession configuration for arbitrary URLs:**
 - [x] Use `URLSessionConfiguration.ephemeral` — no persistent cache/cookies
   - branch: `impl/ephemeral-urlsession`
   - status: `complete`
-- [ ] Set `httpCookieStorage = nil` — prevents cookie leakage
-- [ ] Set `urlCredentialStorage = nil` — prevents credential storage
-- [ ] Set `urlCache = nil` — no caching at all (ephemeral still uses in-memory cache by default)
-- [ ] Set `requestCachePolicy = .reloadIgnoringLocalCacheData` — defense in depth
+- [x] Set `httpCookieStorage = nil` — prevents cookie leakage
+- [x] Set `urlCredentialStorage = nil` — prevents credential storage
+- [x] Set `urlCache = nil` — no caching at all (ephemeral still uses in-memory cache by default)
+- [x] Set `requestCachePolicy = .reloadIgnoringLocalCacheData` — defense in depth
 - [ ] Document `allowsConstrainedNetworkAccess` / `allowsExpensiveNetworkAccess` behavior
 
 **TLS/Certificate verification constraints (CRITICAL):**
-- [ ] **Do NOT implement custom `URLSessionDelegate` trust evaluation** — use system defaults
-- [ ] If `URLSessionDelegate` is needed for other purposes, do NOT override `urlSession(_:didReceive:completionHandler:)` for server trust
+- [x] **Do NOT implement custom `URLSessionDelegate` trust evaluation** — use system defaults
+- [x] If `URLSessionDelegate` is needed for other purposes, do NOT override `urlSession(_:didReceive:completionHandler:)` for server trust
 - [ ] If delegate trust method must be implemented, ONLY call `completionHandler(.performDefaultHandling, nil)` — NEVER `.useCredential` with custom trust
 - [ ] **Explicitly deny any certificate pinning bypass or trust exceptions**
 - [ ] Do NOT set `tlsMinimumSupportedProtocolVersion` below `.TLSv12`
@@ -583,31 +583,31 @@ Post-connect validation (iOS URLSession can re-resolve):
 - [x] Add redirect validation with scheme downgrade blocking
   - branch: `impl/redirect-validation`
   - status: `complete`
-- [ ] Re-validate URL after EACH HTTP redirect (30x responses)
-- [ ] Apply full scheme/host/IP validation to redirect target
-- [ ] **Handle relative and scheme-relative `Location` headers:** Resolve against current request URL before validation
-- [ ] **Block HTTPS→HTTP downgrades** unless user explicitly confirms for target host
+- [x] Re-validate URL after EACH HTTP redirect (30x responses)
+- [x] Apply full scheme/host/IP validation to redirect target
+- [x] **Handle relative and scheme-relative `Location` headers:** Resolve against current request URL before validation
+- [x] **Block HTTPS→HTTP downgrades** unless user explicitly confirms for target host
 - [ ] Confirm on effective host (after DNS resolution) AND on every redirect target
-- [ ] Follow redirect chain with validation at each hop
-- [ ] Limit redirect depth (max 10) to prevent loops
+- [x] Follow redirect chain with validation at each hop
+- [x] Limit redirect depth (max 10) to prevent loops
 
 **Additional URL edge cases:**
-- [ ] Reject URLs with embedded credentials (`user:pass@host`)
-- [ ] **IDN/punycode policy (revised):**
+- [x] Reject URLs with embedded credentials (`user:pass@host`)
+- [x] **IDN/punycode policy (revised):**
   - Allow ASCII-only hostnames (standard domains)
   - Allow punycode hostnames (`xn--...`) — these are ASCII-encoded IDNs, safe to process
   - Reject raw Unicode/non-ASCII hostnames — display error: "Please use the ASCII version of this domain"
   - After allowing punycode, validate the ASCII form against blocked hostname patterns
   - Rationale: Punycode is common for legitimate international domains; rejecting all IDN is overly restrictive for a reader app
-- [ ] Handle trailing dots in hostnames (strip before validation)
-- [ ] Handle mixed-case schemes (normalize to lowercase)
-- [ ] **Reject non-standard IPv4 forms:**
+- [x] Handle trailing dots in hostnames (strip before validation)
+- [x] Handle mixed-case schemes (normalize to lowercase)
+- [x] **Reject non-standard IPv4 forms:**
   - Parsing location: Validate host string BEFORE passing to URLSession
   - Use `inet_pton(AF_INET, host, &addr)` which rejects octal/hex/partial forms
   - If host looks like IPv4 but `inet_pton` fails, reject with error
   - Accept only strict dotted-decimal (four octets, decimal digits only)
   - For IPv6 literals, use `inet_pton(AF_INET6, host, &addr6)`
-- [ ] Handle Share Extension URLs (may include fragments, non-HTTP schemes)
+- [x] Handle Share Extension URLs (may include fragments, non-HTTP schemes)
 - [x] **Share Extension uses same URLValidator** — validation logic is shared, not duplicated
   - branch: `impl/share-urlvalidator`
   - status: `complete`
@@ -616,7 +616,7 @@ Post-connect validation (iOS URLSession can re-resolve):
 - [x] Create `URLValidator` class with comprehensive validation
   - branch: `impl/url-security`
   - status: `complete`
-- [ ] Return clear, localized error messages for each rejection reason
+- [x] Return clear, localized error messages for each rejection reason
 - [x] Log validation failures for debugging (no PII)
   - branch: `impl/urlvalidation-logging`
   - status: `complete`
