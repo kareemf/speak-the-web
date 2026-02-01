@@ -6,8 +6,11 @@ struct HomeView: View {
     @FocusState private var isURLFieldFocused: Bool
     @State private var showClearConfirmation = false
     @State private var pendingDelete: RecentArticle?
+    @AppStorage("hasAcceptedDisclaimer") private var hasAcceptedDisclaimer = false
 
     var body: some View {
+        let canFetchWithDisclaimer = viewModel.canFetch && hasAcceptedDisclaimer
+
         List {
             Section {
                 // Compact header
@@ -30,6 +33,38 @@ struct HomeView: View {
             .listRowInsets(EdgeInsets(top: 8, leading: 16, bottom: 8, trailing: 16))
 
             Section {
+                if !hasAcceptedDisclaimer {
+                    VStack(alignment: .leading, spacing: 12) {
+                        Text("One-time notice")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                            .textCase(.uppercase)
+
+                        Text("You control what content this app reads. You are responsible for the URLs you provide.")
+                            .font(.subheadline)
+                            .foregroundColor(.primary)
+
+                        Button(action: { hasAcceptedDisclaimer = true }) {
+                            Text("I understand")
+                                .fontWeight(.semibold)
+                                .frame(maxWidth: .infinity)
+                                .padding(.vertical, 10)
+                                .background(Color.accentColor)
+                                .foregroundColor(.white)
+                                .cornerRadius(10)
+                        }
+                        .buttonStyle(.plain)
+                    }
+                    .padding()
+                    .background(Color(UIColor.secondarySystemGroupedBackground))
+                    .cornerRadius(12)
+                }
+            }
+            .listRowBackground(Color.clear)
+            .listRowSeparator(.hidden)
+            .listRowInsets(EdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 16))
+
+            Section {
                 // URL Input
                 HStack {
                     Image(systemName: "link")
@@ -43,9 +78,8 @@ struct HomeView: View {
                         .focused($isURLFieldFocused)
                         .submitLabel(.go)
                         .onSubmit {
-                            Task {
-                                await viewModel.fetchContent()
-                            }
+                            guard hasAcceptedDisclaimer else { return }
+                            Task { await viewModel.fetchContent() }
                         }
 
                     if !viewModel.urlInput.isEmpty {
@@ -68,9 +102,8 @@ struct HomeView: View {
                 // Fetch button
                 Button(action: {
                     isURLFieldFocused = false
-                    Task {
-                        await viewModel.fetchContent()
-                    }
+                    guard hasAcceptedDisclaimer else { return }
+                    Task { await viewModel.fetchContent() }
                 }) {
                     HStack {
                         if viewModel.isLoading {
@@ -83,12 +116,12 @@ struct HomeView: View {
                     }
                     .frame(maxWidth: .infinity)
                     .padding()
-                    .background(viewModel.canFetch ? Color.accentColor : Color.gray)
+                    .background(canFetchWithDisclaimer ? Color.accentColor : Color.gray)
                     .foregroundColor(.white)
                     .cornerRadius(12)
                 }
                 .buttonStyle(.plain)
-                .disabled(!viewModel.canFetch)
+                .disabled(!canFetchWithDisclaimer)
             }
             .listRowBackground(Color.clear)
             .listRowSeparator(.hidden)
