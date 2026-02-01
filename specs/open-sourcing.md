@@ -258,6 +258,8 @@ While open-sourcing the code itself has fewer distribution constraints (MIT is G
 ### 2.1 Add Privacy Manifest (Required for iOS 17+)
 - [x] Create `SpeakTheWeb/PrivacyInfo.xcprivacy` file
 - [ ] **Audit app and dependencies for required-reason APIs** (see verification task below)
+  - branch: `impl/privacy-api-audit`
+  - status: `claimed`
 
 **Privacy manifest inventory:**
 
