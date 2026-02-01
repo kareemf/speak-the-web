@@ -555,6 +555,12 @@ This preserves IPv6-only network compatibility while still blocking tunneled acc
 - [ ] Normalize IPv6 representations before validation
 
 **DNS rebinding protection (defense in depth):**
+- [x] Add DNS rebinding protection (pre-fetch + post-connect)
+  - branch: `impl/dns-rebinding`
+  - status: `complete`
+  - branch: `impl/dns-rebinding`
+  - status: `claimed`
+
 
 **Policy decision and rationale:**
 - **Goal:** Prevent SSRF attacks while not breaking legitimate sites
