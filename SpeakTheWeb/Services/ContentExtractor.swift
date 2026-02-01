@@ -2,13 +2,35 @@ import Foundation
 
 /// Service for extracting readable content from URLs.
 ///
-/// Security design:
-/// - Uses non-executing regex-based HTML parser (NOT WKWebView)
+/// ## Security Design
+///
+/// This implementation prioritizes security over rendering fidelity:
+///
+/// ### Parser Choice
+/// Uses a non-executing regex-based HTML parser (NOT WKWebView or JavaScriptCore).
+/// This prevents XSS attacks since no JavaScript is ever evaluated. The regex approach
+/// is less sophisticated than DOM parsers but eliminates entire attack surfaces.
+///
+/// ### Text-Only Extraction
 /// - Extracts text content only; does not evaluate scripts or load remote resources
-/// - Does NOT fetch any URLs found in HTML (images, stylesheets, scripts, iframes, etc.)
+/// - Does NOT fetch any URLs found in HTML (images, stylesheets, scripts, iframes, fonts, etc.)
 /// - Does NOT resolve relative URLs in parsed content
-/// - Does NOT follow canonical/refresh meta tags
-/// - All src, href, srcset attributes are ignored during parsing
+/// - Does NOT follow `<link rel="canonical">`, `<meta http-equiv="refresh">`, or other redirects
+/// - All `src`, `href`, `srcset` attributes are ignored during parsing
+///
+/// ### Dangerous Element Removal
+/// Before text extraction, these elements are stripped completely:
+/// `script`, `style`, `nav`, `header`, `footer`, `aside`, `noscript`, `iframe`,
+/// `form`, `button`, `input`, `select`, `textarea`, `svg`, `canvas`, `video`, `audio`
+///
+/// ### Text Sanitization
+/// After extraction, text is sanitized to remove:
+/// - HTML entities (decoded to plain text)
+/// - Null bytes and control characters (except newlines/tabs)
+/// - Excessive whitespace
+///
+/// ### SSRF/DNS Rebinding Protection
+/// See DNSResolver.swift for pre-fetch and post-connect IP validation.
 final class ContentExtractor: NSObject {
     private struct RedirectContext {
         var allowedHTTPHosts: Set<String>
@@ -358,6 +380,7 @@ final class ContentExtractor: NSObject {
         plainText = plainText.replacingOccurrences(of: "\n{3,}", with: "\n\n", options: .regularExpression)
         plainText = plainText.replacingOccurrences(of: "[ \t]+", with: " ", options: .regularExpression)
         plainText = decodeHTMLEntities(plainText)
+        plainText = sanitizeText(plainText)
         plainText = plainText.trimmingCharacters(in: .whitespacesAndNewlines)
 
         // Now extract sections from the plain text by finding heading text
@@ -397,6 +420,16 @@ final class ContentExtractor: NSObject {
     /// Removes HTML tags from a string
     private func stripHTMLTags(_ html: String) -> String {
         html.replacingOccurrences(of: "<[^>]+>", with: "", options: .regularExpression)
+    }
+
+    /// Sanitizes text by removing null bytes and control characters.
+    /// Preserves newlines (\n, \r), tabs (\t), and all printable characters.
+    /// This prevents potential issues with null-byte injection or hidden control sequences.
+    private func sanitizeText(_ string: String) -> String {
+        string.unicodeScalars.filter { scalar in
+            // Keep printable characters, newlines, tabs, and carriage returns
+            scalar == "\n" || scalar == "\r" || scalar == "\t" || scalar.value >= 0x20
+        }.map { String($0) }.joined()
     }
 
     /// Decodes HTML entities
