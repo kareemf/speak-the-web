@@ -1,0 +1,168 @@
+{
+  "$schema": "http://cyclonedx.org/schema/bom-1.5.schema.json",
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.5",
+  "serialNumber": "urn:uuid:3e671687-395b-41f5-a30f-a58921a69b79",
+  "version": 1,
+  "metadata": {
+    "timestamp": "2026-01-31T00:00:00Z",
+    "tools": [
+      {
+        "vendor": "Manual",
+        "name": "Manual SBOM Generation",
+        "version": "1.0.0"
+      }
+    ],
+    "component": {
+      "bom-ref": "speak-the-web",
+      "type": "application",
+      "name": "SpeakTheWeb",
+      "version": "1.0.0",
+      "description": "iOS app for reading web articles aloud using local TTS",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ],
+      "purl": "pkg:github/kareemf/speak-the-web@1.0.0"
+    }
+  },
+  "components": [
+    {
+      "bom-ref": "swcompression",
+      "type": "library",
+      "name": "SWCompression",
+      "version": "4.8.6",
+      "description": "Swift framework for working with compression, archives, and containers",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ],
+      "purl": "pkg:swift/github.com/tsolomko/SWCompression@4.8.6",
+      "externalReferences": [
+        {
+          "type": "vcs",
+          "url": "https://github.com/tsolomko/SWCompression.git"
+        }
+      ]
+    },
+    {
+      "bom-ref": "sherpa-onnx",
+      "type": "library",
+      "name": "sherpa-onnx",
+      "version": "1.0.0",
+      "description": "Speech-to-text, text-to-speech using next-gen Kaldi and ONNX Runtime",
+      "licenses": [
+        {
+          "license": {
+            "id": "Apache-2.0"
+          }
+        }
+      ],
+      "purl": "pkg:github/k2-fsa/sherpa-onnx@v1.0.0",
+      "externalReferences": [
+        {
+          "type": "vcs",
+          "url": "https://github.com/k2-fsa/sherpa-onnx"
+        },
+        {
+          "type": "distribution",
+          "url": "https://github.com/kareemf/speak-the-web/releases/download/sherpa-v1.0.0/sherpa-onnx.xcframework.zip"
+        }
+      ],
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "bf7dadb28cf7361ddc0d297de120e098f9d8665d3ceb39b8f16e827601675d60"
+        }
+      ]
+    },
+    {
+      "bom-ref": "onnxruntime",
+      "type": "library",
+      "name": "ONNX Runtime",
+      "version": "1.0.0",
+      "description": "Cross-platform, high performance ML inferencing and training accelerator",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ],
+      "purl": "pkg:github/microsoft/onnxruntime",
+      "externalReferences": [
+        {
+          "type": "vcs",
+          "url": "https://github.com/microsoft/onnxruntime"
+        },
+        {
+          "type": "distribution",
+          "url": "https://github.com/kareemf/speak-the-web/releases/download/sherpa-v1.0.0/onnxruntime.xcframework.zip"
+        }
+      ],
+      "hashes": [
+        {
+          "alg": "SHA-256",
+          "content": "962d2acd2729504830806fdea36ebe1658869811f35842013745dfa7781ca75a"
+        }
+      ]
+    },
+    {
+      "bom-ref": "bitbytedata",
+      "type": "library",
+      "name": "BitByteData",
+      "version": "2.0.4",
+      "description": "Reading and writing bits and bytes in Swift",
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT"
+          }
+        }
+      ],
+      "purl": "pkg:swift/github.com/tsolomko/BitByteData@2.0.4",
+      "externalReferences": [
+        {
+          "type": "vcs",
+          "url": "https://github.com/tsolomko/BitByteData.git"
+        }
+      ]
+    }
+  ],
+  "dependencies": [
+    {
+      "ref": "speak-the-web",
+      "dependsOn": [
+        "swcompression",
+        "sherpa-onnx",
+        "onnxruntime"
+      ]
+    },
+    {
+      "ref": "swcompression",
+      "dependsOn": [
+        "bitbytedata"
+      ]
+    },
+    {
+      "ref": "sherpa-onnx",
+      "dependsOn": [
+        "onnxruntime"
+      ]
+    },
+    {
+      "ref": "onnxruntime",
+      "dependsOn": []
+    },
+    {
+      "ref": "bitbytedata",
+      "dependsOn": []
+    }
+  ]
+}
