@@ -224,11 +224,11 @@ While open-sourcing the code itself has fewer distribution constraints (MIT is G
 - [x] Required if expecting community contributions
 
 ### 1.6.3 Add Machine-Readable SBOM (Best Practice)
-- [ ] Generate SPDX or CycloneDX format SBOM
+- [x] Generate SPDX or CycloneDX format SBOM
   - branch: `impl/sbom-generation`
-  - status: `claimed`
-- [ ] Include exact versions, source URLs, and commit hashes for all dependencies
-- [ ] Store in `sbom/` directory or as `bom.json`
+  - status: `complete`
+- [x] Include exact versions, source URLs, and commit hashes for all dependencies
+- [x] Store in `sbom/` directory or as `bom.json`
 - **Rationale:** Compliance audits and supply chain security require machine-readable dependency lists
 
 ### 1.7 Make DEVELOPMENT_TEAM configurable
