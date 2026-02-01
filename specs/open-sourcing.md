@@ -737,9 +737,9 @@ Save the justification text from section 2.2 in a separate file for easy copy-pa
 | Add Terms of Service / disclaimer | `docs/terms.html` | High | [x] Done |
 | **Create URLValidator with comprehensive validation** | URL handling code | **High** | [x] |
 | **Implement HTTPS-first with per-host session-only confirmation** | URL handling code | **High** | [x] |
-| **Add DNS rebinding protection (pre-fetch + post-connect)** | URL handling code | **High** | [ ] |
+| **Add DNS rebinding protection (pre-fetch + post-connect)** | URL handling code | **High** | [x] |
   - branch: `impl/dns-rebinding-protection`
-  - status: `claimed`
+  - status: `complete`
 | **Add redirect validation with scheme downgrade blocking** | URL handling code | **High** | [x] |
 | **Handle IP literals (IPv4, IPv6, mapped, non-standard forms)** | URL handling code | **High** | [ ] |
 | **Configure ephemeral URLSession (no cookies/credentials)** | Networking code | **High** | [x] |
