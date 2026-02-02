@@ -78,6 +78,59 @@ Write clear, descriptive commit messages:
 - No unnecessary dependencies added
 - Privacy-preserving (no analytics, tracking, or external data collection)
 
+## Voice Model Checksums
+
+Voice models are downloaded from GitHub at runtime. For supply chain security, we verify model integrity using SHA256 checksums stored in [`SpeakTheWeb/Models/ModelManifest.swift`](SpeakTheWeb/Models/ModelManifest.swift).
+
+### Verifying Checksums Before Release
+
+Before each app release, verify all model checksums are current:
+
+```bash
+# 1. Download each model from the official release
+curl -LO https://github.com/k2-fsa/sherpa-onnx/releases/download/tts-models/vits-piper-en_US-amy-medium.tar.bz2
+
+# 2. Compute SHA256 checksum
+shasum -a 256 vits-piper-en_US-amy-medium.tar.bz2
+
+# 3. Get file size in bytes
+stat -f%z vits-piper-en_US-amy-medium.tar.bz2  # macOS
+# or: stat --printf="%s" vits-piper-en_US-amy-medium.tar.bz2  # Linux
+
+# 4. Compare with values in ModelManifest.swift
+```
+
+### Adding a New Model
+
+1. Download the model archive from the [official sherpa-onnx release](https://github.com/k2-fsa/sherpa-onnx/releases/tag/tts-models)
+2. Compute the SHA256 checksum and file size (see commands above)
+3. Add an entry to the `knownModels` dictionary in `ModelManifest.swift`:
+
+```swift
+"vits-piper-<language>-<voice>-<quality>": Entry(
+    sha256: "<lowercase-hex-sha256>",
+    releaseTag: "tts-models",
+    compressedSize: <size-in-bytes>,
+    sourceURL: "https://github.com/k2-fsa/sherpa-onnx/releases/download/tts-models/<filename>.tar.bz2"
+)
+```
+
+4. Test the model downloads and verifies correctly in the app
+
+### If Upstream Changes a Model
+
+If the sherpa-onnx project updates a model file (same filename, different content):
+
+1. The app will reject the new file due to checksum mismatch
+2. Update `ModelManifest.swift` with the new checksum and size
+3. Release an app update for users to get the new model
+
+This is intentional — it prevents silent changes to model files.
+
+### Placeholder Checksums
+
+During development, models may have `PLACEHOLDER_CHECKSUM_REQUIRED` as the checksum. These are skipped in DEBUG builds but **rejected in RELEASE builds**. All placeholders must be replaced with real checksums before App Store submission.
+
 ## Reporting Issues
 
 - Check existing issues before creating a new one
