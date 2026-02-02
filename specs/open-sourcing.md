@@ -197,9 +197,9 @@ While open-sourcing the code itself has fewer distribution constraints (MIT is G
 - [x] Instructions for local signing configuration (see 1.7)
 - [x] Git hooks setup: `git config core.hooksPath .githooks`
 - [x] PR process
-- [ ] Model checksum verification process (see 2.1.1)
+- [x] Model checksum verification process (see 2.1.1)
   - branch: `impl/contributing-model-checksums`
-  - status: `claimed`
+  - status: `complete`
 
 ### 1.4 Fix pre-commit hook bug
 - [x] File: `.githooks/pre-commit`
