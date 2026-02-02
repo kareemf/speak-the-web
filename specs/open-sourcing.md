@@ -351,8 +351,8 @@ The app code may not use required-reason APIs directly, but bundled frameworks m
 
 **Required mitigations:**
 1. **Checksum + version verification:**
-   - [ ] Store expected SHA256 checksums in app bundle for known models
-   - [ ] Store expected version AND file size alongside checksum
+   - [x] Store expected SHA256 checksums in app bundle for known models
+   - [x] Store expected version AND file size alongside checksum
    - [ ] Verify all three (checksum, version, size) after download
    - [ ] Reject models that fail any verification
 
@@ -372,10 +372,10 @@ The app code may not use required-reason APIs directly, but bundled frameworks m
    - **Use pinned release asset URLs, not "latest" tags** — prevents accidental use of yanked/modified releases
 
    **Checksum source and maintenance:**
-   - [ ] Source checksums from official sherpa-onnx releases (download, verify manually, compute SHA256)
-   - [ ] Store checksums in `SpeakTheWeb/Models/ModelManifest.swift` (compiled into binary)
+   - [x] Source checksums from official sherpa-onnx releases (download, verify manually, compute SHA256)
+   - [x] Store checksums in `SpeakTheWeb/Models/ModelManifest.swift` (compiled into binary)
    - [ ] **Release checklist step:** Before each app release, verify all model checksums are current
-   - [ ] Document checksum verification process in CONTRIBUTING.md
+   - [x] Document checksum verification process in CONTRIBUTING.md
    - [ ] If upstream changes a model file, treat as new version (update app manifest)
 
 5. **Fallback for unavailable models:**
