@@ -746,7 +746,7 @@ Save the justification text from section 2.2 in a separate file for easy copy-pa
 | Fix pre-commit hook | `.githooks/pre-commit` | High | [x] Already correct |
 | Remove DEVELOPMENT_TEAM from project.yml | `project.yml` | High | [x] Already not present |
 | Add Privacy Manifest | `SpeakTheWeb/PrivacyInfo.xcprivacy` | High | [x] Done |
-| Audit required-reason APIs | App + dependencies | High | [ ] |
+| Audit required-reason APIs | App + dependencies | High | [x] Done (see PrivacyInfo.xcprivacy) |
 | Update privacy policy | `docs/privacy.html` | High | [x] Done |
 | Add Terms of Service / disclaimer | `docs/terms.html` | High | [x] Done |
 | **Create URLValidator with comprehensive validation** | URL handling code | **High** | [x] |
@@ -755,7 +755,7 @@ Save the justification text from section 2.2 in a separate file for easy copy-pa
   - branch: `impl/dns-rebinding-protection`
   - status: `complete`
 | **Add redirect validation with scheme downgrade blocking** | URL handling code | **High** | [x] |
-| **Handle IP literals (IPv4, IPv6, mapped, non-standard forms)** | URL handling code | **High** | [ ] |
+| **Handle IP literals (IPv4, IPv6, mapped, non-standard forms)** | URL handling code | **High** | [x] Done |
 | **Configure ephemeral URLSession (no cookies/credentials)** | Networking code | **High** | [x] |
 | **Share URLValidator with Share Extension** | Extension code | **High** | [x] |
 | **Add model integrity verification (checksum+version+size)** | Model download code | **High** | [x] |
@@ -767,7 +767,7 @@ Save the justification text from section 2.2 in a separate file for easy copy-pa
 | Update README | `/README.md` | Medium | [x] Done |
 | Add SECURITY.md | `/SECURITY.md` | Medium | [x] Done |
 | Add CODE_OF_CONDUCT.md | `/CODE_OF_CONDUCT.md` | Low | [x] Done |
-| Generate SBOM | `sbom/bom.json` | Medium | [ ] |
+| Generate SBOM | `sbom/bom.json` | Medium | [x] Done |
 | Create app-review-notes.txt | `docs/app-review-notes.txt` | High | [x] Done |
 | Capture App Review screenshots | Screenshots folder | High | [ ] |
 
