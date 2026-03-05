@@ -5,9 +5,21 @@ final class SherpaOnnxModelStore: NSObject, ObservableObject {
     enum DownloadState: Equatable {
         case idle
         case downloading(progress: Double)
-        case verifying
         case processing
         case failed(message: String)
+    }
+
+    /// Whether the user has acknowledged the third-party model download disclaimer.
+    @Published var showModelDownloadDisclaimer = false
+
+    /// The model pending download after disclaimer acknowledgment.
+    private var pendingDownloadModel: SherpaModel?
+
+    private static let hasAcknowledgedModelDownloadKey = "hasAcknowledgedModelDownload"
+
+    var hasAcknowledgedModelDownload: Bool {
+        get { UserDefaults.standard.bool(forKey: Self.hasAcknowledgedModelDownloadKey) }
+        set { UserDefaults.standard.set(newValue, forKey: Self.hasAcknowledgedModelDownloadKey) }
     }
 
     @Published private(set) var models: [SherpaModel] = []
@@ -119,6 +131,32 @@ final class SherpaOnnxModelStore: NSObject, ObservableObject {
             return
         }
 
+        if !hasAcknowledgedModelDownload {
+            pendingDownloadModel = model
+            showModelDownloadDisclaimer = true
+            return
+        }
+
+        startDownload(model: model)
+    }
+
+    /// Called when user acknowledges the model download disclaimer.
+    func acknowledgeModelDownload() {
+        hasAcknowledgedModelDownload = true
+        showModelDownloadDisclaimer = false
+        if let model = pendingDownloadModel {
+            pendingDownloadModel = nil
+            startDownload(model: model)
+        }
+    }
+
+    /// Called when user cancels the model download disclaimer.
+    func cancelModelDownload() {
+        showModelDownloadDisclaimer = false
+        pendingDownloadModel = nil
+    }
+
+    private func startDownload(model: SherpaModel) {
         let task = session.downloadTask(with: model.downloadURL)
         task.taskDescription = model.id
         downloadStates[model.id] = .downloading(progress: 0)
@@ -209,31 +247,6 @@ final class SherpaOnnxModelStore: NSObject, ObservableObject {
     private func completeDownload(for model: SherpaModel, archiveURL: URL) {
         Task.detached(priority: .userInitiated) {
             do {
-                // Verify model integrity before extraction
-                await MainActor.run {
-                    self.downloadStates[model.id] = .verifying
-                }
-
-                let verificationResult = ModelManifest.verify(archiveAt: archiveURL, modelId: model.id)
-
-                switch verificationResult {
-                case .verified:
-                    break // Continue with extraction
-                case .unknownModel:
-                    // Allow unknown models in development, warn but proceed
-                    #if DEBUG
-                        print(
-                            "[SherpaOnnxModelStore] WARNING: Model '\(model.id)' not in manifest, proceeding anyway (DEBUG mode)"
-                        )
-                    #else
-                        throw ModelStoreError.verificationFailed(verificationResult.errorDescription ?? "Unknown model")
-                    #endif
-                case .checksumMismatch, .sizeMismatch, .fileReadError:
-                    // Delete the corrupted/tampered archive immediately
-                    try? self.fileManager.removeItem(at: archiveURL)
-                    throw ModelStoreError.verificationFailed(verificationResult.errorDescription ?? "Verification failed")
-                }
-
                 await MainActor.run {
                     self.downloadStates[model.id] = .processing
                 }
@@ -498,7 +511,6 @@ private struct ModelRegistry: Codable {
 private enum ModelStoreError: LocalizedError {
     case missingModelFiles
     case invalidArchiveEntry
-    case verificationFailed(String)
 
     var errorDescription: String? {
         switch self {
@@ -506,8 +518,6 @@ private enum ModelStoreError: LocalizedError {
             "Downloaded model is missing required files."
         case .invalidArchiveEntry:
             "Downloaded model archive contains an invalid entry."
-        case let .verificationFailed(reason):
-            reason
         }
     }
 }

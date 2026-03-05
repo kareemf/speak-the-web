@@ -41,6 +41,18 @@ struct SherpaModelsView: View {
         } message: {
             Text(store.errorMessage ?? "An unknown error occurred")
         }
+        .alert("Third-Party Voice Models", isPresented: $store.showModelDownloadDisclaimer) {
+            Button("Cancel", role: .cancel) {
+                store.cancelModelDownload()
+            }
+            Button("I Understand") {
+                store.acknowledgeModelDownload()
+            }
+        } message: {
+            Text(
+                "Voice models are downloaded from GitHub (k2-fsa/sherpa-onnx) over a secure connection. By proceeding, you accept the risk of using third-party open-source models."
+            )
+        }
     }
 
     private var groupedModels: [String: [SherpaModel]] {
@@ -79,7 +91,7 @@ private struct SherpaModelRow: View {
 
     private var isBusy: Bool {
         switch store.downloadState(for: model) {
-        case .downloading, .verifying, .processing:
+        case .downloading, .processing:
             true
         case .idle, .failed:
             false
@@ -108,9 +120,6 @@ private struct SherpaModelRow: View {
             case let .downloading(progress):
                 ProgressView(value: progress)
                     .progressViewStyle(.linear)
-            case .verifying:
-                ProgressView("Verifying integrity…")
-                    .font(.caption)
             case .processing:
                 ProgressView("Processing…")
                     .font(.caption)

@@ -197,9 +197,7 @@ While open-sourcing the code itself has fewer distribution constraints (MIT is G
 - [x] Instructions for local signing configuration (see 1.7)
 - [x] Git hooks setup: `git config core.hooksPath .githooks`
 - [x] PR process
-- [x] Model checksum verification process (see 2.1.1)
-  - branch: `impl/contributing-model-checksums`
-  - status: `complete`
+- [x] ~~Model checksum verification process~~ (removed — see 2.1.1)
 
 ### 1.4 Fix pre-commit hook bug
 - [x] File: `.githooks/pre-commit`
@@ -344,55 +342,23 @@ The app code may not use required-reason APIs directly, but bundled frameworks m
 - GitHub API (`api.github.com/repos/k2-fsa/sherpa-onnx`) - voice model downloads
 - User-provided URLs - article fetching
 
-### 2.1.1 Voice Model Integrity Verification (NEW)
-**⚠️ Supply chain security:** Models downloaded from GitHub could be tampered with.
+### 2.1.1 Voice Model Download Acknowledgment
+**Previous approach (removed):** SHA256 checksum verification via `ModelManifest.swift` (886 lines, 103 models). Removed because every upstream model update required manually recomputing checksums and shipping a new app release — unsustainable maintenance burden.
 
-**Current state:** Models downloaded from GitHub releases without verification.
+**Current approach:** HTTPS transport security + archive integrity validation (BZip2 decompression and tar extraction throw on corrupted/invalid data) + one-time user acknowledgment.
 
-**Required mitigations:**
-1. **Checksum + version verification:**
-   - [x] Store expected SHA256 checksums in app bundle for known models
-   - [x] Store expected version AND file size alongside checksum
-   - [ ] Verify all three (checksum, version, size) after download
-   - [ ] Reject models that fail any verification
+**Implementation:**
+- [x] One-time FYI alert before first model download (persisted in UserDefaults)
+- [x] Alert text: "Voice models are downloaded from GitHub (k2-fsa/sherpa-onnx) over a secure connection. By proceeding, you accept the risk of using third-party open-source models."
+- [x] Cancel / I Understand buttons
+- [x] Subsequent downloads skip the prompt
+- [x] Existing archive extraction validates integrity (decompression + required-file checks)
 
-2. **Rollback/replay protection:**
-   - [ ] Maintain monotonic version expectation: never accept older version than currently installed
-   - [ ] If server offers older version, reject unless user explicitly approves downgrade
-
-3. **Implementation:**
-   - [ ] Store verification data in compiled code (not plist) — prevents tampering on jailbroken devices
-   - [ ] Create `struct ModelManifest { sha256: String, version: String, expectedSize: Int }`
-   - [ ] Implement `verifyModelIntegrity(at path: URL, expected: ModelManifest) -> Bool`
-   - [ ] Clear corrupted/tampered downloads immediately
-
-4. **Update strategy:**
-   - When new models are released, app update includes new manifest
-   - Unknown models (not in manifest) are rejected with clear error
-   - **Use pinned release asset URLs, not "latest" tags** — prevents accidental use of yanked/modified releases
-
-   **Checksum source and maintenance:**
-   - [x] Source checksums from official sherpa-onnx releases (download, verify manually, compute SHA256)
-   - [x] Store checksums in `SpeakTheWeb/Models/ModelManifest.swift` (compiled into binary)
-   - [ ] **Release checklist step:** Before each app release, verify all model checksums are current
-   - [x] Document checksum verification process in CONTRIBUTING.md
-   - [ ] If upstream changes a model file, treat as new version (update app manifest)
-
-5. **Fallback for unavailable models:**
-   - If GitHub release is yanked or asset removed, show graceful error: "This voice model is no longer available. Please update the app for the latest models."
-   - Do NOT fall back to unverified sources
-   - App remains functional with other verified models
-
-6. **Download robustness (availability protection):**
-   - [ ] Implement retry with exponential backoff: 3 attempts, delays of 1s, 2s, 4s
-   - [ ] Support resumable downloads using HTTP Range headers
-   - [ ] Verify partial downloads with chunk hashing (if GitHub supports range requests)
-   - [ ] If partial download fails verification, restart from beginning
-   - [ ] Show progress UI with cancel option
-   - [ ] Handle network changes gracefully (Wi-Fi → cellular)
-   - [ ] Validate TLS for GitHub CDN (use system defaults, no custom trust)
-
-**Trade-off:** This prevents automatic discovery of new models. Acceptable for security.
+**Removed:**
+- ~~`ModelManifest.swift`~~ — deleted
+- ~~Checksum verification step in download flow~~ — removed
+- ~~`.verifying` download state~~ — removed
+- ~~CONTRIBUTING.md checksum documentation~~ — removed
 
 ### 2.2 App Transport Security
 
@@ -758,9 +724,7 @@ Save the justification text from section 2.2 in a separate file for easy copy-pa
 | **Handle IP literals (IPv4, IPv6, mapped, non-standard forms)** | URL handling code | **High** | [x] Done |
 | **Configure ephemeral URLSession (no cookies/credentials)** | Networking code | **High** | [x] |
 | **Share URLValidator with Share Extension** | Extension code | **High** | [x] |
-| **Add model integrity verification (checksum+version+size)** | Model download code | **High** | [x] |
-  - branch: `impl/model-integrity-verification`
-  - status: `complete`
+| **Model download acknowledgment (replaces checksum verification)** | Model download code | **High** | [x] |
 | Add HTTP connection indicator | Article view UI | Medium | [x] |
 | Add first-launch disclaimer | Onboarding UI | Medium | [x] |
 | Add CHANGELOG | `/CHANGELOG.md` | Medium | [x] Done |
