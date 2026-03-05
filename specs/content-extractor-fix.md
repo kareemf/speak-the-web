@@ -70,9 +70,9 @@ Apply Wikipedia-specific cleanup on `contentHTML` (after content selection), not
 - [x] Fix content selector regexes
   - branch: `impl/fix-content-selectors`
   - status: `complete`
-- [ ] Wikipedia cleanup, section fix, reorder
+- [x] Wikipedia cleanup, section fix, reorder
   - branch: `impl/wikipedia-cleanup`
-  - status: `claimed`
+  - status: `complete`
 
 ## Verification
 
