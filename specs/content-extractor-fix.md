@@ -65,6 +65,8 @@ Apply Wikipedia-specific cleanup on `contentHTML` (after content selection), not
 ## Tasks
 
 - [ ] Add browser User-Agent header
+  - branch: `impl/add-user-agent-header`
+  - status: `claimed`
 - [ ] Fix content selector regexes
 - [ ] Wikipedia cleanup, section fix, reorder
 
