@@ -328,17 +328,16 @@ final class ContentExtractor: NSObject {
             )
         }
 
-        // Try to find main content area
-        let contentSelectors = [
-            "<article[^>]*>(.*?)</article>",
-            "<main[^>]*>(.*?)</main>",
-            "<div[^>]*class=[\"'][^\"']*(?:content|article|post|entry)[^\"']*[\"'][^>]*>(.*?)</div>",
-            "<div[^>]*id=[\"'][^\"']*(?:content|article|post|entry)[^\"']*[\"'][^>]*>(.*?)</div>",
-        ]
-
+        // Try to find main content area using a multi-phase approach
         var contentHTML = workingHTML
-        for selector in contentSelectors {
-            // Use NSRegularExpression for dotMatchesLineSeparators support
+
+        // Phase 1: Simple semantic selectors (article, main)
+        // [\s\S]*? crosses newlines without requiring dotMatchesLineSeparators
+        let simpleSelectors = [
+            "<article[^>]*>([\\s\\S]*?)</article>",
+            "<main[^>]*>([\\s\\S]*?)</main>",
+        ]
+        for selector in simpleSelectors {
             if let regex = try? NSRegularExpression(
                 pattern: selector,
                 options: .caseInsensitive
@@ -347,10 +346,40 @@ final class ContentExtractor: NSObject {
                     in: workingHTML,
                     range: NSRange(workingHTML.startIndex..., in: workingHTML)
                 ),
-                let range = Range(match.range, in: workingHTML)
+                let range = Range(match.range(at: 1), in: workingHTML)
             {
                 contentHTML = String(workingHTML[range])
                 break
+            }
+        }
+
+        // Phase 2: Div selectors with depth counting for proper nesting
+        if contentHTML == workingHTML {
+            let divSelectors = [
+                "<div[^>]*id=[\"']mw-content-text[\"'][^>]*>",
+                "<div[^>]*id=[\"']mw-body-content[\"'][^>]*>",
+                "<div[^>]*class=[\"'][^\"']*\\b(?:content|article|post|entry)\\b[^\"']*[\"'][^>]*>",
+                "<div[^>]*id=[\"'][^\"']*\\b(?:content|article|post|entry)\\b[^\"']*[\"'][^>]*>",
+            ]
+            for selector in divSelectors {
+                if let content = extractDivContent(from: workingHTML, openingPattern: selector) {
+                    contentHTML = content
+                    break
+                }
+            }
+        }
+
+        // Phase 3: ARIA role fallback (reuse depth counting for proper nesting)
+        if contentHTML == workingHTML {
+            let ariaSelectors = [
+                "<div[^>]*role=[\"']main[\"'][^>]*>",
+                "<div[^>]*role=[\"']article[\"'][^>]*>",
+            ]
+            for selector in ariaSelectors {
+                if let content = extractDivContent(from: workingHTML, openingPattern: selector) {
+                    contentHTML = content
+                    break
+                }
             }
         }
 
@@ -497,6 +526,117 @@ final class ContentExtractor: NSObject {
         }
 
         return result
+    }
+
+    /// Extracts content from a div element by finding the opening tag via regex
+    /// and then scanning for matching open/close div tags to handle nesting.
+    /// Uses UTF-8 byte scanning for safe indexing (HTML tag names are ASCII).
+    private func extractDivContent(from html: String, openingPattern: String) -> String? {
+        guard let regex = try? NSRegularExpression(
+            pattern: openingPattern,
+            options: .caseInsensitive
+        ),
+            let match = regex.firstMatch(
+                in: html,
+                range: NSRange(html.startIndex..., in: html)
+            ),
+            let matchRange = Range(match.range, in: html)
+        else {
+            return nil
+        }
+
+        let searchStart = matchRange.upperBound
+        let utf8 = Array(html.utf8)
+        var pos = html.utf8.distance(from: html.utf8.startIndex, to: searchStart.samePosition(in: html.utf8)!)
+        let len = utf8.count
+        var depth = 1
+
+        // ASCII bytes for comparison
+        let lt: UInt8 = 0x3C // <
+        let slash: UInt8 = 0x2F // /
+        let gt: UInt8 = 0x3E // >
+        let space: UInt8 = 0x20
+        let tab: UInt8 = 0x09
+        let newline: UInt8 = 0x0A
+        let cr: UInt8 = 0x0D
+        /// d/D = 0x64/0x44, i/I = 0x69/0x49, v/V = 0x76/0x56
+        func isD(_ b: UInt8) -> Bool {
+            b == 0x64 || b == 0x44
+        }
+        func isI(_ b: UInt8) -> Bool {
+            b == 0x69 || b == 0x49
+        }
+        func isV(_ b: UInt8) -> Bool {
+            b == 0x76 || b == 0x56
+        }
+        func isTagEnd(_ b: UInt8) -> Bool {
+            b == space || b == gt || b == tab || b == newline || b == cr || b == slash
+        }
+
+        while pos < len, depth > 0 {
+            // Scan for next '<'
+            while pos < len, utf8[pos] != lt {
+                pos += 1
+            }
+            if pos >= len { break }
+
+            let remaining = len - pos
+
+            // Check for </div
+            if remaining >= 6,
+               utf8[pos + 1] == slash,
+               isD(utf8[pos + 2]),
+               isI(utf8[pos + 3]),
+               isV(utf8[pos + 4]),
+               isTagEnd(utf8[pos + 5])
+            {
+                depth -= 1
+                if depth == 0 {
+                    // Convert UTF-8 offset back to String.Index
+                    let endIndex = String.Index(utf8Index: html.utf8.index(html.utf8.startIndex, offsetBy: pos), within: html)!
+                    return String(html[searchStart ..< endIndex])
+                }
+                pos += 6
+            }
+            // Check for <div (but not </div which we already handled)
+            // Skip self-closing <div/> (scan ahead for /> to avoid unbalanced depth)
+            else if remaining >= 4,
+                    isD(utf8[pos + 1]),
+                    isI(utf8[pos + 2]),
+                    isV(utf8[pos + 3]),
+                    remaining == 4 || isTagEnd(utf8[pos + 4])
+            {
+                // Check if self-closing: scan forward to find unquoted > and check for preceding /
+                let dquote: UInt8 = 0x22 // "
+                let squote: UInt8 = 0x27 // '
+                var scanPos = pos + 4
+                var isSelfClosing = false
+                var inQuote: UInt8 = 0
+                while scanPos < len {
+                    let b = utf8[scanPos]
+                    if inQuote != 0 {
+                        if b == inQuote { inQuote = 0 }
+                    } else if b == dquote || b == squote {
+                        inQuote = b
+                    } else if b == gt {
+                        break
+                    }
+                    scanPos += 1
+                }
+                if scanPos < len, scanPos > pos + 4, utf8[scanPos - 1] == slash {
+                    isSelfClosing = true
+                }
+                if !isSelfClosing {
+                    depth += 1
+                }
+                pos = scanPos + 1
+                continue
+            } else {
+                pos += 1
+            }
+        }
+
+        return nil
     }
 }
 
