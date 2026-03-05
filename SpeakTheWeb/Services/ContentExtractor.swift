@@ -350,6 +350,31 @@ final class ContentExtractor: NSObject {
             }
         }
 
+        // Remove MediaWiki-specific noise elements (only if page is MediaWiki)
+        let isMediaWiki = workingHTML.contains("mw-content-text") || workingHTML.contains("mw-body-content")
+        let noisePatterns: [String] = isMediaWiki ? [
+            "<sup[^>]*class=[\"'][^\"']*\\breference\\b[^\"']*[\"'][^>]*>[\\s\\S]*?</sup>",
+            "<span[^>]*class=[\"'][^\"']*\\bmw-editsection\\b[^\"']*[\"'][^>]*>[\\s\\S]*?</span>",
+            "<ol[^>]*class=[\"'][^\"']*\\breferences\\b[^\"']*[\"'][^>]*>[\\s\\S]*?</ol>",
+            "<table[^>]*class=[\"'][^\"']*\\b(?:navbox|infobox)\\b[^\"']*[\"'][^>]*>[\\s\\S]*?</table>",
+            "<div[^>]*id=[\"']mw-panel-toc[\"'][^>]*>[\\s\\S]*?</div>",
+            "<div[^>]*class=[\"'][^\"']*\\b(?:reflist|catlinks|printfooter|mw-[a-z-]+)\\b[^\"']*[\"'][^>]*>[\\s\\S]*?</div>",
+        ] : []
+        for pattern in noisePatterns {
+            if let regex = try? NSRegularExpression(
+                pattern: pattern,
+                options: .caseInsensitive
+            ) {
+                contentHTML = regex.stringByReplacingMatches(
+                    in: contentHTML,
+                    range: NSRange(contentHTML.startIndex..., in: contentHTML),
+                    withTemplate: ""
+                )
+            }
+        }
+
+        let contentHTMLForHeadings = contentHTML
+
         // Extract sections (headings) before stripping tags
         var sections: [ArticleSection] = []
         let headingPattern = "<h([1-6])[^>]*>(.*?)</h\\1>"
@@ -385,14 +410,18 @@ final class ContentExtractor: NSObject {
 
         // Now extract sections from the plain text by finding heading text
         if let regex {
-            let matches = regex.matches(in: workingHTML, options: [], range: NSRange(workingHTML.startIndex..., in: workingHTML))
+            let matches = regex.matches(
+                in: contentHTMLForHeadings,
+                options: [],
+                range: NSRange(contentHTMLForHeadings.startIndex..., in: contentHTMLForHeadings)
+            )
 
             for match in matches {
-                if let levelRange = Range(match.range(at: 1), in: workingHTML),
-                   let textRange = Range(match.range(at: 2), in: workingHTML),
-                   let level = Int(workingHTML[levelRange])
+                if let levelRange = Range(match.range(at: 1), in: contentHTMLForHeadings),
+                   let textRange = Range(match.range(at: 2), in: contentHTMLForHeadings),
+                   let level = Int(contentHTMLForHeadings[levelRange])
                 {
-                    let headingText = stripHTMLTags(String(workingHTML[textRange]))
+                    let headingText = stripHTMLTags(String(contentHTMLForHeadings[textRange]))
                         .trimmingCharacters(in: .whitespacesAndNewlines)
 
                     guard !headingText.isEmpty else { continue }
