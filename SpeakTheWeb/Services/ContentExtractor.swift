@@ -622,7 +622,7 @@ final class ContentExtractor: NSObject {
                 depth -= 1
                 if depth == 0 {
                     // Convert UTF-8 offset back to String.Index
-                    let endIndex = String.Index(utf8Index: html.utf8.index(html.utf8.startIndex, offsetBy: pos), within: html)!
+                    let endIndex = html.utf8.index(html.utf8.startIndex, offsetBy: pos)
                     return String(html[searchStart ..< endIndex])
                 }
                 pos += 6
