@@ -67,10 +67,12 @@ Apply Wikipedia-specific cleanup on `contentHTML` (after content selection), not
 - [x] Add browser User-Agent header
   - branch: `impl/add-user-agent-header`
   - status: `complete`
-- [ ] Fix content selector regexes
+- [x] Fix content selector regexes
   - branch: `impl/fix-content-selectors`
-  - status: `claimed`
+  - status: `complete`
 - [ ] Wikipedia cleanup, section fix, reorder
+  - branch: `impl/wikipedia-cleanup`
+  - status: `claimed`
 
 ## Verification
 
